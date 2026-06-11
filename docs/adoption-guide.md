@@ -16,6 +16,9 @@
 
 迷った場合は Standard から始めます。
 
+導入前に [principles.md](principles.md) と [practical-guide.md](practical-guide.md) を読み、なぜこの運用を入れるのか、1タスクをどう進めるのかを先に共有します。
+テンプレートだけを置いても、判断理由を残す文化がなければ効果は限定的です。
+
 ## Step 2: ファイルを配置する
 
 Standard の場合、次の構成を推奨します。
@@ -29,12 +32,21 @@ workflows/
   session-start.md
   session-end.md
 templates/
+  AGENTS.md
+  adr.md
   implementation-plan.md
   completion-review.md
   devlog.md
+  security-review.md
+  rollback-plan.md
+.github/
+  pull_request_template.md
+  ISSUE_TEMPLATE/
 ```
 
 このリポジトリの `workflows/` と `templates/` から必要なファイルをコピーします。
+
+AIエージェントを使うプロジェクトでは、`templates/AGENTS.md` をプロジェクト用に編集し、リポジトリルートの `AGENTS.md` として配置します。
 
 ## Step 3: PROJECT_STATUSを書く
 
@@ -93,6 +105,8 @@ Phase 4: 公開準備
 - 検証方法
 - 完了条件
 
+完了条件を書くときは、[definition-of-done.md](definition-of-done.md) を基準にします。
+
 ## Step 7: 完了前レビューを行う
 
 `templates/completion-review.md` を使い、作業漏れを確認します。
@@ -104,6 +118,11 @@ Phase 4: 公開準備
 - テストやビルドが通っているか
 - ドキュメント更新が必要か
 - 次回に残すべき注意点があるか
+
+重要な設計判断が発生した場合は、`templates/adr.md` を使って `docs/adr/` に記録します。
+devlogは作業判断、ADRは長期的な設計判断を残すために分けます。
+
+Strict modeでは、必要に応じて `templates/security-review.md` と `templates/rollback-plan.md` も作成します。
 
 ## Step 8: devlogを書く
 
@@ -126,6 +145,24 @@ git commit -m "[short message]"
 コミットメッセージは短くて構いません。
 理由はdevlogに残します。
 
+## Step 10: PRとCIに接続する
+
+GitHubを使う場合は、`.github/pull_request_template.md` と `.github/workflows/docs-check.yml` を導入します。
+
+これにより、PR上で次を確認しやすくなります。
+
+- workflow mode
+- 関連する計画、レビュー、devlog、ADR
+- 予定外の変更
+- 検証結果
+- セキュリティとプライバシー
+- Strict modeの追加ゲート
+
+CIでは `scripts/check-docs.sh` により、最低限の文書構造、未解決プレースホルダー、秘密情報らしき文字列、ローカルリンクを確認します。
+
+品質ゲートの考え方は [quality-gates.md](quality-gates.md) を参照してください。
+チームで導入する場合は [team-development.md](team-development.md) を先に読み、誰がレビューし、誰が最終判断するかを決めてから運用します。
+
 ## 導入時の注意
 
 - 既存プロジェクトのルールを上書きしない
@@ -133,3 +170,5 @@ git commit -m "[short message]"
 - 秘密情報をdevlogに書かない
 - すべての作業で重い手順を強制しない
 - 小さな修正ではMinimal運用に落とす
+- PRやCIを入れても、人間のレビュー責任はなくならない
+- Strict modeはチェック欄を埋めることではなく、リスクを証拠付きで扱うこと

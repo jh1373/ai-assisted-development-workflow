@@ -1,142 +1,158 @@
 # AI-assisted Development Workflow
 
-AI開発支援ツールを使う開発で、文脈、計画、検証、判断理由を失わないためのワークフローテンプレート集です。
+AI駆動開発で、実装速度だけを上げるのではなく、品質、判断理由、検証結果、責任範囲を失わずにプロダクトを作るための実践ガイドです。
 
-このリポジトリは、AIにコード作成を丸投げするためのプロンプト集ではありません。
-Gitが「何を変えたか」を残すのに対して、このワークフローは「なぜ変えたか」「何を試したか」「次に何を見るべきか」を残すためのものです。
+このリポジトリは、AIにコード作成を丸投げするためのプロンプト集でも、Markdownテンプレート集でもありません。
+Codex、Claude Code、Google Antigravity、GitHub Copilot などのAI開発支援ツールを使うときに、何をAIに任せ、何を人間が判断し、どの証拠を残せば品質を保てるかを整理するためのものです。
 
-## 概要
+## 何を解決するか
 
-AI支援開発では、実装は速くなります。一方で、判断理由や失敗した試行がチャット内に埋もれやすくなります。
+AI駆動開発では、実装は速くなります。
+一方で、次の問題も速く発生します。
 
-このリポジトリでは、1つのタスクを1つの開発セッションとして扱います。
-作業開始時に現在地を復元し、実装前に計画を作り、完了前にレビューし、最後にdevlogとGitで記録します。
+- 何を作るべきかが曖昧なまま、AIがそれらしい実装を始める
+- チャットが長くなり、前提や判断理由が埋もれる
+- Gitには差分が残るが、なぜその実装にしたかは残らない
+- AIが不要なリファクタリングや範囲外の変更を混ぜる
+- テスト、ビルド、手動確認が曖昧なまま完了扱いになる
+- 別のチャットや別の作業者が再開したとき、現在地を復元できない
+- 認証、権限、課金、個人情報などの高リスク変更をAI任せにしてしまう
+
+このガイドの目的は、AIを使わないことではありません。
+AIで実装速度を上げながら、人間が品質と公開判断に責任を持てる状態を作ることです。
+
+## 基本思想
+
+このワークフローは、次の考え方を中心にしています。
+
+- チャットは作業場であり、信頼できる記録ではない
+- Gitは「何を変えたか」を残すが、「なぜ変えたか」は別に残す
+- 実装前に目的、対象範囲、完了条件、検証方法を固定する
+- AIの出力は成果物ではなく、レビュー対象の提案として扱う
+- 完了とは、実装済みではなく、検証済みで再開可能な状態を指す
+- 不確実性、失敗、見送った選択肢を隠さない
+- 作業の重さは、リスクの大きさに合わせる
+
+詳しくは [docs/principles.md](docs/principles.md) を参照してください。
+
+## 実践フロー
+
+1つのタスクを、1つの開発セッションとして扱います。
 
 ```text
-要件定義
-→ ロードマップ
-→ タスク分割
-→ session start
-→ implementation plan
-→ implementation
-→ completion review
-→ session end
-→ devlog + git commit
+要件を詰める
+→ タスクを分ける
+→ 現在地を復元する
+→ 実装計画を作る
+→ AIと実装する
+→ テストと手動確認を行う
+→ 完了前レビューを行う
+→ devlogとGitに記録する
+→ 必要ならPRでレビューする
 ```
 
-## 何のためのリポジトリか
+実際の進め方は [docs/practical-guide.md](docs/practical-guide.md) にまとめています。
 
-目的は、AI支援開発を「その場のチャット」ではなく「追跡できる開発プロセス」にすることです。
+## まず使う3ファイル
 
-解決したい課題:
-
-- チャットが長くなり、前提や判断理由が埋もれる
-- Gitには差分は残るが、実装理由や失敗した試行は残りにくい
-- 別のチャットで再開したとき、現在地を復元しにくい
-- AIの提案を採用した理由、採用しなかった理由が残らない
-- テスト、ビルド、レビューが曖昧なまま完了扱いになりやすい
-
-## このリポジトリでできること
-
-- AI支援開発の作業開始手順を標準化する
-- 実装前の計画をテンプレート化する
-- 完了前レビューの観点を固定する
-- devlogで判断理由を残す
-- 次のチャットや次の作業者が再開しやすい状態を作る
-- 小さく導入し、必要に応じて厳格な運用へ拡張する
-
-## これは何ではないか
-
-- 万能な開発手法ではありません
-- 特定のAIツール専用ではありません
-- コード品質を自動で保証するものではありません
-- テストやレビューを不要にするものではありません
-- チャット全文を保存するための仕組みではありません
-
-人間が要件、判断、検証、公開可否を管理し、AIを調査や実装の補助として使うことを前提にしています。
-
-## Quick Start
-
-最初はすべてを導入する必要はありません。まずは最小構成で始めます。
-
-### 1. 必要なテンプレートをコピーする
-
-自分のプロジェクトに次のファイルを置きます。
+最初からすべてを導入する必要はありません。
+まずは次の3つだけで始められます。
 
 ```text
 docs/PROJECT_STATUS.md
-docs/devlog/
-workflows/session-start.md
-workflows/session-end.md
 templates/implementation-plan.md
 templates/devlog.md
-templates/completion-review.md
 ```
 
-### 2. プロジェクトの現在地を書く
+- `PROJECT_STATUS.md`: 次のセッションで最初に読む現在地メモ
+- `implementation-plan.md`: 実装前に目的、範囲、検証方法を固定する計画
+- `devlog.md`: 作業後に判断理由、検証結果、未完了事項を残す記録
 
-`docs/PROJECT_STATUS.md` に、今の状態、次にやること、最後に確認したテストを書きます。
+慣れてきたら、`session-start.md`、`completion-review.md`、`AGENTS.md`、PRテンプレート、Strict modeを追加します。
 
-### 3. タスクごとにセッションを分ける
+## 品質を守る関門
 
-大きなチャットで複数タスクを続けず、1タスクごとに新しいセッションを使います。
+AI駆動開発では、速く作れるぶん、間違った変更も速く混ざります。
+そのため、作業ごとに品質ゲートを決めます。
 
-### 4. 作業開始時に現在地を復元する
+例:
 
-`workflows/session-start.md` に沿って、Git状態、現在地、直近devlog、テスト状態を確認します。
+- scope gate: 何をやるか、何をやらないかが明確か
+- test gate: テスト、ビルド、手動確認を実行したか
+- diff gate: 予定外の変更が混ざっていないか
+- security gate: 秘密情報、個人情報、権限変更がないか
+- recovery gate: 問題が出たときに戻せるか
+- review gate: 人間が最終判断すべき変更ではないか
 
-### 5. 実装前に計画を作る
-
-`templates/implementation-plan.md` を使い、目的、対象範囲、実装手順、検証方法、完了条件を決めます。
-
-### 6. 完了前にレビューする
-
-`templates/completion-review.md` を使い、漏れ、余計な変更、未検証、次回への引き継ぎを確認します。
-
-### 7. session endで記録する
-
-`workflows/session-end.md` と `templates/devlog.md` を使い、判断理由、試したこと、検証結果、残課題を残します。
+詳しくは [docs/quality-gates.md](docs/quality-gates.md) を参照してください。
 
 ## 運用モード
 
-プロジェクトの重さに応じて、3段階で使えます。
+作業の重さに応じて、3段階で使います。
 
-| モード | 向いている用途 | 使うもの |
+| モード | 向いている用途 | 目的 |
 |---|---|---|
-| Minimal | 学習、小さな個人開発、短いタスク | `PROJECT_STATUS.md`, `implementation-plan.md`, `devlog.md` |
-| Standard | 継続的な個人開発、面接で見せるポートフォリオ | Minimal + `session-start.md`, `session-end.md`, `completion-review.md` |
-| Strict | 公開前、複数人開発、重要な設計変更 | Standard + `roadmap.md`, `review-checklist.md`, security review |
+| Minimal | 学習、小さな個人開発、短いタスク | 目的、検証、判断理由だけ残す |
+| Standard | 継続的な個人開発、通常の機能追加、バグ修正 | 開始、計画、完了レビュー、devlogを回す |
+| Strict | 公開前、複数人開発、認証、権限、課金、個人情報、データ移行 | リスク、承認、復旧方法まで証拠を残す |
 
-詳しくは [docs/workflow-modes.md](docs/workflow-modes.md) を参照してください。
+詳しくは [docs/workflow-modes.md](docs/workflow-modes.md) と [docs/strict-mode.md](docs/strict-mode.md) を参照してください。
+
+## 個人開発とチーム開発
+
+個人開発では、現在地、判断理由、検証結果を残すことが主な目的です。
+チーム開発では、それに加えて責任範囲、PRレビュー、CI、承認、ロールバックまで必要になります。
+
+チームで使う場合は、最低限次を決めます。
+
+- AIに任せてよい作業と、人間が必ず判断する作業
+- PRで必ず書く検証結果
+- Strict modeが必要な変更
+- 誰がレビューし、誰がマージ判断するか
+- 失敗時にどう戻すか
+
+詳しくは [docs/team-development.md](docs/team-development.md) を参照してください。
 
 ## リポジトリ構成
 
 ```text
 .
 ├── README.md
+├── docs/
+│   ├── adoption-guide.md
+│   ├── ai-human-boundary.md
+│   ├── anti-patterns.md
+│   ├── definition-of-done.md
+│   ├── practical-guide.md
+│   ├── principles.md
+│   ├── quality-gates.md
+│   ├── review-checklist.md
+│   ├── security.md
+│   ├── strict-mode.md
+│   ├── team-development.md
+│   └── workflow-modes.md
 ├── workflows/
 │   ├── session-start.md
 │   └── session-end.md
 ├── templates/
+│   ├── AGENTS.md
+│   ├── adr.md
 │   ├── completion-review.md
 │   ├── devlog.md
 │   ├── implementation-plan.md
 │   ├── project-status.md
 │   ├── roadmap.md
+│   ├── rollback-plan.md
+│   ├── security-review.md
 │   └── task-brief.md
-├── docs/
-│   ├── adoption-guide.md
-│   ├── ai-human-boundary.md
-│   ├── review-checklist.md
-│   ├── security.md
-│   └── workflow-modes.md
+├── .github/
+│   ├── ISSUE_TEMPLATE/
+│   ├── pull_request_template.md
+│   └── workflows/
+├── scripts/
+│   └── check-docs.sh
 └── examples/
     └── react-app/
-        ├── README.md
-        ├── PROJECT_STATUS.md
-        ├── completion-review-example.md
-        ├── devlog-example.md
-        └── implementation-plan-example.md
 ```
 
 ## 使うべき場面
@@ -144,23 +160,35 @@ templates/completion-review.md
 - AI支援開発でチャットが長くなりすぎる
 - 後から「なぜこの実装にしたのか」が分からなくなる
 - Gitの差分だけでは判断理由が足りない
-- 個人開発でもチーム開発に近い形で進めたい
-- 面接やレビューで、開発プロセスを説明できる状態にしたい
+- 別チャットや別AIツールで作業を再開したい
+- AIエージェントに守らせる開発ルールを明文化したい
+- PRやIssueに検証結果と判断理由を接続したい
+- 個人開発でもチーム開発に近い品質管理をしたい
 
 ## 使わない方がよい場面
 
 - 数分で終わる単純な修正
 - 一度きりの実験コード
-- そもそもGitやドキュメントで管理する必要がない作業
+- Gitやドキュメントで管理する必要がない作業
 - ログを残すことで秘密情報が漏れる危険が高い作業
 
-## 導入ガイド
+小さい作業に重い手順を強制する必要はありません。
+重要なのは、作業のリスクに見合った証拠を残すことです。
+
+## 導入方法
 
 既存プロジェクトに導入する場合は、[docs/adoption-guide.md](docs/adoption-guide.md) から始めてください。
 
-レビュー観点だけ使いたい場合は、[docs/review-checklist.md](docs/review-checklist.md) を参照してください。
+最初に読む順番:
 
-AIと人間の役割分担は、[docs/ai-human-boundary.md](docs/ai-human-boundary.md) にまとめています。
+1. [docs/principles.md](docs/principles.md)
+2. [docs/practical-guide.md](docs/practical-guide.md)
+3. [docs/workflow-modes.md](docs/workflow-modes.md)
+4. [docs/quality-gates.md](docs/quality-gates.md)
+5. [docs/adoption-guide.md](docs/adoption-guide.md)
+
+AIと人間の役割分担は [docs/ai-human-boundary.md](docs/ai-human-boundary.md) にまとめています。
+よくある失敗パターンは [docs/anti-patterns.md](docs/anti-patterns.md) にまとめています。
 
 ## セキュリティとプライバシー
 

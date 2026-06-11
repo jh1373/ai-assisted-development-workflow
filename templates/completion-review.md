@@ -4,6 +4,12 @@
 
 <!-- 今回レビューするタスク名を書く -->
 
+## Workflow Mode
+
+<!-- Minimal / Standard / Strict -->
+
+-
+
 ## 計画との照合
 
 ### 完了したこと
@@ -33,6 +39,18 @@
 ```text
 [command/result summary]
 ```
+
+## Security and Privacy
+
+- [ ] 秘密情報、認証情報、個人情報が含まれていないことを確認した
+- [ ] ログ、スクリーンショット、エラー出力を確認した
+- [ ] 影響なし、または影響内容を記録した
+
+## Rollback / Recovery
+
+<!-- Strict modeの場合は必須。通常モードでも必要なら書く -->
+
+-
 
 ## ドキュメント更新
 

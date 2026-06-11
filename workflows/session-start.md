@@ -35,6 +35,8 @@ git status --short --branch
 - `README.md`
 - `docs/README.md`
 - `CONTRIBUTING.md`
+- `docs/principles.md`
+- `docs/definition-of-done.md`
 
 ここでは、プロジェクト固有のルール、禁止事項、実行環境、テスト方法を確認します。
 
@@ -88,6 +90,9 @@ npm run build
 
 計画なしに実装へ入らないことが重要です。
 AI支援開発では実装速度が速いため、先に目的、対象範囲、検証方法を固定しておかないと、不要な変更が混ざりやすくなります。
+
+認証、権限、課金、個人情報、データ移行、本番設定、依存追加、公開前作業を含む場合は、Strict modeとして扱います。
+その場合は [docs/strict-mode.md](../docs/strict-mode.md) の確認項目を計画に含めます。
 
 ## 開始時の出力テンプレート
 

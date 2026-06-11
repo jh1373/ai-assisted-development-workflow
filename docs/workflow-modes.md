@@ -63,14 +63,19 @@
 - 大きなアーキテクチャ変更
 - 複数人での開発
 - 長期運用するプロジェクト
+- データ移行や本番設定を変更する作業
+- 外部依存やライブラリを追加する作業
 
 ### 使うファイル
 
 - Standard の全ファイル
 - `docs/review-checklist.md`
 - `docs/security.md`
+- `docs/definition-of-done.md`
+- `docs/strict-mode.md`
 - プロジェクト固有の `docs/ARCHITECTURE.md`
 - プロジェクト固有の `docs/README.md`
+- 必要に応じて `docs/adr/`
 
 ### 守ること
 
@@ -79,6 +84,10 @@
 - テスト、ビルド、手動確認を記録する
 - 見送った選択肢と理由を残す
 - 未完了事項を隠さない
+- ロールバックまたは復旧方法を記録する
+- 最終判断者を明確にする
+
+各モードでどの品質ゲートを最低限通すかは [quality-gates.md](quality-gates.md) を参照してください。
 
 ## モード選択の目安
 
@@ -88,5 +97,7 @@
 | 新機能を1つ追加する | Standard |
 | 不具合の原因調査 | Standard |
 | 認証や権限を変更する | Strict |
+| 課金、個人情報、データ移行を扱う | Strict |
+| 依存ライブラリを追加する | Standard、影響が大きければStrict |
 | 公開前チェック | Strict |
 | READMEだけの小修正 | Minimal |
