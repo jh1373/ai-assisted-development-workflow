@@ -167,3 +167,7 @@ AIと人間の役割分担は、[docs/ai-human-boundary.md](docs/ai-human-bounda
 devlogやプロジェクト文書には、秘密情報、認証情報、個人情報、管理画面URL、社内固有情報を含めないでください。
 
 詳しくは [docs/security.md](docs/security.md) を参照してください。
+
+## License
+
+This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
