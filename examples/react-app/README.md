@@ -9,6 +9,20 @@ Reactアプリ開発で、このワークフローを使う場合の例です。
 - 1タスク1セッションで作業する
 - 作業終了時にdevlogを残す
 
+## この例で扱うタスク
+
+検索結果が0件のときに、空状態メッセージを表示するタスクを例にしています。
+
+流れ:
+
+```text
+PROJECT_STATUSを読む
+→ implementation-plan-example.md で計画する
+→ 実装する
+→ completion-review-example.md で漏れを確認する
+→ devlog-example.md で判断理由を残す
+```
+
 ## セッション開始時
 
 ```bash
@@ -36,3 +50,9 @@ git diff --check
 - `docs/devlog/YYYY-MM-DD/HHMM-task.md`
 - 必要に応じて `docs/PROJECT_STATUS.md`
 - 必要に応じて `docs/ROADMAP.md`
+
+## 例ファイル
+
+- `implementation-plan-example.md`: 実装前の計画例
+- `completion-review-example.md`: 完了前レビュー例
+- `devlog-example.md`: 作業後の判断ログ例
