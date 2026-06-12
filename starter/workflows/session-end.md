@@ -14,6 +14,13 @@
 ### 1. 完了前レビューを行う
 
 `templates/completion-review.md` を使い、今回の作業が計画通りに終わっているか確認します。
+完了前レビューは、タスク成果物フォルダに保存します。
+
+保存先の例:
+
+```text
+docs/tasks/YYYY-MM-DD-HHMM-task-name/completion-review.md
+```
 
 見ること:
 
@@ -84,6 +91,8 @@ devlogで重視するのは、作業量ではなく判断理由です。
 ADR候補を検知した場合は、[docs/ai-workflow/adr-guidelines.md](../docs/ai-workflow/adr-guidelines.md) に沿ってユーザーに確認します。
 ADRのテンプレートは `templates/adr.md` です。
 
+devlogには、関連するタスク成果物フォルダとADRの有無を記録します。
+
 ### 5. プロジェクト状態を更新する
 
 必要に応じて、次のようなファイルを更新します。
@@ -122,6 +131,15 @@ git commit -m "[message]"
 - ...
 
 更新したドキュメント:
+- ...
+
+タスク成果物:
+- ...
+
+Devlog:
+- ...
+
+ADR:
 - ...
 
 コミット:

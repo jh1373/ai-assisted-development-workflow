@@ -24,12 +24,19 @@ None
 
 ## Related Artifacts
 
+- Task artifacts:
 - Requirement alignment:
 - Task brief:
 - Implementation plan:
 - Completion review:
 - Devlog:
 - ADR:
+
+## ADR Decision
+
+- [ ] ADR created
+- [ ] ADR not needed, reason documented in devlog
+- [ ] ADR candidate exists, waiting for user approval
 
 ## Scope Check
 

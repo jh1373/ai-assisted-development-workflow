@@ -71,9 +71,24 @@ npm run build: passed
 
 - [x] PROJECT_STATUS を更新した
 - [ ] ROADMAP を更新した
-- [x] devlog を作成した
+- [x] devlog に残すべき判断理由、検証結果、未完了事項を整理した
+- [x] devlog の保存先を決めた
 - [ ] README や利用手順を更新した
 - [ ] 更新不要であることを確認した
+
+## Devlog / ADR Handoff
+
+Devlog path:
+
+```text
+docs/devlog/2026-06-11/2230-search-result-rendering.md
+```
+
+ADR decision:
+
+- [ ] ADRを作成した
+- [x] ADRは不要で、不要理由をdevlogに残す
+- [ ] ADR候補があり、ユーザー確認待ち
 
 ## リスクと残課題
 

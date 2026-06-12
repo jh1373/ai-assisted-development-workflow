@@ -9,10 +9,11 @@
 
 ## 最終セッション
 
-<!-- 日時、作業名、devlogへのリンクを書く -->
+<!-- 日時、作業名、devlogとタスク成果物へのリンクを書く -->
 
 ```text
 YYYY-MM-DD HH:mm: [作業名] -> docs/devlog/YYYY-MM-DD/HHMM-task-name.md
+Task artifacts -> docs/tasks/YYYY-MM-DD-HHMM-task-name/
 ```
 
 ## 完了済み

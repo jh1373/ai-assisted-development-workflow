@@ -20,6 +20,7 @@ AI駆動開発では、実装速度が上がる一方で、誤った変更や範
 
 - requirement alignment
 - task brief
+- task artifacts
 - issue
 - user confirmation note
 
@@ -39,6 +40,7 @@ AI駆動開発では、実装速度が上がる一方で、誤った変更や範
 
 - task brief
 - implementation plan
+- task artifacts
 - issue
 
 ## 2. Mode Selection Gate
@@ -56,6 +58,7 @@ AI駆動開発では、実装速度が上がる一方で、誤った変更や範
 - implementation plan
 - completion review
 - devlog
+- task artifacts
 - PR mode selection reason
 
 ## 3. Context Gate

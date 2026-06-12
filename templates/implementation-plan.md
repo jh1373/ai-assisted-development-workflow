@@ -3,6 +3,12 @@
 実装に入る前に作る計画書です。
 目的は、AI支援開発で作業範囲が広がりすぎることを防ぎ、完了条件と検証方法を先に決めることです。
 
+保存先の例:
+
+```text
+docs/tasks/YYYY-MM-DD-HHMM-task-name/implementation-plan.md
+```
+
 ## 目的
 
 <!-- 今回の実装で何を達成するか -->

@@ -21,27 +21,34 @@ Edit it to match the project before use.
 - Keep changes limited to the requested task.
 - Do not introduce new dependencies without approval.
 - Do not put secrets, tokens, personal data, or internal URLs in committed files.
+- Do not edit template files as task records. Create task artifacts under
+  `docs/tasks/YYYY-MM-DD-HHMM-task-name/`.
 
 ## Workflow
 
 For normal work:
 
-1. Align requirements with `templates/requirement-alignment.md` when the task is
+1. Restore context with `workflows/session-start.md`.
+2. Align requirements with `templates/requirement-alignment.md` when the task is
    non-trivial or ambiguous.
-2. Select the workflow mode. Default to Standard.
-3. Downgrade to Minimal only when the task is small, reversible, low-risk, and
+3. Select the workflow mode. Default to Standard.
+4. Downgrade to Minimal only when the task is small, reversible, low-risk, and
    does not affect behavior, data, security, cost, release scope, or production.
-4. Upgrade to Strict when the task affects authentication, authorization,
+5. Upgrade to Strict when the task affects authentication, authorization,
    billing, personal data, data migration, production configuration, external
    dependencies, public release, architecture, or destructive actions.
-5. State the reason whenever selecting Minimal or Strict.
-6. Restore context with `workflows/session-start.md`.
-7. Write or update an implementation plan.
-8. Implement in small, reviewable changes.
-9. Run relevant tests, builds, or manual checks.
-10. Complete `templates/completion-review.md`.
-11. Write a devlog.
-12. Update `docs/PROJECT_STATUS.md` when project state changes.
+6. State the reason whenever selecting Minimal or Strict.
+7. Create or update task artifacts under `docs/tasks/YYYY-MM-DD-HHMM-task-name/`.
+8. Write or update `implementation-plan.md` in the task artifacts folder.
+9. Implement in small, reviewable changes.
+10. Run relevant tests, builds, or manual checks.
+11. Complete `completion-review.md` in the task artifacts folder.
+12. Run `workflows/session-end.md` at the end of the task. This includes
+    devlog creation, PROJECT_STATUS update decision, and git commit decision.
+
+Do not finish a task until `workflows/session-end.md` is complete, including
+completion review, devlog, PROJECT_STATUS update decision, and git commit
+decision.
 
 For high-risk work, use Strict mode.
 See `docs/strict-mode.md`.

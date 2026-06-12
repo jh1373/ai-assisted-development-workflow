@@ -1,5 +1,11 @@
 # Completion Review Template
 
+保存先の例:
+
+```text
+docs/tasks/YYYY-MM-DD-HHMM-task-name/completion-review.md
+```
+
 ## 対象タスク
 
 <!-- 今回レビューするタスク名を書く -->
@@ -64,9 +70,24 @@ Mode changed during work:
 
 - [ ] PROJECT_STATUS を更新した
 - [ ] ROADMAP を更新した
-- [ ] devlog を作成した
+- [ ] devlog に残すべき判断理由、検証結果、未完了事項を整理した
+- [ ] devlog の保存先を決めた
 - [ ] README や利用手順を更新した
 - [ ] 更新不要であることを確認した
+
+## Devlog / ADR Handoff
+
+Devlog path:
+
+```text
+docs/devlog/YYYY-MM-DD/HHMM-task-name.md
+```
+
+ADR decision:
+
+- [ ] ADRを作成した
+- [ ] ADRは不要で、不要理由をdevlogに残す
+- [ ] ADR候補があり、ユーザー確認待ち
 
 ## リスクと残課題
 

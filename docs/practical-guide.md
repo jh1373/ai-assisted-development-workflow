@@ -26,6 +26,7 @@ AIに実装を頼む前に、まずタスクを明確にします。
 その推測が外れると、見た目は進んでいても、違うものを作っている状態になります。
 
 必要なら `templates/requirement-alignment.md` と `templates/task-brief.md` を使います。
+作成した記録は、テンプレート本体ではなく `docs/tasks/YYYY-MM-DD-HHMM-task-name/` に保存します。
 未確認の前提が残る場合は、実装に進みません。
 
 ## 2. 現在地を復元する
@@ -67,6 +68,7 @@ AIに実装を頼む前に、まずタスクを明確にします。
 重要なのは、AIが勝手に範囲を広げたときに「それは今回の対象外」と判断できる基準を持つことです。
 
 テンプレートは `templates/implementation-plan.md` を使います。
+保存先は `docs/tasks/YYYY-MM-DD-HHMM-task-name/implementation-plan.md` です。
 
 ## 4. AIに小さく任せる
 
@@ -143,6 +145,7 @@ UIや操作が関係する場合は、手動確認も記録します。
 - 次の作業者が再開できるか
 
 テンプレートは `templates/completion-review.md` を使います。
+保存先は `docs/tasks/YYYY-MM-DD-HHMM-task-name/completion-review.md` です。
 完了判断の基準は `docs/definition-of-done.md` を使います。
 
 ## 8. 判断理由を残す
@@ -174,6 +177,7 @@ docs/devlog/YYYY-MM-DD/HHMM-task-name.md
 ```
 
 粒度の見本は [examples/devlog/standard-task-devlog.md](../examples/devlog/standard-task-devlog.md) を参照してください。
+タスク成果物の保存先は [task-artifacts.md](task-artifacts.md) を参照してください。
 
 ## 9. 重要な設計判断はADRに分ける
 

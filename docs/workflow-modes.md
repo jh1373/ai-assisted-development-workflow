@@ -72,6 +72,7 @@ Strictに上げる場合、AIは理由を明示します。
 ### 使うファイル
 
 - `docs/PROJECT_STATUS.md`
+- `docs/tasks/`
 - `templates/implementation-plan.md`
 - `templates/devlog.md`
 

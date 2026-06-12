@@ -18,6 +18,7 @@ Reactアプリ開発で、このワークフローを使う場合の例です。
 ```text
 PROJECT_STATUSを読む
 → ユーザー要望とAI側の理解を揃える
+→ docs/tasks/ にタスク成果物を作る
 → implementation-plan-example.md で計画する
 → 実装する
 → completion-review-example.md で漏れを確認する
@@ -48,6 +49,7 @@ git diff --check
 
 作成または更新するもの:
 
+- `docs/tasks/YYYY-MM-DD-HHMM-task-name/`
 - `docs/devlog/YYYY-MM-DD/HHMM-task-name.md`
 - 必要に応じて `docs/PROJECT_STATUS.md`
 - 必要に応じて `docs/ROADMAP.md`

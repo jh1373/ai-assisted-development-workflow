@@ -3,9 +3,29 @@
 devlogは作業日報ではありません。
 後から「なぜその判断をしたのか」を追うための記録です。
 
+保存先の例:
+
+```text
+docs/devlog/YYYY-MM-DD/HHMM-task-name.md
+```
+
+関連するタスク成果物:
+
+```text
+docs/tasks/YYYY-MM-DD-HHMM-task-name/
+```
+
 ## 作業テーマ
 
 <!-- 何の作業をしたかを1-2行で書く -->
+
+## 関連するタスク成果物
+
+<!-- requirement-alignment、implementation-plan、completion-reviewを置いたフォルダを書く -->
+
+```text
+docs/tasks/YYYY-MM-DD-HHMM-task-name/
+```
 
 ## なぜやったか
 

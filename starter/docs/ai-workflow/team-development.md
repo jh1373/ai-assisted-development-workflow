@@ -127,6 +127,7 @@ Strict modeでは、少なくとも次を残します。
 AGENTS.md
 templates/requirement-alignment.md
 docs/PROJECT_STATUS.md
+docs/tasks/
 docs/devlog/
 templates/implementation-plan.md
 templates/completion-review.md

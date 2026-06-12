@@ -34,6 +34,7 @@ docs/
   PROJECT_STATUS.md
   ROADMAP.md
   ai-workflow/
+  tasks/
   devlog/
   adr/
 workflows/
@@ -57,6 +58,21 @@ templates/
 
 AIエージェントを使うプロジェクトでは、ルートの `AGENTS.md` をプロジェクト用に編集します。
 `AGENTS.md` には「曖昧な点がある場合は実装前に確認する」「認識合わせが終わるまで実装しない」など、必ず守らせたいルールを書きます。
+
+`.github/` は隠しディレクトリのため、コピー時に漏れないようにします。
+
+Bash:
+
+```bash
+cp -R starter/. /path/to/project/
+```
+
+PowerShell:
+
+```powershell
+Copy-Item -Path .\starter\* -Destination C:\path\to\project -Recurse -Force
+Copy-Item -Path .\starter\.github -Destination C:\path\to\project -Recurse -Force
+```
 
 ## Step 3: PROJECT_STATUSを書く
 
@@ -102,6 +118,7 @@ Phase 4: 公開準備
 ## Step 6: 要件認識合わせを行う
 
 ユーザーの要望が短い場合や、意図、範囲、完了条件に曖昧さがある場合は、`templates/requirement-alignment.md` を使います。
+記録はテンプレート本体ではなく、`docs/tasks/YYYY-MM-DD-HHMM-task-name/requirement-alignment.md` に保存します。
 
 確認すること:
 
@@ -117,6 +134,7 @@ Phase 4: 公開準備
 ## Step 7: 実装計画を作る
 
 `templates/implementation-plan.md` を使います。
+記録は `docs/tasks/YYYY-MM-DD-HHMM-task-name/implementation-plan.md` に保存します。
 
 計画には、次の観点を必ず入れます。
 
@@ -135,6 +153,7 @@ Phase 4: 公開準備
 ## Step 8: 完了前レビューを行う
 
 `templates/completion-review.md` を使い、作業漏れを確認します。
+記録は `docs/tasks/YYYY-MM-DD-HHMM-task-name/completion-review.md` に保存します。
 
 ここで見るのは、コードが書けたかだけではありません。
 
@@ -156,6 +175,8 @@ Strict modeでは、必要に応じて `templates/security-review.md` と `templ
 
 devlogは作業日報ではありません。
 後から判断を追うための記録です。
+
+タスク成果物の保存先とdevlogの関係は [task-artifacts.md](task-artifacts.md) を参照してください。
 
 ## Step 10: Gitに記録する
 
