@@ -12,7 +12,7 @@
 <!-- 日時、作業名、devlogへのリンクを書く -->
 
 ```text
-YYYY-MM-DD HH:mm: [作業名] -> docs/devlog/YYYY-MM-DD/HHMM-task.md
+YYYY-MM-DD HH:mm: [作業名] -> docs/devlog/YYYY-MM-DD/HHMM-task-name.md
 ```
 
 ## 完了済み

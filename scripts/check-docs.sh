@@ -17,6 +17,8 @@ required_files=(
   "starter/workflows/session-start.md"
   "starter/workflows/session-end.md"
   "starter/.github/pull_request_template.md"
+  "examples/devlog/README.md"
+  "examples/devlog/standard-task-devlog.md"
   "docs/principles.md"
   "docs/requirement-alignment.md"
   "docs/practical-guide.md"

@@ -48,7 +48,7 @@ git diff --check
 
 作成または更新するもの:
 
-- `docs/devlog/YYYY-MM-DD/HHMM-task.md`
+- `docs/devlog/YYYY-MM-DD/HHMM-task-name.md`
 - 必要に応じて `docs/PROJECT_STATUS.md`
 - 必要に応じて `docs/ROADMAP.md`
 

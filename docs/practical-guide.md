@@ -164,6 +164,17 @@ devlogは作業日報ではありません。
 
 テンプレートは `templates/devlog.md` を使います。
 
+1タスク1セッションで進める場合、タスクを実行したら必ずdevlogを残します。
+小さい修正では短くて構いませんが、判断理由、検証結果、未完了事項の3つは省略しません。
+
+保存先の例:
+
+```text
+docs/devlog/YYYY-MM-DD/HHMM-task-name.md
+```
+
+粒度の見本は [examples/devlog/standard-task-devlog.md](../examples/devlog/standard-task-devlog.md) を参照してください。
+
 ## 9. 重要な設計判断はADRに分ける
 
 devlogはセッション単位の記録です。

@@ -89,6 +89,8 @@ templates/devlog.md
 - `implementation-plan.md`: 実装前に目的、範囲、検証方法を固定する計画
 - `devlog.md`: 作業後に判断理由、検証結果、未完了事項を残す記録
 
+Devlogの粒度は [examples/devlog/standard-task-devlog.md](examples/devlog/standard-task-devlog.md) を見本にしてください。
+
 慣れてきたら、`session-start.md`、`completion-review.md`、`AGENTS.md`、PRテンプレート、Strict modeを追加します。
 
 ## 品質を守る関門
