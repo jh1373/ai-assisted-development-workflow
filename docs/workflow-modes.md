@@ -166,7 +166,7 @@ Strictに上げる場合、AIは理由を明示します。
 | 不具合の原因調査 | Standard |
 | 認証や権限を変更する | Strict |
 | 課金、個人情報、データ移行を扱う | Strict |
-| 依存ライブラリを追加する | Standard、影響が大きければStrict |
+| 依存ライブラリを追加する | Strict |
 | 公開前チェック | Strict |
 | READMEだけの小修正 | Minimal |
 

@@ -38,6 +38,36 @@
 - 検索条件のURL同期
 - デザイン全体の変更
 
+## Directory Context
+
+Related directories:
+
+- `src/features/search/`
+- `src/components/`
+- `src/types/`
+
+Responsibilities:
+
+- `src/features/search/` は検索画面、検索結果表示、検索状態を扱う
+- `src/components/` は再利用UIを扱う
+- `src/types/` は検索結果の共有型を扱う
+
+Boundaries not to cross:
+
+- API接続は今回追加しない
+- 検索条件のURL同期は今回扱わない
+- 検索精度改善と0件時の表示改善を混ぜない
+
+Files to inspect before implementation:
+
+- `src/features/search/`
+- `src/components/SearchResults.tsx`
+- `src/components/SearchResults.test.tsx`
+
+Directory Map update candidate:
+
+- none: 既存の検索機能ディレクトリ内のUI改善であり、主要ディレクトリや責務は変わらない
+
 ## Workflow Mode
 
 Standard

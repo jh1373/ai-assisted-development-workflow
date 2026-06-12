@@ -30,6 +30,12 @@ docs/tasks/2026-06-11-2230-search-result-rendering/
 - Reason: 通常のUI機能追加であり、複数ファイルの変更とテスト追加を含むため
 - Mode changes during work: なし
 
+### Directory Map
+
+- Impact: none
+- Reason: 既存の検索機能ディレクトリ内のUI改善のみで、主要ディレクトリや責務に変更なし
+- Updated path: none
+
 ### 採用した方針
 
 - API接続は行わず、まずモックデータでUIの流れを確認する
@@ -71,7 +77,7 @@ npm run build: passed
 
 - 目的: 検索結果表示と0件時の表示を実装した
 - 検証: `npm test` と `npm run build` が通った
-- ドキュメント: `PROJECT_STATUS.md` とdevlogを更新した
+- ドキュメント: `docs/PROJECT_STATUS.md` とdevlogを更新し、DIRECTORY_MAPは更新不要と判断した
 - 残課題: API接続とURLクエリ同期は次フェーズとして記録した
 
 ## 次にやること

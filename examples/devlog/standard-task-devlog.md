@@ -32,6 +32,12 @@ AI側では最初、検索ロジック全体の改善も候補に入ると考え
 - Reason: 通常のUI改善だが、ユーザー体験に影響し、テスト追加とドキュメント更新を含むため
 - Mode changes during work: なし
 
+### Directory Map
+
+- Impact: none
+- Reason: 既存の検索機能ディレクトリ内のUI改善のみで、主要ディレクトリや責務に変更なし
+- Updated path: none
+
 ### ユーザーとの認識合わせ
 
 - ユーザー要望: 検索結果がないときに、状態が分かる表示にしたい
@@ -94,7 +100,7 @@ git diff --check: passed
 - ユーザー要望に対応した: 検索結果0件時に状態が分かる表示を追加した
 - 対象外に触れていない: API接続、検索条件、URL同期は変更していない
 - 検証した: `npm test`、`npm run build`、`git diff --check` が通った
-- 次回再開できる: `docs/PROJECT_STATUS.md` に未完了事項を残した
+- 次回再開できる: `docs/PROJECT_STATUS.md` に未完了事項を残し、DIRECTORY_MAPは更新不要と判断した
 
 ## 次にやること
 

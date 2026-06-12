@@ -17,8 +17,8 @@ Reactアプリ開発で、このワークフローを使う場合の例です。
 
 ```text
 ROADMAPとPROJECT_STATUSを読む
-→ DIRECTORY_MAPで今回読むべき範囲を絞る
 → 今回扱うタスクを選ぶ
+→ DIRECTORY_MAPで今回読むべき範囲を絞る
 → ユーザー要望とAI側の理解を揃える
 → docs/tasks/ にタスク記録を作る
 → Workflow Modeを判定する
@@ -57,6 +57,7 @@ git diff --check
 - `docs/devlog/YYYY-MM-DD/HHMM-task-name.md`
 - 必要に応じて `docs/PROJECT_STATUS.md`
 - 必要に応じて `docs/ROADMAP.md`
+- 必要に応じて `docs/DIRECTORY_MAP.md`
 
 ## 例ファイル
 

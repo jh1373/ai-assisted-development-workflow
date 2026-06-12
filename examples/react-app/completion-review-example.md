@@ -71,6 +71,8 @@ npm run build: passed
 
 - [x] PROJECT_STATUS を更新した
 - [ ] ROADMAP を更新した
+- [x] DIRECTORY_MAP の更新要否を確認した
+- [x] DIRECTORY_MAP を更新した、または更新不要の理由を記録した
 - [x] devlog に残すべき判断理由、検証結果、未完了事項を整理した
 - [x] devlog の保存先を決めた
 - [ ] README や利用手順を更新した
@@ -89,6 +91,13 @@ ADR decision:
 - [ ] ADRを作成した
 - [x] ADRは不要で、不要理由をdevlogに残す
 - [ ] ADR候補があり、ユーザー確認待ち
+
+Directory Map impact:
+
+```text
+none
+Reason: 既存の検索機能ディレクトリ内のUI改善のみで、主要ディレクトリや責務に変更なし。
+```
 
 ## リスクと残課題
 
