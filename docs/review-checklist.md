@@ -5,6 +5,8 @@ AI支援開発で、完了前に確認するためのチェックリストです
 ## 実装前レビュー
 
 - [practical-guide.md](practical-guide.md) の流れに沿って、タスクを開始しているか
+- [requirement-alignment.md](requirement-alignment.md) に沿って、ユーザーとの認識合わせを行ったか
+- 未回答の不明点が残ったまま実装に進んでいないか
 - 目的は明確か
 - 完了条件は明確か
 - 変更する範囲は明確か

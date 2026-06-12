@@ -10,6 +10,14 @@ assignees: ""
 
 <!-- What outcome should this task achieve? -->
 
+## User Request
+
+<!-- What did the user originally ask for? -->
+
+## Current Understanding
+
+<!-- How do we understand the request now? -->
+
 ## Background
 
 <!-- Why is this needed now? -->
@@ -43,5 +51,11 @@ assignees: ""
 ```
 
 ## Risks and Unknowns
+
+-
+
+## Questions Before Implementation
+
+<!-- If any question here must be answered, do not start implementation yet. -->
 
 -

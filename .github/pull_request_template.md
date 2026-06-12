@@ -12,6 +12,7 @@
 
 ## Related Artifacts
 
+- Requirement alignment:
 - Task brief:
 - Implementation plan:
 - Completion review:
@@ -20,9 +21,16 @@
 
 ## Scope Check
 
+- [ ] User intent and AI understanding are aligned.
 - [ ] The intended change is clear.
 - [ ] Out-of-scope items were not changed.
 - [ ] Unplanned changes are explained below.
+
+Open questions or assumptions:
+
+```text
+None
+```
 
 Unplanned changes:
 

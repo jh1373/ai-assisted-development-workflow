@@ -17,6 +17,7 @@ Reactアプリ開発で、このワークフローを使う場合の例です。
 
 ```text
 PROJECT_STATUSを読む
+→ ユーザー要望とAI側の理解を揃える
 → implementation-plan-example.md で計画する
 → 実装する
 → completion-review-example.md で漏れを確認する

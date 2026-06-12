@@ -12,7 +12,12 @@ Edit it to match the project before use.
 - Do not overwrite or revert user changes unless explicitly instructed.
 - Do not start implementation until the task goal, scope, out-of-scope items,
   and completion condition are clear.
-- Ask for clarification when requirements are ambiguous.
+- Requirement Alignment First: do not implement when the user's intent, scope,
+  constraints, or completion criteria are ambiguous.
+- Before implementation, summarize your understanding, list unclear points,
+  identify assumptions, and ask the user for confirmation when needed.
+- Never silently fill gaps that could change product behavior, user experience,
+  data handling, security, cost, or release scope.
 - Keep changes limited to the requested task.
 - Do not introduce new dependencies without approval.
 - Do not put secrets, tokens, personal data, or internal URLs in committed files.
@@ -21,13 +26,15 @@ Edit it to match the project before use.
 
 For normal work:
 
-1. Restore context with `workflows/session-start.md`.
-2. Write or update an implementation plan.
-3. Implement in small, reviewable changes.
-4. Run relevant tests, builds, or manual checks.
-5. Complete `templates/completion-review.md`.
-6. Write a devlog.
-7. Update `docs/PROJECT_STATUS.md` when project state changes.
+1. Align requirements with `templates/requirement-alignment.md` when the task is
+   non-trivial or ambiguous.
+2. Restore context with `workflows/session-start.md`.
+3. Write or update an implementation plan.
+4. Implement in small, reviewable changes.
+5. Run relevant tests, builds, or manual checks.
+6. Complete `templates/completion-review.md`.
+7. Write a devlog.
+8. Update `docs/PROJECT_STATUS.md` when project state changes.
 
 For high-risk work, use Strict mode.
 See `docs/strict-mode.md`.

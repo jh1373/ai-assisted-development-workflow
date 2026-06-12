@@ -4,6 +4,7 @@ set -euo pipefail
 required_files=(
   "README.md"
   "docs/principles.md"
+  "docs/requirement-alignment.md"
   "docs/practical-guide.md"
   "docs/quality-gates.md"
   "docs/team-development.md"
@@ -12,6 +13,7 @@ required_files=(
   "docs/strict-mode.md"
   "docs/security.md"
   "templates/AGENTS.md"
+  "templates/requirement-alignment.md"
   "templates/implementation-plan.md"
   "templates/completion-review.md"
   "templates/devlog.md"

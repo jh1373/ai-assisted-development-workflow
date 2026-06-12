@@ -5,6 +5,26 @@
 AI駆動開発では、実装速度が上がる一方で、誤った変更や範囲外の変更も速く混ざります。
 そのため、作業の途中と完了前に、証拠をもって確認する関門を置きます。
 
+## 0. Requirement Alignment Gate
+
+すべての作業で最初に確認します。
+
+- ユーザーの元要望をAIが正しく要約したか
+- AI側の理解をユーザーに見える形で示したか
+- 不明点、曖昧な点、懸念点を洗い出したか
+- AIが置いた仮定を明示したか
+- ユーザー確認が必要な点を質問したか
+- 未回答の重要な不明点が残ったまま実装へ進んでいないか
+
+証拠:
+
+- requirement alignment
+- task brief
+- issue
+- user confirmation note
+
+このゲートを通過できない場合、implementation planや実装に進みません。
+
 ## 1. Scope Gate
 
 実装前に確認します。
@@ -130,6 +150,7 @@ PRまたは作業完了前に確認します。
 
 | Gate | Minimal | Standard | Strict |
 |---|---|---|---|
+| Requirement Alignment | 必須 | 必須 | 必須 |
 | Scope | 必須 | 必須 | 必須 |
 | Context | 推奨 | 必須 | 必須 |
 | Diff | 推奨 | 必須 | 必須 |

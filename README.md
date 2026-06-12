@@ -11,6 +11,7 @@ AI駆動開発では、実装は速くなります。
 一方で、次の問題も速く発生します。
 
 - 何を作るべきかが曖昧なまま、AIがそれらしい実装を始める
+- ユーザーとAIの認識がズレたまま、プロダクトが作られていく
 - チャットが長くなり、前提や判断理由が埋もれる
 - Gitには差分が残るが、なぜその実装にしたかは残らない
 - AIが不要なリファクタリングや範囲外の変更を混ぜる
@@ -27,6 +28,7 @@ AIで実装速度を上げながら、人間が品質と公開判断に責任を
 
 - チャットは作業場であり、信頼できる記録ではない
 - Gitは「何を変えたか」を残すが、「なぜ変えたか」は別に残す
+- 認識合わせが終わるまで、実装に進まない
 - 実装前に目的、対象範囲、完了条件、検証方法を固定する
 - AIの出力は成果物ではなく、レビュー対象の提案として扱う
 - 完了とは、実装済みではなく、検証済みで再開可能な状態を指す
@@ -40,7 +42,11 @@ AIで実装速度を上げながら、人間が品質と公開判断に責任を
 1つのタスクを、1つの開発セッションとして扱います。
 
 ```text
-要件を詰める
+ユーザーの要望を受け取る
+→ AI側の理解を要約する
+→ 不明点、曖昧な点、懸念点を洗い出す
+→ 必要ならユーザーに確認する
+→ 合意できた範囲だけをタスク化する
 → タスクを分ける
 → 現在地を復元する
 → 実装計画を作る
@@ -52,19 +58,22 @@ AIで実装速度を上げながら、人間が品質と公開判断に責任を
 ```
 
 実際の進め方は [docs/practical-guide.md](docs/practical-guide.md) にまとめています。
+要件認識合わせの原則は [docs/requirement-alignment.md](docs/requirement-alignment.md) を参照してください。
 
-## まず使う3ファイル
+## まず使う4ファイル
 
 最初からすべてを導入する必要はありません。
 まずは次の3つだけで始められます。
 
 ```text
 docs/PROJECT_STATUS.md
+templates/requirement-alignment.md
 templates/implementation-plan.md
 templates/devlog.md
 ```
 
 - `PROJECT_STATUS.md`: 次のセッションで最初に読む現在地メモ
+- `requirement-alignment.md`: 実装前にユーザーとAIの認識を揃える確認メモ
 - `implementation-plan.md`: 実装前に目的、範囲、検証方法を固定する計画
 - `devlog.md`: 作業後に判断理由、検証結果、未完了事項を残す記録
 
@@ -77,6 +86,7 @@ AI駆動開発では、速く作れるぶん、間違った変更も速く混ざ
 
 例:
 
+- requirement alignment gate: ユーザーとAIの認識が揃っているか
 - scope gate: 何をやるか、何をやらないかが明確か
 - test gate: テスト、ビルド、手動確認を実行したか
 - diff gate: 予定外の変更が混ざっていないか
@@ -126,6 +136,7 @@ AI駆動開発では、速く作れるぶん、間違った変更も速く混ざ
 │   ├── practical-guide.md
 │   ├── principles.md
 │   ├── quality-gates.md
+│   ├── requirement-alignment.md
 │   ├── review-checklist.md
 │   ├── security.md
 │   ├── strict-mode.md
@@ -141,6 +152,7 @@ AI駆動開発では、速く作れるぶん、間違った変更も速く混ざ
 │   ├── devlog.md
 │   ├── implementation-plan.md
 │   ├── project-status.md
+│   ├── requirement-alignment.md
 │   ├── roadmap.md
 │   ├── rollback-plan.md
 │   ├── security-review.md
@@ -182,10 +194,11 @@ AI駆動開発では、速く作れるぶん、間違った変更も速く混ざ
 最初に読む順番:
 
 1. [docs/principles.md](docs/principles.md)
-2. [docs/practical-guide.md](docs/practical-guide.md)
-3. [docs/workflow-modes.md](docs/workflow-modes.md)
-4. [docs/quality-gates.md](docs/quality-gates.md)
-5. [docs/adoption-guide.md](docs/adoption-guide.md)
+2. [docs/requirement-alignment.md](docs/requirement-alignment.md)
+3. [docs/practical-guide.md](docs/practical-guide.md)
+4. [docs/workflow-modes.md](docs/workflow-modes.md)
+5. [docs/quality-gates.md](docs/quality-gates.md)
+6. [docs/adoption-guide.md](docs/adoption-guide.md)
 
 AIと人間の役割分担は [docs/ai-human-boundary.md](docs/ai-human-boundary.md) にまとめています。
 よくある失敗パターンは [docs/anti-patterns.md](docs/anti-patterns.md) にまとめています。
