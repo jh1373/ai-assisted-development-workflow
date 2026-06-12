@@ -146,6 +146,7 @@ Phase 4: 公開準備
 
 重要な設計判断が発生した場合は、`templates/adr.md` を使って `docs/adr/` に記録します。
 devlogは作業判断、ADRは長期的な設計判断を残すために分けます。
+ADR候補の判断基準は [adr-guidelines.md](adr-guidelines.md) を参照してください。
 
 Strict modeでは、必要に応じて `templates/security-review.md` と `templates/rollback-plan.md` も作成します。
 

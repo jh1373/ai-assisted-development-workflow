@@ -80,6 +80,8 @@ devlogで重視するのは、作業量ではなく判断理由です。
 - 次に何をするべきか
 
 長期的に残すべき設計判断がある場合は、devlogだけでなくADRを作成します。
+ただし、AIはADRを勝手に確定しません。
+ADR候補を検知した場合は、[docs/ai-workflow/adr-guidelines.md](../docs/ai-workflow/adr-guidelines.md) に沿ってユーザーに確認します。
 ADRのテンプレートは `templates/adr.md` です。
 
 ### 5. プロジェクト状態を更新する
