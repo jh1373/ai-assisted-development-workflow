@@ -42,7 +42,7 @@ docs/tasks/YYYY-MM-DD-HHMM-task-name/implementation-plan.md
 
 ## Workflow Mode
 
-<!-- Default is Standard. Minimalに下げる場合、またはStrictに上げる場合は理由を書く -->
+<!-- AIが今回のタスク内容とリスクを見て判定する。導入時に固定しない。Default is Standard. Minimalに下げる場合、またはStrictに上げる場合は理由を書く -->
 
 -
 
@@ -56,7 +56,7 @@ Mode change during work:
 
 ## 実装方針
 
-<!-- どのような順番で実装するか -->
+<!-- ROADMAP全体ではなく、今回の1タスクをどのような順番で実装するか -->
 
 1.
 2.

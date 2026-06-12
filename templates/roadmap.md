@@ -1,5 +1,9 @@
 # Roadmap Template
 
+ROADMAPはプロジェクト全体の地図です。
+ここにはフェーズ、目的、主要タスク候補を書きます。
+今回実行する1タスクの細かな手順は、`docs/tasks/YYYY-MM-DD-HHMM-task-name/implementation-plan.md` に分けて書きます。
+
 ## 目的
 
 <!-- このプロジェクトで最終的に何を達成したいかを書く -->

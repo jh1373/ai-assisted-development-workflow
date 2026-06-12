@@ -16,9 +16,11 @@ Reactアプリ開発で、このワークフローを使う場合の例です。
 流れ:
 
 ```text
-PROJECT_STATUSを読む
+ROADMAPとPROJECT_STATUSを読む
+→ 今回扱うタスクを選ぶ
 → ユーザー要望とAI側の理解を揃える
 → docs/tasks/ にタスク記録を作る
+→ Workflow Modeを判定する
 → implementation-plan-example.md で計画する
 → 実装する
 → completion-review-example.md で漏れを確認する
