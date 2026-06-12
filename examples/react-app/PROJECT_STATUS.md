@@ -8,7 +8,7 @@ Phase 2: 検索機能の実装中
 
 ```text
 2026-06-11 22:30: search-result-rendering -> docs/devlog/2026-06-11/2230-search-result-rendering.md
-Task artifacts -> docs/tasks/2026-06-11-2230-search-result-rendering/
+Task records -> docs/tasks/2026-06-11-2230-search-result-rendering/
 ```
 
 ## 完了済み

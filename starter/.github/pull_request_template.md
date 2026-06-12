@@ -24,7 +24,7 @@ None
 
 ## Related Artifacts
 
-- Task artifacts:
+- Task records:
 - Requirement alignment:
 - Task brief:
 - Implementation plan:

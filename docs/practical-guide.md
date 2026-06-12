@@ -177,7 +177,7 @@ docs/devlog/YYYY-MM-DD/HHMM-task-name.md
 ```
 
 粒度の見本は [examples/devlog/standard-task-devlog.md](../examples/devlog/standard-task-devlog.md) を参照してください。
-タスク成果物の保存先は [task-artifacts.md](task-artifacts.md) を参照してください。
+タスク記録の保存先は [task-records.md](task-records.md) を参照してください。
 
 ## 9. 重要な設計判断はADRに分ける
 

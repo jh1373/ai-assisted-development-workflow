@@ -9,7 +9,7 @@ devlogは作業日報ではありません。
 docs/devlog/YYYY-MM-DD/HHMM-task-name.md
 ```
 
-関連するタスク成果物:
+関連するタスク記録:
 
 ```text
 docs/tasks/YYYY-MM-DD-HHMM-task-name/
@@ -19,7 +19,7 @@ docs/tasks/YYYY-MM-DD-HHMM-task-name/
 
 <!-- 何の作業をしたかを1-2行で書く -->
 
-## 関連するタスク成果物
+## 関連するタスク記録
 
 <!-- requirement-alignment、implementation-plan、completion-reviewを置いたフォルダを書く -->
 

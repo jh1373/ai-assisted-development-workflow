@@ -176,7 +176,7 @@ Strict modeでは、必要に応じて `templates/security-review.md` と `templ
 devlogは作業日報ではありません。
 後から判断を追うための記録です。
 
-タスク成果物の保存先とdevlogの関係は [task-artifacts.md](task-artifacts.md) を参照してください。
+タスク記録の保存先とdevlogの関係は [task-records.md](task-records.md) を参照してください。
 
 ## Step 10: Gitに記録する
 
