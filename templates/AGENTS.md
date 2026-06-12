@@ -28,13 +28,20 @@ For normal work:
 
 1. Align requirements with `templates/requirement-alignment.md` when the task is
    non-trivial or ambiguous.
-2. Restore context with `workflows/session-start.md`.
-3. Write or update an implementation plan.
-4. Implement in small, reviewable changes.
-5. Run relevant tests, builds, or manual checks.
-6. Complete `templates/completion-review.md`.
-7. Write a devlog.
-8. Update `docs/PROJECT_STATUS.md` when project state changes.
+2. Select the workflow mode. Default to Standard.
+3. Downgrade to Minimal only when the task is small, reversible, low-risk, and
+   does not affect behavior, data, security, cost, release scope, or production.
+4. Upgrade to Strict when the task affects authentication, authorization,
+   billing, personal data, data migration, production configuration, external
+   dependencies, public release, architecture, or destructive actions.
+5. State the reason whenever selecting Minimal or Strict.
+6. Restore context with `workflows/session-start.md`.
+7. Write or update an implementation plan.
+8. Implement in small, reviewable changes.
+9. Run relevant tests, builds, or manual checks.
+10. Complete `templates/completion-review.md`.
+11. Write a devlog.
+12. Update `docs/PROJECT_STATUS.md` when project state changes.
 
 For high-risk work, use Strict mode.
 See `docs/strict-mode.md`.

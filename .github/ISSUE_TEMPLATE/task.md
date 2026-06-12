@@ -38,6 +38,12 @@ assignees: ""
 - [ ] Standard
 - [ ] Strict
 
+Mode selection reason:
+
+```text
+Default is Standard. Explain if downgraded to Minimal or upgraded to Strict.
+```
+
 ## Completion Condition
 
 <!-- What evidence proves this task is done? -->

@@ -21,6 +21,12 @@ devlogは作業日報ではありません。
 
 <!-- 方針として決めたことを書く -->
 
+### Workflow Mode
+
+- Selected mode:
+- Reason:
+- Mode changes during work:
+
 ### 採用した方針
 
 -

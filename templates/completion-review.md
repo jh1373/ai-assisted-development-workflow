@@ -10,6 +10,14 @@
 
 -
 
+Mode selection reason:
+
+-
+
+Mode changed during work:
+
+-
+
 ## 計画との照合
 
 ### 完了したこと

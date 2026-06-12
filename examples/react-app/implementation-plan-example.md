@@ -42,6 +42,16 @@
 
 Standard
 
+Mode selection reason:
+
+- 通常のUI機能追加であり、複数ファイルの変更とテスト追加を含むため、デフォルトのStandard modeで進める
+- 認証、権限、課金、個人情報、データ移行、本番設定には触れないため、Strict modeには上げない
+- 挙動変更を含むため、Minimal modeには下げない
+
+Mode change during work:
+
+- なし
+
 理由:
 
 - 検索結果UIの通常機能追加であり、複数ファイルの変更とテスト追加を含む

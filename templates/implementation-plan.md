@@ -36,7 +36,15 @@
 
 ## Workflow Mode
 
-<!-- Minimal / Standard / Strict のどれで進めるか。理由も書く -->
+<!-- Default is Standard. Minimalに下げる場合、またはStrictに上げる場合は理由を書く -->
+
+-
+
+Mode selection reason:
+
+-
+
+Mode change during work:
 
 -
 

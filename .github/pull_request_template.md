@@ -10,6 +10,18 @@
 - [ ] Standard
 - [ ] Strict
 
+Mode selection reason:
+
+```text
+Default is Standard. Explain if downgraded to Minimal or upgraded to Strict.
+```
+
+Mode changed during work:
+
+```text
+None
+```
+
 ## Related Artifacts
 
 - Requirement alignment:

@@ -101,7 +101,18 @@ npm run build
 - 完了条件は検索結果の表示とテスト通過
 ```
 
-### 7. 実装計画を作る
+### 7. Workflow Modeを選ぶ
+
+デフォルトはStandardです。
+
+- 小さく、戻しやすく、低リスクで、挙動、データ、セキュリティ、本番設定に影響しない場合だけMinimalに下げます。
+- 認証、権限、課金、個人情報、データ移行、本番設定、外部依存、公開リリース、アーキテクチャ変更を含む場合はStrictに上げます。
+- モードを変更する場合は理由を記録します。
+- Strictの可能性があり判断できない場合は、実装前にユーザーへ確認します。
+
+詳しくは [docs/workflow-modes.md](../docs/workflow-modes.md) を参照します。
+
+### 8. 実装計画を作る
 
 作業範囲を確認したら、`templates/implementation-plan.md` を使って実装計画を作ります。
 
@@ -129,6 +140,7 @@ AI支援開発では実装速度が速いため、先に目的、対象範囲、
 確認したもの:
 - git status
 - requirement alignment
+- workflow mode
 - project status
 - roadmap
 - latest devlog

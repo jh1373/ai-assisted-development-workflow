@@ -18,6 +18,12 @@
 
 ## 判断したこと
 
+### Workflow Mode
+
+- Selected mode: Standard
+- Reason: 通常のUI機能追加であり、複数ファイルの変更とテスト追加を含むため
+- Mode changes during work: なし
+
 ### 採用した方針
 
 - API接続は行わず、まずモックデータでUIの流れを確認する

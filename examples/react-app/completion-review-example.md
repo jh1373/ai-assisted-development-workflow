@@ -8,6 +8,15 @@
 
 Standard
 
+Mode selection reason:
+
+- 通常のUI機能追加であり、複数ファイルの変更とテスト追加を含むため、Standard modeで実施した
+- 認証、権限、課金、個人情報、データ移行、本番設定には触れないため、Strict modeには上げなかった
+
+Mode changed during work:
+
+- なし
+
 ## 計画との照合
 
 ### 完了したこと

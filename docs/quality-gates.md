@@ -41,7 +41,24 @@ AI駆動開発では、実装速度が上がる一方で、誤った変更や範
 - implementation plan
 - issue
 
-## 2. Context Gate
+## 2. Mode Selection Gate
+
+実装前に確認します。
+
+- デフォルトのStandardから始めているか
+- Minimalに下げる場合、その理由が明確か
+- Strictに上げる条件を見落としていないか
+- 作業途中でStrict条件が見つかった場合、モードを上げたか
+- Strictの可能性があるが判断できない場合、ユーザー確認に戻したか
+
+証拠:
+
+- implementation plan
+- completion review
+- devlog
+- PR mode selection reason
+
+## 3. Context Gate
 
 作業開始時に確認します。
 
@@ -57,7 +74,7 @@ AI駆動開発では、実装速度が上がる一方で、誤った変更や範
 - `git status --short --branch`
 - `PROJECT_STATUS.md`
 
-## 3. Diff Gate
+## 4. Diff Gate
 
 実装中または完了前に確認します。
 
@@ -73,7 +90,7 @@ AI駆動開発では、実装速度が上がる一方で、誤った変更や範
 - completion review
 - devlog
 
-## 4. Verification Gate
+## 5. Verification Gate
 
 完了前に確認します。
 
@@ -99,7 +116,7 @@ git diff --check
 - スキップ理由
 - 手動確認の観察結果
 
-## 5. Security Gate
+## 6. Security Gate
 
 公開前、PR前、Strict modeで確認します。
 
@@ -115,7 +132,7 @@ git diff --check
 - secret scan
 - PR security section
 
-## 6. Recovery Gate
+## 7. Recovery Gate
 
 本番影響、データ影響、課金、権限、公開リリースがある場合に確認します。
 
@@ -131,7 +148,7 @@ git diff --check
 - release note
 - monitoring or manual check notes
 
-## 7. Review Gate
+## 8. Review Gate
 
 PRまたは作業完了前に確認します。
 
@@ -152,6 +169,7 @@ PRまたは作業完了前に確認します。
 |---|---|---|---|
 | Requirement Alignment | 必須 | 必須 | 必須 |
 | Scope | 必須 | 必須 | 必須 |
+| Mode Selection | 必須 | 必須 | 必須 |
 | Context | 推奨 | 必須 | 必須 |
 | Diff | 推奨 | 必須 | 必須 |
 | Verification | 必須 | 必須 | 必須 |
