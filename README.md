@@ -49,6 +49,7 @@ AIで実装速度を上げながら、人間が品質と公開判断に責任を
 → PROJECT_STATUSに現在地を残す
 → session-startで現在地を復元する
 → ROADMAPとPROJECT_STATUSから今回のタスクを選ぶ
+→ DIRECTORY_MAPで今回読むべき範囲を絞る
 → AIがタスク内容とリスクを見てWorkflow Modeを判定する
 → implementation planで今回の実行計画を作る
 → AIと実装する
@@ -93,6 +94,7 @@ starter/
 ```
 
 コピーすると、AIが最初に読む `AGENTS.md`、現在地を残す `docs/PROJECT_STATUS.md`、AI駆動開発の思想をまとめた `docs/ai-workflow/`、作業用テンプレート、GitHub用テンプレートが配置されます。
+`docs/DIRECTORY_MAP.md` には主要ディレクトリと責務を残し、AIがコード全体を読む前に確認範囲を絞れるようにします。
 
 詳しくは [starter/README.md](starter/README.md) を参照してください。
 
@@ -103,6 +105,7 @@ starter/
 
 ```text
 docs/PROJECT_STATUS.md
+docs/DIRECTORY_MAP.md
 docs/tasks/
 templates/requirement-alignment.md
 templates/implementation-plan.md
@@ -110,6 +113,7 @@ templates/devlog.md
 ```
 
 - `PROJECT_STATUS.md`: 次のセッションで最初に読む現在地メモ
+- `DIRECTORY_MAP.md`: 主要ディレクトリ、責務、タスク別の参照先を残す地図
 - `docs/tasks/`: 1タスクごとの認識合わせ、計画、完了レビューを残す場所
 - `requirement-alignment.md`: 実装前にユーザーとAIの認識を揃える確認メモ
 - `implementation-plan.md`: 実装前に目的、範囲、検証方法を固定する計画
@@ -206,6 +210,7 @@ AIは今回のタスク内容とリスクを見て、低リスクなら理由を
 │   ├── implementation-plan.md
 │   ├── project-status.md
 │   ├── requirement-alignment.md
+│   ├── directory-map.md
 │   ├── roadmap.md
 │   ├── rollback-plan.md
 │   ├── security-review.md
@@ -252,9 +257,11 @@ AIは今回のタスク内容とリスクを見て、低リスクなら理由を
 2. 作りたいものを整理する
 3. `docs/ROADMAP.md` に全体計画を書く
 4. `docs/PROJECT_STATUS.md` に現在地を書く
-5. `workflows/session-start.md` で現在地を復元する
-6. ROADMAPから今回のタスクを選ぶ
-7. AIがWorkflow Modeを判定し、`implementation-plan.md` を作ってから実装する
+5. `docs/DIRECTORY_MAP.md` に主要ディレクトリと責務を書く
+6. `workflows/session-start.md` で現在地を復元する
+7. ROADMAPとPROJECT_STATUSから今回のタスクを選ぶ
+8. DIRECTORY_MAPで今回読むべき範囲を絞る
+9. AIがWorkflow Modeを判定し、`implementation-plan.md` を作ってから実装する
 
 最初に読む順番:
 

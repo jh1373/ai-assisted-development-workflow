@@ -6,8 +6,8 @@ Edit it to match the project before use.
 ## Project Rules
 
 - Read this file before making changes.
-- Read `README.md`, `docs/PROJECT_STATUS.md`, and the latest devlog before
-  starting a non-trivial task.
+- Read `README.md`, `docs/PROJECT_STATUS.md`, `docs/DIRECTORY_MAP.md`, and
+  the latest devlog before starting a non-trivial task.
 - Run `git status --short --branch` before editing files.
 - Do not overwrite or revert user changes unless explicitly instructed.
 - Do not start implementation until the task goal, scope, out-of-scope items,
@@ -29,22 +29,27 @@ Edit it to match the project before use.
 For normal work:
 
 1. Restore context with `workflows/session-start.md`.
-2. Align requirements with `templates/requirement-alignment.md` when the task is
+2. After the task is selected, use `docs/DIRECTORY_MAP.md` to identify the
+   directories, responsibilities, boundaries, and files to inspect before
+   planning.
+3. Align requirements with `templates/requirement-alignment.md` when the task is
    non-trivial or ambiguous.
-3. Select the workflow mode. Default to Standard.
-4. Downgrade to Minimal only when the task is small, reversible, low-risk, and
+4. Select the workflow mode. Default to Standard.
+5. Downgrade to Minimal only when the task is small, reversible, low-risk, and
    does not affect behavior, data, security, cost, release scope, or production.
-5. Upgrade to Strict when the task affects authentication, authorization,
+6. Upgrade to Strict when the task affects authentication, authorization,
    billing, personal data, data migration, production configuration, external
    dependencies, public release, architecture, or destructive actions.
-6. State the reason whenever selecting Minimal or Strict.
-7. Create or update task records under `docs/tasks/YYYY-MM-DD-HHMM-task-name/`.
-8. Write or update `implementation-plan.md` in the task records folder.
-9. Implement in small, reviewable changes.
-10. Run relevant tests, builds, or manual checks.
-11. Complete `completion-review.md` in the task records folder.
-12. Run `workflows/session-end.md` at the end of the task. This includes
-    devlog creation, PROJECT_STATUS update decision, and git commit decision.
+7. State the reason whenever selecting Minimal or Strict.
+8. Create or update task records under `docs/tasks/YYYY-MM-DD-HHMM-task-name/`.
+9. Write or update `implementation-plan.md` in the task records folder,
+   including Directory Context and Workflow Mode.
+10. Implement in small, reviewable changes.
+11. Run relevant tests, builds, or manual checks.
+12. Complete `completion-review.md` in the task records folder.
+13. Run `workflows/session-end.md` at the end of the task. This includes
+    devlog creation, PROJECT_STATUS update decision, DIRECTORY_MAP update
+    decision, and git commit decision.
 
 Do not finish a task until `workflows/session-end.md` is complete, including
 completion review, devlog, PROJECT_STATUS update decision, and git commit
@@ -61,6 +66,7 @@ A task is complete only when:
 - relevant verification has been run
 - skipped checks are explained
 - documentation is updated or explicitly marked unnecessary
+- DIRECTORY_MAP impact has been checked and recorded
 - remaining risks are recorded
 - the next session can resume from tracked files, not chat history
 

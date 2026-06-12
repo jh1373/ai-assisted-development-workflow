@@ -8,6 +8,7 @@
 - 次のセッションで迷わず再開できるようにする
 - 失敗した試行や見送った選択肢を消さずに残す
 - 完了前に漏れや未検証を確認する
+- DIRECTORY_MAPの更新要否を確認する
 
 ## 手順
 
@@ -93,19 +94,55 @@ ADRのテンプレートは `templates/adr.md` です。
 
 devlogには、関連するタスク記録フォルダとADRの有無を記録します。
 
-### 5. プロジェクト状態を更新する
+### 5. Directory Mapの更新要否を確認する
+
+毎回 `docs/DIRECTORY_MAP.md` を編集する必要はありません。
+ただし、今回の変更で更新が必要かは必ず確認します。
+
+更新が必要な例:
+
+- 新しい主要ディレクトリを追加した
+- 既存ディレクトリの責務を変えた
+- ファイル配置ルールを変えた
+- タスク別の参照先が変わった
+- 次回のAIが迷いそうな構成変更をした
+
+更新不要な例:
+
+- 既存ディレクトリ内の小さなUI変更
+- 文言修正
+- テスト追加のみ
+- README更新のみ
+- ディレクトリ責務に影響しない小さな修正
+
+更新要否と理由は、completion reviewまたはdevlogに残します。
+
+例:
+
+```text
+Directory Map impact: none
+Reason: 既存ディレクトリ内のUI表示変更のみで、責務や構成に変更なし。
+```
+
+```text
+Directory Map impact: updated
+Reason: `src/features/search/` を追加し、検索機能の責務と参照先を明記した。
+```
+
+### 6. プロジェクト状態を更新する
 
 必要に応じて、次のようなファイルを更新します。
 
 - `docs/PROJECT_STATUS.md`
 - `docs/ROADMAP.md`
-- `docs/ARCHITECTURE.md`
+- `docs/DIRECTORY_MAP.md`
+- `docs/ARCHITECTURE.md` がある場合
 - `docs/README.md`
 
 ただし、単純な修正まで毎回すべて更新する必要はありません。
 次回の再開に必要な情報だけを更新します。
 
-### 6. Gitに記録する
+### 7. Gitに記録する
 
 差分を確認し、必要なファイルだけをコミットします。
 
@@ -131,6 +168,9 @@ git commit -m "[message]"
 - ...
 
 更新したドキュメント:
+- ...
+
+Directory Map impact:
 - ...
 
 タスク記録:

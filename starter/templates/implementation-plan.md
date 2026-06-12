@@ -40,6 +40,30 @@ docs/tasks/YYYY-MM-DD-HHMM-task-name/implementation-plan.md
 
 -
 
+## Directory Context
+
+<!-- DIRECTORY_MAPをもとに、今回読むべき範囲と触らない境界を書く -->
+
+Related directories:
+
+-
+
+Responsibilities:
+
+-
+
+Boundaries not to cross:
+
+-
+
+Files to inspect before implementation:
+
+-
+
+Directory Map update candidate:
+
+-
+
 ## Workflow Mode
 
 <!-- AIが今回のタスク内容とリスクを見て判定する。導入時に固定しない。Default is Standard. Minimalに下げる場合、またはStrictに上げる場合は理由を書く -->

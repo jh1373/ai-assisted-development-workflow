@@ -77,7 +77,23 @@ AI駆動開発では、実装速度が上がる一方で、誤った変更や範
 - `git status --short --branch`
 - `PROJECT_STATUS.md`
 
-## 4. Diff Gate
+## 4. Directory Context Gate
+
+実装前に確認します。
+
+- `DIRECTORY_MAP.md` を読んだか
+- 今回のタスクが関係するディレクトリを特定したか
+- 各ディレクトリの責務と触ってはいけない境界を確認したか
+- コード全体ではなく、必要な範囲に絞って読む計画になっているか
+- DIRECTORY_MAPと実際の構成にズレがある場合、更新候補として記録したか
+
+証拠:
+
+- directory map
+- implementation plan Directory Context
+- session start summary
+
+## 5. Diff Gate
 
 実装中または完了前に確認します。
 
@@ -93,7 +109,7 @@ AI駆動開発では、実装速度が上がる一方で、誤った変更や範
 - completion review
 - devlog
 
-## 5. Verification Gate
+## 6. Verification Gate
 
 完了前に確認します。
 
@@ -119,7 +135,7 @@ git diff --check
 - スキップ理由
 - 手動確認の観察結果
 
-## 6. Security Gate
+## 7. Security Gate
 
 公開前、PR前、Strict modeで確認します。
 
@@ -135,7 +151,7 @@ git diff --check
 - secret scan
 - PR security section
 
-## 7. Recovery Gate
+## 8. Recovery Gate
 
 本番影響、データ影響、課金、権限、公開リリースがある場合に確認します。
 
@@ -151,7 +167,7 @@ git diff --check
 - release note
 - monitoring or manual check notes
 
-## 8. Review Gate
+## 9. Review Gate
 
 PRまたは作業完了前に確認します。
 
@@ -174,6 +190,7 @@ PRまたは作業完了前に確認します。
 | Scope | 必須 | 必須 | 必須 |
 | Mode Selection | 必須 | 必須 | 必須 |
 | Context | 推奨 | 必須 | 必須 |
+| Directory Context | 推奨 | 必須 | 必須 |
 | Diff | 推奨 | 必須 | 必須 |
 | Verification | 必須 | 必須 | 必須 |
 | Security | 推奨 | 影響があれば必須 | 必須 |

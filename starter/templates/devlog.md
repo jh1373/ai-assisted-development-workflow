@@ -47,6 +47,12 @@ docs/tasks/YYYY-MM-DD-HHMM-task-name/
 - Reason:
 - Mode changes during work:
 
+### Directory Map
+
+- Impact: none / updated / update-needed
+- Reason:
+- Updated path:
+
 ### 採用した方針
 
 -

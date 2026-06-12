@@ -78,6 +78,7 @@ Strictに上げる場合、AIは理由を明示します。
 ### 使うファイル
 
 - `docs/PROJECT_STATUS.md`
+- `docs/DIRECTORY_MAP.md`
 - `docs/tasks/`
 - `templates/implementation-plan.md`
 - `templates/devlog.md`
@@ -138,7 +139,7 @@ Strictに上げる場合、AIは理由を明示します。
 - `docs/security.md`
 - `docs/definition-of-done.md`
 - `docs/strict-mode.md`
-- プロジェクト固有の `docs/ARCHITECTURE.md`
+- 必要に応じてプロジェクト固有の `docs/ARCHITECTURE.md`
 - プロジェクト固有の `docs/README.md`
 - 必要に応じて `docs/adr/`
 

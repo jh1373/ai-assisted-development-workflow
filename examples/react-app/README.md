@@ -17,6 +17,7 @@ Reactアプリ開発で、このワークフローを使う場合の例です。
 
 ```text
 ROADMAPとPROJECT_STATUSを読む
+→ DIRECTORY_MAPで今回読むべき範囲を絞る
 → 今回扱うタスクを選ぶ
 → ユーザー要望とAI側の理解を揃える
 → docs/tasks/ にタスク記録を作る
@@ -38,7 +39,8 @@ npm test
 
 - `docs/PROJECT_STATUS.md`
 - `docs/ROADMAP.md`
-- `docs/ARCHITECTURE.md`
+- `docs/DIRECTORY_MAP.md`
+- `docs/ARCHITECTURE.md` がある場合
 - 最新の `docs/devlog/`
 
 ## セッション終了時
