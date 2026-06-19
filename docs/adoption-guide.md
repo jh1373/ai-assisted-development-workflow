@@ -148,7 +148,7 @@ AIが実装前に今回のタスクで確認すべき範囲を絞れるように
 
 ## Step 7: 最初のセッションを始める
 
-`workflows/session-start.md` を使い、現在地を復元します。
+`workflows/session-start.md` を使い、現在の開発状況を把握します。
 
 確認すること:
 

@@ -28,7 +28,7 @@ Edit it to match the project before use.
 
 For normal work:
 
-1. Restore context with `workflows/session-start.md`.
+1. Review the current development status with `workflows/session-start.md`.
 2. After the task is selected, use `docs/DIRECTORY_MAP.md` to identify the
    directories, responsibilities, boundaries, and files to inspect before
    planning.
