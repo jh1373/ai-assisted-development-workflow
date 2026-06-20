@@ -209,7 +209,7 @@ python scripts/project-structure.py validate
 必要に応じて次を実行し、localhost画面で予定構成と現在の全ファイルを確認します。
 
 ```bash
-python scripts/project-structure.py serve
+python scripts/project-structure.py serve --open-browser
 ```
 
 プロジェクトの初期構築後、実際の全ファイル構成、役割、境界をユーザーが確認してから `verify --verified-by` でVerifiedへ変更します。

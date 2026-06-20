@@ -56,7 +56,7 @@ Map Status: Provisional
 python scripts/project-structure.py validate
 python scripts/project-structure.py diff
 python scripts/project-structure.py generate
-python scripts/project-structure.py serve
+python scripts/project-structure.py serve --open-browser
 ```
 
 構造の基準線を更新するのは、差分を確認した後だけです。

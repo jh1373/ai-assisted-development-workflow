@@ -95,10 +95,23 @@ python scripts/project-structure.py refresh --by "User"
 localhost画面:
 
 ```bash
-python scripts/project-structure.py serve
+python scripts/project-structure.py serve --open-browser
 ```
 
 起動時に、一時トークンを含む`http://127.0.0.1:4173/`のURLを表示します。
+
+### Windowsでワンクリック起動する
+
+新規プロジェクトのルートにある`open-project-structure-map.cmd`をダブルクリックします。
+
+1. `py -3`または`python`を検出する
+2. Python 3.10以降か確認する
+3. localhostサーバーを起動する
+4. token付きURLを既定ブラウザで開く
+
+起動中はコマンド画面を閉じません。終了するときは、その画面で`Ctrl+C`を押します。
+
+Pythonがない、Pythonが古い、ポートが使用中、JSONが不正などの場合は、エラー内容を表示して画面を保持します。ツールを自動インストールすることはありません。
 
 ## localhost画面
 

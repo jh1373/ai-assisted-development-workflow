@@ -10,11 +10,11 @@ Map Status: Provisional
 ## Verification
 
 - Validation result: `DIRECTORY_MAP_PROVISIONAL`
-- Structure hash: `sha256:bf3ab006b621842e8f9eebd360f35528ade83670e5421abd94188a3e3f52ae0b`
+- Structure hash: `sha256:a971de0585c1387905319a87bd156a597d17bf3f104b516c2655b028f86ee4d0`
 - Baseline hash: `Not created`
 - Verified at: Not verified
 - Verified by: Not verified
-- Files: 54
+- Files: 55
 - Directories: 13
 - Unclassified entries: 0
 
@@ -31,6 +31,7 @@ Map Status: Provisional
 | `workflows` | directory | Project Initialization、session-start、session-endの実行手順を定義する |
 | `AGENTS.md` | file | AIエージェントが必ず守るプロジェクト固有ルールを定義する |
 | `README.md` | file | プロジェクトの目的、導入方法、主要な利用手順を説明する |
+| `open-project-structure-map.cmd` | file | Project Structure MapをWindowsからワンクリックで起動する |
 
 ## Task Routing Guide
 
@@ -49,6 +50,7 @@ Map Status: Provisional
 | 開発フロー変更 | `workflows` |
 | AIルール変更 | `AGENTS.md` |
 | 利用手順変更 | `README.md` |
+| Project Structure Mapの起動 | `open-project-structure-map.cmd` |
 
 ## Boundaries
 
@@ -63,6 +65,8 @@ Map Status: Provisional
 - `templates`: 実際のタスク記録をテンプレートへ直接書き込まない
 - `workflows`: ユーザー承認ゲートを省略しない
 - `AGENTS.md`: Hypothesisを恒久ルールとして確定しない
+- `open-project-structure-map.cmd`: 外部ネットワークへサーバーを公開しない
+- `open-project-structure-map.cmd`: Pythonスクリプトの構造検証を迂回しない
 
 ## Structure Changes
 
@@ -76,7 +80,7 @@ Map Status: Provisional
 python scripts/project-structure.py validate
 python scripts/project-structure.py diff
 python scripts/project-structure.py generate
-python scripts/project-structure.py serve
+python scripts/project-structure.py serve --open-browser
 ```
 
 構造の基準線を更新するのは、差分を確認した後だけです。

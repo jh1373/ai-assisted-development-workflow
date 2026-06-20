@@ -109,6 +109,18 @@
       "task_types": [
         "利用手順変更"
       ]
+    },
+    {
+      "path": "open-project-structure-map.cmd",
+      "kind": "file",
+      "role": "Project Structure MapをWindowsからワンクリックで起動する",
+      "boundaries": [
+        "外部ネットワークへサーバーを公開しない",
+        "Pythonスクリプトの構造検証を迂回しない"
+      ],
+      "task_types": [
+        "Project Structure Mapの起動"
+      ]
     }
   ],
   "conventions": [

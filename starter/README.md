@@ -125,7 +125,9 @@ Devlogは1タスクにつき1つ残します。
 - `PROJECT_BRIEF.md` では仮説と確定事項を分けてください。
 - `PROJECT_STATUS.md` と `ROADMAP.md` は初期設定でプロジェクト内容へ書き換えてください。
 - `.ai-workflow/directory-map.json` を主要ディレクトリと責務に合わせ、`DIRECTORY_MAP.md`を再生成してください。
-- 全ファイルのライブ表示は `python scripts/project-structure.py serve` で起動します。
+- Windowsでは、プロジェクト直下の `open-project-structure-map.cmd` をダブルクリックすると、全ファイルのライブ表示と既定ブラウザが自動で起動します。
+- ターミナルから起動する場合は `python scripts/project-structure.py serve --open-browser` を使います。
+- 起動中の黒い画面は閉じず、終了するときはその画面で `Ctrl+C` を押します。
 - 構造の固定判定は `bash scripts/check-directory-map.sh` または `scripts/check-directory-map.ps1` を使います。
 - ROADMAPは全体計画、implementation planは今回の1タスクの実行計画として分けてください。
 - 認識合わせが終わるまで、実装に進まないでください。

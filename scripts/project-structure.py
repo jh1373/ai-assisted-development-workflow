@@ -17,6 +17,7 @@ import secrets
 import sys
 import threading
 import time
+import webbrowser
 from datetime import datetime, timezone
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
@@ -510,7 +511,7 @@ def render_markdown(state: dict[str, Any], mapping: dict[str, Any]) -> str:
             "python scripts/project-structure.py validate",
             "python scripts/project-structure.py diff",
             "python scripts/project-structure.py generate",
-            "python scripts/project-structure.py serve",
+            "python scripts/project-structure.py serve --open-browser",
             "```",
             "",
             "構造の基準線を更新するのは、差分を確認した後だけです。",
@@ -596,7 +597,17 @@ class LiveState:
             return self.cached
 
 
-def serve(root: Path, port: int) -> None:
+def launch_browser(url: str) -> None:
+    try:
+        opened = webbrowser.open(url, new=2)
+    except Exception as exc:  # Browser registration differs across operating systems.
+        print(f"Browser could not be opened automatically: {exc}", file=sys.stderr, flush=True)
+        return
+    if not opened:
+        print("Browser could not be opened automatically. Open the URL above manually.", file=sys.stderr, flush=True)
+
+
+def serve(root: Path, port: int, open_browser: bool = False) -> None:
     token = secrets.token_urlsafe(24)
     static_root = Path(__file__).resolve().parent / "project-structure-viewer"
     if not static_root.is_dir():
@@ -676,8 +687,11 @@ def serve(root: Path, port: int) -> None:
 
     server = ThreadingHTTPServer(("127.0.0.1", port), Handler)
     actual_port = server.server_address[1]
-    print(f"Project Structure Map: http://127.0.0.1:{actual_port}/?token={token}", flush=True)
+    url = f"http://127.0.0.1:{actual_port}/?token={token}"
+    print(f"Project Structure Map: {url}", flush=True)
     print("Press Ctrl+C to stop.", flush=True)
+    if open_browser:
+        threading.Thread(target=launch_browser, args=(url,), daemon=True).start()
     try:
         server.serve_forever(poll_interval=0.25)
     except KeyboardInterrupt:
@@ -723,6 +737,11 @@ def build_parser() -> argparse.ArgumentParser:
 
     serve_parser = sub.add_parser("serve", help="Start the read-only localhost viewer.")
     serve_parser.add_argument("--port", type=int, default=4173)
+    serve_parser.add_argument(
+        "--open-browser",
+        action="store_true",
+        help="Open the token-protected viewer URL in the default browser.",
+    )
     return parser
 
 
@@ -790,7 +809,7 @@ def main(argv: list[str] | None = None) -> int:
         if args.command == "serve":
             if args.port < 0 or args.port > 65535:
                 raise StructureError("port must be between 0 and 65535.")
-            serve(root, args.port)
+            serve(root, args.port, open_browser=args.open_browser)
             return 0
     except FileNotFoundError as exc:
         if args.command == "validate":

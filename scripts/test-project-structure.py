@@ -10,6 +10,7 @@ import time
 import unittest
 import urllib.error
 import urllib.request
+from unittest import mock
 from pathlib import Path
 from urllib.parse import parse_qs, urlparse
 
@@ -246,6 +247,18 @@ class ProjectStructureTests(unittest.TestCase):
                 process.stdout.close()
             if process.stderr:
                 process.stderr.close()
+
+    def test_open_browser_option_and_helper(self) -> None:
+        args = project_structure.build_parser().parse_args(["serve", "--open-browser"])
+        self.assertTrue(args.open_browser)
+
+        url = "http://127.0.0.1:4173/?token=test"
+        with mock.patch.object(project_structure.webbrowser, "open", return_value=True) as opener:
+            project_structure.launch_browser(url)
+        opener.assert_called_once_with(url, new=2)
+
+        with mock.patch.object(project_structure.webbrowser, "open", side_effect=OSError("no browser")):
+            project_structure.launch_browser(url)
 
 
 if __name__ == "__main__":

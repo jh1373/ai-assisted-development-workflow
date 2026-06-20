@@ -57,7 +57,7 @@ powershell -ExecutionPolicy Bypass -File scripts/check-directory-map.ps1
 - `DIRECTORY_MAP_INVALID`: JSON、snapshot、生成文書の不整合を報告し、推測で修正しない
 - `DIRECTORY_MAP_CHECK_FAILED`: Python、権限、読み取り失敗を報告し、構造を推測しない
 
-localhost画面は必要なときだけ `python scripts/project-structure.py serve` で起動します。session-startで毎回起動しません。
+localhost画面は必要なときだけ `open-project-structure-map.cmd` をダブルクリックするか、`python scripts/project-structure.py serve --open-browser` で起動します。session-startで毎回起動しません。
 詳しくは [Project Structure Map](../docs/project-structure-map.md) を参照してください。
 
 ### 1. Gitの状態を確認する

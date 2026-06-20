@@ -35,6 +35,7 @@ required_files=(
   "starter/scripts/check-directory-map.sh"
   "starter/scripts/check-directory-map.ps1"
   "starter/scripts/project-structure.py"
+  "starter/open-project-structure-map.cmd"
   "starter/scripts/project-structure-viewer/index.html"
   "starter/scripts/project-structure-viewer/app.js"
   "starter/scripts/project-structure-viewer/styles.css"
@@ -180,6 +181,16 @@ fi
 
 if ! grep -Fq '### 0.5. Project Structure Gateを確認する' starter/workflows/session-start.md; then
   echo "starter session-start is missing the Project Structure Gate." >&2
+  exit 1
+fi
+
+if ! grep -Fq 'serve --open-browser' starter/open-project-structure-map.cmd; then
+  echo "Windows launcher must start the viewer with browser auto-open enabled." >&2
+  exit 1
+fi
+
+if ! grep -Fq 'open-project-structure-map.cmd' starter/README.md; then
+  echo "Starter README is missing the one-click Windows launcher instructions." >&2
   exit 1
 fi
 
