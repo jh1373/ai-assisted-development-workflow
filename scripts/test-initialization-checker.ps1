@@ -3,10 +3,11 @@ $ErrorActionPreference = 'Stop'
 $repoRoot = Split-Path -Parent $PSScriptRoot
 $checker = Join-Path $repoRoot 'scripts\check-initialization.ps1'
 $fixture = Join-Path ([System.IO.Path]::GetTempPath()) ("initialization-checker-" + [guid]::NewGuid().ToString('N'))
+$powerShellExecutable = if ($PSVersionTable.PSEdition -eq 'Desktop') { 'powershell.exe' } else { 'pwsh' }
 
 function Assert-Result {
     param([Parameter(Mandatory = $true)][string]$Expected)
-    $actual = (& pwsh -NoProfile -File (Join-Path $fixture 'scripts\check-initialization.ps1')).Trim()
+    $actual = (& $powerShellExecutable -NoProfile -File (Join-Path $fixture 'scripts\check-initialization.ps1')).Trim()
     if ($actual -ne $Expected) {
         throw "Expected $Expected, got $actual"
     }
@@ -53,6 +54,15 @@ try {
     Write-State -Status 'unknown' -Approved 'false'
     Assert-Result 'INITIALIZATION_INVALID'
 
+    Write-State -Status 'READY' -Approved 'true'
+    Assert-Result 'INITIALIZATION_INVALID'
+
+    Write-State -Status 'ready' -Approved 'True'
+    Assert-Result 'INITIALIZATION_INVALID'
+
+    @('Schema_version=1', 'initialization_status=not_started', 'user_approved=false') | Set-Content -LiteralPath (Join-Path $fixture '.ai-workflow\project-state.conf')
+    Assert-Result 'INITIALIZATION_INVALID'
+
     @('schema_version=2', 'initialization_status=not_started', 'user_approved=false') | Set-Content -LiteralPath (Join-Path $fixture '.ai-workflow\project-state.conf')
     Assert-Result 'INITIALIZATION_INVALID'
 
@@ -63,17 +73,24 @@ try {
     Assert-Result 'INITIALIZATION_INVALID'
 
     New-Item -ItemType Directory -Force -Path (Join-Path $fixture 'docs') | Out-Null
-    Set-Content -LiteralPath (Join-Path $fixture 'AGENTS.md') -Value 'Product goal: configured'
+    @('## Project-specific Context', 'Product goal: configured', '## Initialization Routing', '## Task Workflow After Initialization') | Set-Content -LiteralPath (Join-Path $fixture 'AGENTS.md')
     @('- Initialization track: Discovery', '- Last confirmed by user: 2026-06-20') | Set-Content -LiteralPath (Join-Path $fixture 'docs\PROJECT_BRIEF.md')
-    Set-Content -LiteralPath (Join-Path $fixture 'docs\ROADMAP.md') -Value '- Initialization track: Discovery'
+    @('- Initialization track: Discovery', '## Phase 1: Validation') | Set-Content -LiteralPath (Join-Path $fixture 'docs\ROADMAP.md')
     Set-Content -LiteralPath (Join-Path $fixture 'docs\PROJECT_STATUS.md') -Value 'Current phase: Discovery'
     Set-Content -LiteralPath (Join-Path $fixture 'docs\DIRECTORY_MAP.md') -Value 'Map Status: Provisional'
-    Set-Content -LiteralPath (Join-Path $fixture 'docs\INITIALIZATION_REVIEW.md') -Value 'Initialization Decision: Ready'
+    @('Initialization Decision: Ready', '- Approved by: User', '- Approved at: 2026-06-20', '- Confirmation summary: Approved for validation') | Set-Content -LiteralPath (Join-Path $fixture 'docs\INITIALIZATION_REVIEW.md')
     Assert-Result 'INITIALIZATION_READY'
 
-    Set-Content -LiteralPath (Join-Path $fixture 'AGENTS.md') -Value 'Product goal: Not initialized'
+    @('## Project-specific Context', 'Product goal: Not initialized', '## Initialization Routing', '## Task Workflow After Initialization') | Set-Content -LiteralPath (Join-Path $fixture 'AGENTS.md')
     Assert-Result 'INITIALIZATION_INVALID'
-    Set-Content -LiteralPath (Join-Path $fixture 'AGENTS.md') -Value 'Product goal: configured'
+    @('## Project-specific Context', 'Product goal: configured', '## Initialization Routing', '## Task Workflow After Initialization') | Set-Content -LiteralPath (Join-Path $fixture 'AGENTS.md')
+
+    @('Map Status: Provisional', '[PROJECT_ROOT]/') | Set-Content -LiteralPath (Join-Path $fixture 'docs\DIRECTORY_MAP.md')
+    Assert-Result 'INITIALIZATION_INVALID'
+    Set-Content -LiteralPath (Join-Path $fixture 'docs\DIRECTORY_MAP.md') -Value 'Map Status: Provisional'
+
+    @('Initialization Decision: Ready', '- Approved by:    ', '- Approved at: 2026-06-20', '- Confirmation summary: Approved for validation') | Set-Content -LiteralPath (Join-Path $fixture 'docs\INITIALIZATION_REVIEW.md')
+    Assert-Result 'INITIALIZATION_INVALID'
 
     Set-Content -LiteralPath (Join-Path $fixture 'docs\INITIALIZATION_REVIEW.md') -Value 'Initialization Decision: Not Ready'
     Assert-Result 'INITIALIZATION_INVALID'

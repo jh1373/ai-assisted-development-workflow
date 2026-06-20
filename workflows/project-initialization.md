@@ -28,6 +28,23 @@
 
 `complete` は使いません。プロダクト方針は将来変わるため、ここで表すのは完全性ではなく開始可能性です。
 
+## READYの機械判定条件
+
+状態ファイルのキーと値は大文字小文字を区別します。
+`ready`で次を満たさない場合、判定器は `INITIALIZATION_INVALID` を返します。
+
+- `user_approved=true`
+- AGENTS.mdにProject-specific Context、Initialization Routing、Task Workflowの見出しがある
+- AGENTS.mdに`Not initialized`やプロジェクト固有コマンドのプレースホルダーが残っていない
+- PROJECT_BRIEFにDiscoveryまたはBuild-readyとユーザー確認記録がある
+- ROADMAPにDiscoveryまたはBuild-readyと名前付きPhase 1がある
+- PROJECT_STATUSが初期値のままではない
+- DIRECTORY_MAPがProvisionalまたはVerifiedで、初期プレースホルダーが残っていない
+- INITIALIZATION_REVIEWがReadyで、承認者、承認日、確認要約がある
+
+判定器はプロダクト仮説の正しさまでは判断しません。
+仮説を開始可能と判断する責任は、レビュー内容を確認したユーザーにあります。
+
 ## 手順
 
 ### 1. 状態を機械的に確認する

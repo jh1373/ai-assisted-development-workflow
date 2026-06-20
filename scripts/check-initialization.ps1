@@ -25,7 +25,7 @@ try {
 
     $values = @{}
     foreach ($line in $lines) {
-        if ($line -notmatch '^(schema_version|initialization_status|user_approved)=([^\s]+)$') {
+        if ($line -cnotmatch '^(schema_version|initialization_status|user_approved)=([^\s]+)$') {
             Write-ResultAndExit 'INITIALIZATION_INVALID'
         }
         if ($values.ContainsKey($Matches[1])) {
@@ -34,32 +34,32 @@ try {
         $values[$Matches[1]] = $Matches[2]
     }
 
-    if ($values.Count -ne 3 -or $values['schema_version'] -ne '1') {
+    if ($values.Count -ne 3 -or $values['schema_version'] -cne '1') {
         Write-ResultAndExit 'INITIALIZATION_INVALID'
     }
 
     $status = $values['initialization_status']
     $approved = $values['user_approved']
 
-    switch ($status) {
+    switch -CaseSensitive ($status) {
         'not_started' {
-            if ($approved -ne 'false') { Write-ResultAndExit 'INITIALIZATION_INVALID' }
+            if ($approved -cne 'false') { Write-ResultAndExit 'INITIALIZATION_INVALID' }
             $reviewPath = Join-Path $projectRoot 'docs\INITIALIZATION_REVIEW.md'
-            if ((Test-Path -LiteralPath $reviewPath -PathType Leaf) -and ((Get-Content -LiteralPath $reviewPath) -contains 'Initialization Decision: Ready')) {
+            if ((Test-Path -LiteralPath $reviewPath -PathType Leaf) -and ((Get-Content -LiteralPath $reviewPath) -ccontains 'Initialization Decision: Ready')) {
                 Write-ResultAndExit 'INITIALIZATION_INVALID'
             }
             Write-ResultAndExit 'INITIALIZATION_NOT_STARTED'
         }
         'in_progress' {
-            if ($approved -ne 'false') { Write-ResultAndExit 'INITIALIZATION_INVALID' }
+            if ($approved -cne 'false') { Write-ResultAndExit 'INITIALIZATION_INVALID' }
             Write-ResultAndExit 'INITIALIZATION_IN_PROGRESS'
         }
         'revisit_required' {
-            if ($approved -ne 'false') { Write-ResultAndExit 'INITIALIZATION_INVALID' }
+            if ($approved -cne 'false') { Write-ResultAndExit 'INITIALIZATION_INVALID' }
             Write-ResultAndExit 'INITIALIZATION_REVISIT_REQUIRED'
         }
         'ready' {
-            if ($approved -ne 'true') { Write-ResultAndExit 'INITIALIZATION_INVALID' }
+            if ($approved -cne 'true') { Write-ResultAndExit 'INITIALIZATION_INVALID' }
             $requiredFiles = @(
                 'AGENTS.md',
                 'docs\PROJECT_BRIEF.md',
@@ -75,28 +75,56 @@ try {
                 }
             }
             $reviewPath = Join-Path $projectRoot 'docs\INITIALIZATION_REVIEW.md'
-            if ((Get-Content -LiteralPath $reviewPath) -notcontains 'Initialization Decision: Ready') {
+            $review = Get-Content -LiteralPath $reviewPath
+            if ($review -cnotcontains 'Initialization Decision: Ready') {
                 Write-ResultAndExit 'INITIALIZATION_INVALID'
             }
-            if (Select-String -LiteralPath (Join-Path $projectRoot 'AGENTS.md') -SimpleMatch 'Not initialized' -Quiet) {
+            $agents = Get-Content -LiteralPath (Join-Path $projectRoot 'AGENTS.md')
+            if ($agents -cnotcontains '## Project-specific Context' -or
+                $agents -cnotcontains '## Initialization Routing' -or
+                $agents -cnotcontains '## Task Workflow After Initialization') {
+                Write-ResultAndExit 'INITIALIZATION_INVALID'
+            }
+            if (Select-String -LiteralPath (Join-Path $projectRoot 'AGENTS.md') -SimpleMatch 'Not initialized' -Quiet -CaseSensitive:$false) {
+                Write-ResultAndExit 'INITIALIZATION_INVALID'
+            }
+            if (Select-String -LiteralPath (Join-Path $projectRoot 'AGENTS.md') -SimpleMatch '[project-specific' -Quiet -CaseSensitive:$false) {
                 Write-ResultAndExit 'INITIALIZATION_INVALID'
             }
             $projectBrief = Get-Content -LiteralPath (Join-Path $projectRoot 'docs\PROJECT_BRIEF.md')
-            if (-not ($projectBrief -match '^- Initialization track: (Discovery|Build-ready)$')) {
+            if (-not ($projectBrief -cmatch '^- Initialization track: (Discovery|Build-ready)$')) {
                 Write-ResultAndExit 'INITIALIZATION_INVALID'
             }
-            if ($projectBrief -contains '- Last confirmed by user: Not confirmed') {
+            if (-not ($projectBrief -cmatch '^- Last confirmed by user: .*\S')) {
+                Write-ResultAndExit 'INITIALIZATION_INVALID'
+            }
+            if ($projectBrief -ccontains '- Last confirmed by user: Not confirmed') {
                 Write-ResultAndExit 'INITIALIZATION_INVALID'
             }
             $roadmap = Get-Content -LiteralPath (Join-Path $projectRoot 'docs\ROADMAP.md')
-            if (-not ($roadmap -match '^- Initialization track: (Discovery|Build-ready)$')) {
+            if (-not ($roadmap -cmatch '^- Initialization track: (Discovery|Build-ready)$')) {
                 Write-ResultAndExit 'INITIALIZATION_INVALID'
             }
-            if ((Get-Content -LiteralPath (Join-Path $projectRoot 'docs\PROJECT_STATUS.md')) -contains 'Project Initialization: Not started') {
+            if (-not ($roadmap -cmatch '^## Phase 1: .*\S')) {
+                Write-ResultAndExit 'INITIALIZATION_INVALID'
+            }
+            if ((Get-Content -LiteralPath (Join-Path $projectRoot 'docs\PROJECT_STATUS.md')) -ccontains 'Project Initialization: Not started') {
                 Write-ResultAndExit 'INITIALIZATION_INVALID'
             }
             $directoryMap = Get-Content -LiteralPath (Join-Path $projectRoot 'docs\DIRECTORY_MAP.md')
-            if (-not ($directoryMap -match '^Map Status: (Provisional|Verified)$')) {
+            if (-not ($directoryMap -cmatch '^Map Status: (Provisional|Verified)$')) {
+                Write-ResultAndExit 'INITIALIZATION_INVALID'
+            }
+            if ($directoryMap -cmatch '\[(PROJECT_ROOT|path|responsibility|boundary or important note|task type|primary path|related paths or tests|boundary not to cross)\]') {
+                Write-ResultAndExit 'INITIALIZATION_INVALID'
+            }
+            if (-not ($review -cmatch '^- Approved by: .*\S')) {
+                Write-ResultAndExit 'INITIALIZATION_INVALID'
+            }
+            if (-not ($review -cmatch '^- Approved at: [0-9]{4}-[0-9]{2}-[0-9]{2}$')) {
+                Write-ResultAndExit 'INITIALIZATION_INVALID'
+            }
+            if (-not ($review -cmatch '^- Confirmation summary: .*\S')) {
                 Write-ResultAndExit 'INITIALIZATION_INVALID'
             }
             Write-ResultAndExit 'INITIALIZATION_READY'

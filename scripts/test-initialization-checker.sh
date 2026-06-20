@@ -46,6 +46,15 @@ assert_result "INITIALIZATION_INVALID"
 printf 'schema_version=1\ninitialization_status=unknown\nuser_approved=false\n' > "$fixture/.ai-workflow/project-state.conf"
 assert_result "INITIALIZATION_INVALID"
 
+write_state READY true
+assert_result "INITIALIZATION_INVALID"
+
+write_state ready True
+assert_result "INITIALIZATION_INVALID"
+
+printf 'Schema_version=1\ninitialization_status=not_started\nuser_approved=false\n' > "$fixture/.ai-workflow/project-state.conf"
+assert_result "INITIALIZATION_INVALID"
+
 printf 'schema_version=2\ninitialization_status=not_started\nuser_approved=false\n' > "$fixture/.ai-workflow/project-state.conf"
 assert_result "INITIALIZATION_INVALID"
 
@@ -56,17 +65,24 @@ write_state ready true
 assert_result "INITIALIZATION_INVALID"
 
 mkdir -p "$fixture/docs"
-printf 'Product goal: configured\n' > "$fixture/AGENTS.md"
+printf '%s\n' '## Project-specific Context' 'Product goal: configured' '## Initialization Routing' '## Task Workflow After Initialization' > "$fixture/AGENTS.md"
 printf '%s\n' '- Initialization track: Discovery' '- Last confirmed by user: 2026-06-20' > "$fixture/docs/PROJECT_BRIEF.md"
-printf '%s\n' '- Initialization track: Discovery' > "$fixture/docs/ROADMAP.md"
+printf '%s\n' '- Initialization track: Discovery' '## Phase 1: Validation' > "$fixture/docs/ROADMAP.md"
 printf 'Current phase: Discovery\n' > "$fixture/docs/PROJECT_STATUS.md"
 printf 'Map Status: Provisional\n' > "$fixture/docs/DIRECTORY_MAP.md"
-printf 'Initialization Decision: Ready\n' > "$fixture/docs/INITIALIZATION_REVIEW.md"
+printf '%s\n' 'Initialization Decision: Ready' '- Approved by: User' '- Approved at: 2026-06-20' '- Confirmation summary: Approved for validation' > "$fixture/docs/INITIALIZATION_REVIEW.md"
 assert_result "INITIALIZATION_READY"
 
-printf 'Product goal: Not initialized\n' > "$fixture/AGENTS.md"
+printf '%s\n' '## Project-specific Context' 'Product goal: Not initialized' '## Initialization Routing' '## Task Workflow After Initialization' > "$fixture/AGENTS.md"
 assert_result "INITIALIZATION_INVALID"
-printf 'Product goal: configured\n' > "$fixture/AGENTS.md"
+printf '%s\n' '## Project-specific Context' 'Product goal: configured' '## Initialization Routing' '## Task Workflow After Initialization' > "$fixture/AGENTS.md"
+
+printf '%s\n' 'Map Status: Provisional' '[PROJECT_ROOT]/' > "$fixture/docs/DIRECTORY_MAP.md"
+assert_result "INITIALIZATION_INVALID"
+printf 'Map Status: Provisional\n' > "$fixture/docs/DIRECTORY_MAP.md"
+
+printf '%s\n' 'Initialization Decision: Ready' '- Approved by:    ' '- Approved at: 2026-06-20' '- Confirmation summary: Approved for validation' > "$fixture/docs/INITIALIZATION_REVIEW.md"
+assert_result "INITIALIZATION_INVALID"
 
 printf 'Initialization Decision: Not Ready\n' > "$fixture/docs/INITIALIZATION_REVIEW.md"
 assert_result "INITIALIZATION_INVALID"

@@ -78,7 +78,13 @@ case "$initialization_status" in
     if ! grep -Fxq 'Initialization Decision: Ready' "$project_root/docs/INITIALIZATION_REVIEW.md"; then
       emit "INITIALIZATION_INVALID"
     fi
-    if grep -Fq 'Not initialized' "$project_root/AGENTS.md"; then
+    for required_heading in '## Project-specific Context' '## Initialization Routing' '## Task Workflow After Initialization'; do
+      grep -Fxq "$required_heading" "$project_root/AGENTS.md" || emit "INITIALIZATION_INVALID"
+    done
+    if grep -Fiq 'Not initialized' "$project_root/AGENTS.md"; then
+      emit "INITIALIZATION_INVALID"
+    fi
+    if grep -Fiq '[project-specific' "$project_root/AGENTS.md"; then
       emit "INITIALIZATION_INVALID"
     fi
     if ! grep -Eq '^- Initialization track: (Discovery|Build-ready)$' "$project_root/docs/PROJECT_BRIEF.md"; then
@@ -87,13 +93,31 @@ case "$initialization_status" in
     if grep -Fq 'Last confirmed by user: Not confirmed' "$project_root/docs/PROJECT_BRIEF.md"; then
       emit "INITIALIZATION_INVALID"
     fi
+    if ! grep -Eq '^- Last confirmed by user: .*[^[:space:]]' "$project_root/docs/PROJECT_BRIEF.md"; then
+      emit "INITIALIZATION_INVALID"
+    fi
     if ! grep -Eq '^- Initialization track: (Discovery|Build-ready)$' "$project_root/docs/ROADMAP.md"; then
+      emit "INITIALIZATION_INVALID"
+    fi
+    if ! grep -Eq '^## Phase 1: .*[^[:space:]]' "$project_root/docs/ROADMAP.md"; then
       emit "INITIALIZATION_INVALID"
     fi
     if grep -Fq 'Project Initialization: Not started' "$project_root/docs/PROJECT_STATUS.md"; then
       emit "INITIALIZATION_INVALID"
     fi
     if ! grep -Eq '^Map Status: (Provisional|Verified)$' "$project_root/docs/DIRECTORY_MAP.md"; then
+      emit "INITIALIZATION_INVALID"
+    fi
+    if grep -Eq '\[(PROJECT_ROOT|path|responsibility|boundary or important note|task type|primary path|related paths or tests|boundary not to cross)\]' "$project_root/docs/DIRECTORY_MAP.md"; then
+      emit "INITIALIZATION_INVALID"
+    fi
+    if ! grep -Eq '^- Approved by: .*[^[:space:]]' "$project_root/docs/INITIALIZATION_REVIEW.md"; then
+      emit "INITIALIZATION_INVALID"
+    fi
+    if ! grep -Eq '^- Approved at: [0-9]{4}-[0-9]{2}-[0-9]{2}$' "$project_root/docs/INITIALIZATION_REVIEW.md"; then
+      emit "INITIALIZATION_INVALID"
+    fi
+    if ! grep -Eq '^- Confirmation summary: .*[^[:space:]]' "$project_root/docs/INITIALIZATION_REVIEW.md"; then
       emit "INITIALIZATION_INVALID"
     fi
     emit "INITIALIZATION_READY"

@@ -5,7 +5,7 @@
 
 ## Review Summary
 
-- Initialization Decision: Not Ready / Ready
+Initialization Decision: Not Ready / Ready
 - Initialization track: Discovery / Build-ready
 - Review date:
 - Reviewer:
@@ -80,4 +80,5 @@ Approval evidence:
 - [ ] 承認後だけ `initialization_status=ready`、`user_approved=true` に変更した
 - [ ] 判定スクリプトが `INITIALIZATION_READY` を返した
 
-`Initialization Decision: Ready` は、ユーザーの明示承認を記録した後だけ選びます。
+判定欄は、ユーザーの明示承認を記録した後だけ、行全体を正確に
+`Initialization Decision: Ready` へ置き換えます。

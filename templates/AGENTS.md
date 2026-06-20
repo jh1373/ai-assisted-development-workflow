@@ -101,7 +101,7 @@ completion review, devlog, PROJECT_STATUS update decision, and git commit
 decision.
 
 For high-risk work, use Strict mode.
-See `docs/strict-mode.md`.
+See `docs/ai-workflow/strict-mode.md`.
 
 ## Definition of Done
 
@@ -115,7 +115,7 @@ A task is complete only when:
 - remaining risks are recorded
 - the next session can resume from tracked files, not chat history
 
-See `docs/definition-of-done.md`.
+See `docs/ai-workflow/definition-of-done.md`.
 
 ## Verification Commands
 

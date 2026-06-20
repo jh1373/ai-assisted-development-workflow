@@ -86,6 +86,7 @@ fi
 
 echo "Checking synchronized initialization assets..."
 sync_pairs=(
+  "templates/AGENTS.md:starter/AGENTS.md"
   "workflows/project-initialization.md:starter/workflows/project-initialization.md"
   "templates/project-brief.md:starter/templates/project-brief.md"
   "templates/initialization-review.md:starter/templates/initialization-review.md"
