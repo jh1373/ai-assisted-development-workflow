@@ -16,6 +16,29 @@
 
 ## 手順
 
+### 0. Initialization Gateを確認する
+
+通常タスクを始める前に、現在の環境に合う判定スクリプトを1つ実行します。
+
+```bash
+bash scripts/check-initialization.sh
+```
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/check-initialization.ps1
+```
+
+AIは文書の雰囲気やファイル数から初期設定状態を推測しません。
+
+- `INITIALIZATION_READY`: 次のGit確認へ進む
+- `INITIALIZATION_NOT_STARTED`: `workflows/project-initialization.md` を開始し、通常タスクには進まない
+- `INITIALIZATION_IN_PROGRESS`: 既存の初期設定文書を読み、続きから再開する
+- `INITIALIZATION_REVISIT_REQUIRED`: 影響する前提だけを見直し、再承認まで通常タスクには進まない
+- `INITIALIZATION_INVALID`: 設定不整合を報告し、初期設定を最初からやり直さない
+- `INITIALIZATION_CHECK_FAILED`: 実行失敗を報告し、状態を推測しない
+
+このゲートはMinimal、Standard、Strictの選択より前に通します。
+
 ### 1. Gitの状態を確認する
 
 ```bash
@@ -193,6 +216,7 @@ docs/tasks/YYYY-MM-DD-HHMM-task-name/
 [未完了事項、リスク、触らない範囲]
 
 確認したもの:
+- initialization checker: INITIALIZATION_READY
 - git status
 - selected task from roadmap/project status
 - directory map

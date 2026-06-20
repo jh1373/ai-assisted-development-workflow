@@ -15,3 +15,10 @@ jobs:
 
       - name: Check documentation structure
         run: bash scripts/check-docs.sh
+
+      - name: Test Bash initialization checker
+        run: bash scripts/test-initialization-checker.sh
+
+      - name: Test PowerShell initialization checker
+        shell: pwsh
+        run: ./scripts/test-initialization-checker.ps1

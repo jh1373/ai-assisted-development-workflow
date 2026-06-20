@@ -24,11 +24,56 @@ Edit it to match the project before use.
 - Do not edit template files as task records. Create task records under
   `docs/tasks/YYYY-MM-DD-HHMM-task-name/`.
 
-## Workflow
+## Project-specific Context
+
+Complete this section during Project Initialization. Do not turn hypotheses into
+permanent rules.
+
+- Product goal: Not initialized
+- Current maturity: Not initialized
+- Runtime and main stack: Not initialized
+- Verification commands: Not initialized
+- Deployment target: Not initialized
+- Security or privacy constraints: Not initialized
+
+## Initialization Routing
+
+At the start of a session, begin with `workflows/session-start.md`. Its Step 0
+runs exactly one initialization checker for the current environment:
+
+```bash
+bash scripts/check-initialization.sh
+```
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/check-initialization.ps1
+```
+
+Follow the exact output. Do not infer initialization state from prose or from
+whether the project looks partially configured.
+
+- `INITIALIZATION_NOT_STARTED`: start `workflows/project-initialization.md`.
+- `INITIALIZATION_IN_PROGRESS`: continue the existing initialization records.
+- `INITIALIZATION_READY`: normal task work may begin.
+- `INITIALIZATION_REVISIT_REQUIRED`: review only the affected project assumptions
+  and obtain renewed user approval.
+- `INITIALIZATION_INVALID`: report the inconsistent state. Do not restart or mark
+  initialization complete.
+- `INITIALIZATION_CHECK_FAILED`: report the checker failure. Do not guess.
+
+Only set `initialization_status=ready` and `user_approved=true` after explicit
+user approval recorded in `docs/INITIALIZATION_REVIEW.md`.
+
+Treat `Confirmed`, `Hypothesis`, `Unknown`, and `Deferred` as different states.
+Never implement a hypothesis as if the user had confirmed it.
+
+## Task Workflow After Initialization
 
 For normal work:
 
-1. Review the current development status with `workflows/session-start.md`.
+1. Run `workflows/session-start.md`; continue only when its Step 0 returns
+   `INITIALIZATION_READY`. Do not run the checker a second time in the same
+   session unless the initialization state was intentionally changed.
 2. After the task is selected, use `docs/DIRECTORY_MAP.md` to identify the
    directories, responsibilities, boundaries, and files to inspect before
    planning.
@@ -77,8 +122,8 @@ See `docs/ai-workflow/definition-of-done.md`.
 Replace these examples with project-specific commands.
 
 ```bash
-npm test
-npm run build
+[project-specific test command]
+[project-specific build command]
 git diff --check
 ```
 

@@ -2,6 +2,17 @@
 
 AI支援開発で、完了前に確認するためのチェックリストです。
 
+## Project Initializationレビュー
+
+- 初期設定チェッカーが `INITIALIZATION_READY` を返しているか
+- 状態をAIの文章解釈で判定していないか
+- PROJECT_BRIEFでConfirmed、Hypothesis、Unknown、Deferredが区別されているか
+- 対象ユーザーや収益化の仮説を確定事項として扱っていないか
+- ROADMAPがDiscoveryまたはBuild-readyの現在地に合っているか
+- AGENTS.mdに未設定のプロジェクト固有欄が残っていないか
+- 初期設定レビューにユーザーの明示承認があるか
+- `ready`を「すべて確定済み」という意味で使っていないか
+
 ## 実装前レビュー
 
 - [practical-guide.md](practical-guide.md) の流れに沿って、タスクを開始しているか

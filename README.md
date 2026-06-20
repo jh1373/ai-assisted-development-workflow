@@ -40,14 +40,35 @@ AIで実装速度を上げながら、人間が品質と公開判断に責任を
 
 ## 実践フロー
 
-このワークフローは、プロジェクト全体を整理する段階と、1タスクを実行する段階を分けて扱います。
+このワークフローは、新規プロジェクトで一度だけ行う初期設定と、初期設定後に1タスクずつ実行する通常フローを分けて扱います。
+
+### 初回のみ: Project Initialization
 
 ```text
-作りたいものを決める
-→ AIと壁打ちして目的、制約、成功条件を整理する
+starter/を配置する
+→ 初期設定状態をnot_startedとして確認する
+→ ユーザーとAIがプロダクト構想を壁打ちする
+→ 確定事項、仮説、不明点、後で決めることを分ける
+→ PROJECT_BRIEFを作る
+→ DiscoveryまたはBuild-readyの経路を選ぶ
 → ROADMAPを作る
-→ PROJECT_STATUSに現在地を残す
-→ session-startで現在の開発状況を把握する
+→ AGENTS.mdをプロジェクト向けに正式化する
+→ PROJECT_STATUSとDIRECTORY_MAPを初期化する
+→ 初期設定レビューを行う
+→ ユーザーが開始を承認する
+→ 機械判定がINITIALIZATION_READYになったことを確認する
+```
+
+初期設定の目的は、すべてを最初から確定することではありません。
+「なんとなく作ってみたい」という段階でも、仮説と不明点を明示し、最初の検証タスクを安全に始められれば準備完了にできます。
+
+詳しくは [workflows/project-initialization.md](workflows/project-initialization.md) を参照してください。
+
+### 初期設定後: Task Workflow
+
+```text
+session-startのStep 0でINITIALIZATION_READYを確認する
+→ 現在の開発状況を把握する
 → ROADMAPとPROJECT_STATUSから今回のタスクを選ぶ
 → DIRECTORY_MAPで今回読むべき範囲を絞る
 → AIがタスク内容とリスクを見てWorkflow Modeを判定する
@@ -59,19 +80,21 @@ AIで実装速度を上げながら、人間が品質と公開判断に責任を
 → 必要ならPRでレビューする
 ```
 
-ROADMAPはプロジェクト全体の地図です。
+ROADMAPは初期設定で作るプロジェクト全体の地図です。
 `implementation-plan.md` は、今回取り組む1タスクの実行計画です。
 
 1つのタスクを、1つの開発セッションとして扱います。
 
 ```text
 ユーザーの要望を受け取る
+→ session-startのStep 0でINITIALIZATION_READYを確認する
+→ 現在の開発状況を把握する
 → AI側の理解を要約する
 → 不明点、曖昧な点、懸念点を洗い出す
 → 必要ならユーザーに確認する
 → 合意できた範囲だけをタスク化する
-→ タスクを分ける
-→ 現在の開発状況を把握する
+→ DIRECTORY_MAPで関連範囲を絞る
+→ Workflow Modeを判定する
 → 実装計画を作る
 → AIと実装する
 → テストと手動確認を行う
@@ -85,7 +108,7 @@ ROADMAPはプロジェクト全体の地図です。
 
 ## まず使う方法
 
-既存プロジェクトに導入する場合は、`starter/` の中身をプロジェクトルートへコピーするのが最短です。
+新規プロジェクト用のリポジトリを作り、`starter/` の中身をプロジェクトルートへコピーします。
 このリポジトリ自体は開発運用のテンプレートです。
 通常は、プロダクト用リポジトリを別に用意し、そこへ `starter/` を導入します。
 
@@ -93,25 +116,41 @@ ROADMAPはプロジェクト全体の地図です。
 starter/
 ```
 
-コピーすると、AIが最初に読む `AGENTS.md`、現在地を残す `docs/PROJECT_STATUS.md`、AI駆動開発の思想をまとめた `docs/ai-workflow/`、作業用テンプレート、GitHub用テンプレートが配置されます。
+コピーすると、初期設定状態を持つ `.ai-workflow/`、AIが最初に読む `AGENTS.md`、プロダクト仮説を整理する `docs/PROJECT_BRIEF.md`、現在地を残す `docs/PROJECT_STATUS.md`、初期設定と通常タスクのワークフロー、作業用テンプレートが配置されます。
 `docs/DIRECTORY_MAP.md` には主要ディレクトリと責務を残し、AIがコード全体を読む前に確認範囲を絞れるようにします。
 
 詳しくは [starter/README.md](starter/README.md) を参照してください。
 
-## 最小構成で使う場合
+## 新規プロジェクトで必要な基本構成
 
-最初からすべてを導入する必要はありません。
-まずは次のファイルとディレクトリだけで始められます。
+初期設定と通常タスクを正しく分けるため、次を基本構成として扱います。
 
 ```text
+.ai-workflow/project-state.conf
+AGENTS.md
+docs/PROJECT_BRIEF.md
+docs/INITIALIZATION_REVIEW.md
+docs/ROADMAP.md
 docs/PROJECT_STATUS.md
 docs/DIRECTORY_MAP.md
 docs/tasks/
+workflows/project-initialization.md
+workflows/session-start.md
+workflows/session-end.md
+scripts/check-initialization.sh
+scripts/check-initialization.ps1
+templates/project-brief.md
+templates/initialization-review.md
 templates/requirement-alignment.md
 templates/implementation-plan.md
+templates/completion-review.md
 templates/devlog.md
 ```
 
+- `.ai-workflow/project-state.conf`: 初期設定状態を機械判定する唯一の状態ファイル
+- `PROJECT_BRIEF.md`: 確定事項、仮説、不明点、後で決めることを整理する
+- `INITIALIZATION_REVIEW.md`: ユーザー承認を含む初期設定レビュー
+- `ROADMAP.md`: プロジェクト全体のフェーズ、成果、見直し条件を残す
 - `PROJECT_STATUS.md`: 次のセッションで最初に読む現在地メモ
 - `DIRECTORY_MAP.md`: 主要ディレクトリ、責務、タスク別の参照先を残す地図
 - `docs/tasks/`: 1タスクごとの認識合わせ、計画、完了レビューを残す場所
@@ -121,7 +160,7 @@ templates/devlog.md
 
 Devlogの粒度は [examples/devlog/standard-task-devlog.md](examples/devlog/standard-task-devlog.md) を見本にしてください。
 
-慣れてきたら、`session-start.md`、`completion-review.md`、`AGENTS.md`、PRテンプレート、Strict modeを追加します。
+PRテンプレート、ADR、Strict modeの追加成果物は、プロジェクトのリスクと運用に応じて使います。
 
 ## 品質を守る関門
 
@@ -130,6 +169,7 @@ AI駆動開発では、速く作れるぶん、間違った変更も速く混ざ
 
 例:
 
+- project initialization gate: 初期設定状態、仮説、不明点、ユーザー承認が確認できるか
 - requirement alignment gate: ユーザーとAIの認識が揃っているか
 - scope gate: 何をやるか、何をやらないかが明確か
 - test gate: テスト、ビルド、手動確認を実行したか
@@ -176,6 +216,7 @@ AIは今回のタスク内容とリスクを見て、低リスクなら理由を
 .
 ├── README.md
 ├── starter/
+│   ├── .ai-workflow/
 │   ├── AGENTS.md
 │   ├── docs/
 │   ├── templates/
@@ -200,6 +241,7 @@ AIは今回のタスク内容とリスクを見て、低リスクなら理由を
 │   ├── team-development.md
 │   └── workflow-modes.md
 ├── workflows/
+│   ├── project-initialization.md
 │   ├── session-start.md
 │   └── session-end.md
 ├── templates/
@@ -208,6 +250,8 @@ AIは今回のタスク内容とリスクを見て、低リスクなら理由を
 │   ├── completion-review.md
 │   ├── devlog.md
 │   ├── implementation-plan.md
+│   ├── initialization-review.md
+│   ├── project-brief.md
 │   ├── project-status.md
 │   ├── requirement-alignment.md
 │   ├── directory-map.md
@@ -220,8 +264,13 @@ AIは今回のタスク内容とリスクを見て、低リスクなら理由を
 │   ├── pull_request_template.md
 │   └── workflows/
 ├── scripts/
-│   └── check-docs.sh
+│   ├── check-docs.sh
+│   ├── check-initialization.sh
+│   ├── check-initialization.ps1
+│   ├── test-initialization-checker.sh
+│   └── test-initialization-checker.ps1
 └── examples/
+    ├── project-initialization/
     ├── devlog/
     └── react-app/
 ```
@@ -248,32 +297,35 @@ AIは今回のタスク内容とリスクを見て、低リスクなら理由を
 
 ## 導入方法
 
-既存プロジェクトに丸ごと導入する場合は、まず [starter/README.md](starter/README.md) を見てください。
+新規プロジェクトへ導入する場合は、まず [starter/README.md](starter/README.md) を見てください。
 運用の考え方を理解したい場合は、[docs/adoption-guide.md](docs/adoption-guide.md) から始めてください。
 
 導入後の基本的な流れ:
 
 1. `starter/` をプロジェクトへ配置する
-2. 作りたいものを整理する
-3. `docs/ROADMAP.md` に全体計画を書く
-4. `docs/PROJECT_STATUS.md` に現在地を書く
-5. `docs/DIRECTORY_MAP.md` に主要ディレクトリと責務を書く
-6. `workflows/session-start.md` で現在の開発状況を把握する
-7. ROADMAPとPROJECT_STATUSから今回のタスクを選ぶ
-8. DIRECTORY_MAPで今回読むべき範囲を絞る
-9. AIがWorkflow Modeを判定し、`implementation-plan.md` を作ってから実装する
+2. 初期設定チェッカーで `INITIALIZATION_NOT_STARTED` を確認する
+3. `workflows/project-initialization.md` に沿ってユーザーとAIが壁打ちする
+4. `docs/PROJECT_BRIEF.md` に確定事項、仮説、不明点、Deferredを記録する
+5. DiscoveryまたはBuild-readyのROADMAPを作る
+6. `AGENTS.md` をプロジェクト向けに正式化する
+7. `PROJECT_STATUS.md` と `DIRECTORY_MAP.md` を初期化する
+8. `INITIALIZATION_REVIEW.md` を使って初期設定をレビューする
+9. ユーザー承認後だけ状態を `ready` にする
+10. チェッカーで `INITIALIZATION_READY` を確認する
+11. ユーザーが最初のタスク開始を指示した後、`session-start.md` へ進む
 
 最初に読む順番:
 
 1. [docs/design-rationale.md](docs/design-rationale.md)
 2. [docs/principles.md](docs/principles.md)
-3. [docs/requirement-alignment.md](docs/requirement-alignment.md)
-4. [docs/task-records.md](docs/task-records.md)
-5. [docs/practical-guide.md](docs/practical-guide.md)
-6. [docs/workflow-modes.md](docs/workflow-modes.md)
-7. [docs/quality-gates.md](docs/quality-gates.md)
-8. [docs/adr-guidelines.md](docs/adr-guidelines.md)
-9. [docs/adoption-guide.md](docs/adoption-guide.md)
+3. [docs/adoption-guide.md](docs/adoption-guide.md)
+4. [workflows/project-initialization.md](workflows/project-initialization.md)
+5. [docs/requirement-alignment.md](docs/requirement-alignment.md)
+6. [docs/task-records.md](docs/task-records.md)
+7. [docs/practical-guide.md](docs/practical-guide.md)
+8. [docs/workflow-modes.md](docs/workflow-modes.md)
+9. [docs/quality-gates.md](docs/quality-gates.md)
+10. [docs/adr-guidelines.md](docs/adr-guidelines.md)
 
 AIと人間の役割分担は [docs/ai-human-boundary.md](docs/ai-human-boundary.md) にまとめています。
 よくある失敗パターンは [docs/anti-patterns.md](docs/anti-patterns.md) にまとめています。

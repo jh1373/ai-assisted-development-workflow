@@ -5,6 +5,9 @@ required_files=(
   "README.md"
   "starter/README.md"
   "starter/AGENTS.md"
+  "starter/.ai-workflow/project-state.conf"
+  "starter/docs/PROJECT_BRIEF.md"
+  "starter/docs/INITIALIZATION_REVIEW.md"
   "starter/docs/PROJECT_STATUS.md"
   "starter/docs/ROADMAP.md"
   "starter/docs/DIRECTORY_MAP.md"
@@ -17,10 +20,15 @@ required_files=(
   "starter/docs/ai-workflow/task-records.md"
   "starter/docs/ai-workflow/requirement-alignment.md"
   "starter/templates/requirement-alignment.md"
+  "starter/templates/project-brief.md"
+  "starter/templates/initialization-review.md"
   "starter/templates/implementation-plan.md"
   "starter/templates/completion-review.md"
   "starter/workflows/session-start.md"
   "starter/workflows/session-end.md"
+  "starter/workflows/project-initialization.md"
+  "starter/scripts/check-initialization.sh"
+  "starter/scripts/check-initialization.ps1"
   "starter/.github/pull_request_template.md"
   "examples/devlog/README.md"
   "examples/devlog/standard-task-devlog.md"
@@ -38,6 +46,8 @@ required_files=(
   "docs/strict-mode.md"
   "docs/security.md"
   "templates/AGENTS.md"
+  "templates/project-brief.md"
+  "templates/initialization-review.md"
   "templates/requirement-alignment.md"
   "templates/implementation-plan.md"
   "templates/completion-review.md"
@@ -46,6 +56,19 @@ required_files=(
   "templates/adr.md"
   "templates/security-review.md"
   "templates/rollback-plan.md"
+  "workflows/project-initialization.md"
+  "scripts/check-initialization.sh"
+  "scripts/check-initialization.ps1"
+  "scripts/test-initialization-checker.sh"
+  "scripts/test-initialization-checker.ps1"
+  "examples/project-initialization/README.md"
+  "examples/project-initialization/docs/PROJECT_BRIEF.md"
+  "examples/project-initialization/docs/INITIALIZATION_REVIEW.md"
+  "examples/project-initialization/docs/ROADMAP.md"
+  "examples/project-initialization/docs/PROJECT_STATUS.md"
+  "examples/project-initialization/docs/DIRECTORY_MAP.md"
+  "examples/project-initialization/AGENTS.md"
+  "examples/project-initialization/.ai-workflow/project-state.conf"
   ".github/pull_request_template.md"
 )
 
@@ -61,6 +84,49 @@ if [[ "$missing" -ne 0 ]]; then
   exit 1
 fi
 
+echo "Checking synchronized initialization assets..."
+sync_pairs=(
+  "workflows/project-initialization.md:starter/workflows/project-initialization.md"
+  "templates/project-brief.md:starter/templates/project-brief.md"
+  "templates/initialization-review.md:starter/templates/initialization-review.md"
+  "scripts/check-initialization.sh:starter/scripts/check-initialization.sh"
+  "scripts/check-initialization.ps1:starter/scripts/check-initialization.ps1"
+  "docs/principles.md:starter/docs/ai-workflow/principles.md"
+  "docs/design-rationale.md:starter/docs/ai-workflow/design-rationale.md"
+  "docs/quality-gates.md:starter/docs/ai-workflow/quality-gates.md"
+  "docs/ai-human-boundary.md:starter/docs/ai-workflow/ai-human-boundary.md"
+  "docs/review-checklist.md:starter/docs/ai-workflow/review-checklist.md"
+  "docs/anti-patterns.md:starter/docs/ai-workflow/anti-patterns.md"
+  "docs/requirement-alignment.md:starter/docs/ai-workflow/requirement-alignment.md"
+  "docs/task-records.md:starter/docs/ai-workflow/task-records.md"
+)
+
+for pair in "${sync_pairs[@]}"; do
+  left="${pair%%:*}"
+  right="${pair#*:}"
+  if ! cmp -s "$left" "$right"; then
+    echo "Synchronized files differ: $left and $right" >&2
+    exit 1
+  fi
+done
+
+expected_state=$'schema_version=1\ninitialization_status=not_started\nuser_approved=false'
+actual_state="$(tr -d '\r' < starter/.ai-workflow/project-state.conf)"
+if [[ "$actual_state" != "$expected_state" ]]; then
+  echo "Starter initialization state must remain not_started and unapproved." >&2
+  exit 1
+fi
+
+if ! grep -Fq '## Initialization Routing' starter/AGENTS.md; then
+  echo "starter/AGENTS.md is missing Initialization Routing." >&2
+  exit 1
+fi
+
+if ! grep -Fq '### 0. Initialization Gateを確認する' starter/workflows/session-start.md; then
+  echo "starter session-start is missing the Initialization Gate." >&2
+  exit 1
+fi
+
 echo "Checking for unresolved template placeholders in published docs..."
 if grep -RIn --exclude-dir='.git' --include='*.md' \
   -e 'TODO' \
@@ -72,7 +138,7 @@ if grep -RIn --exclude-dir='.git' --include='*.md' \
 fi
 
 echo "Checking for common secret-like strings..."
-if grep -RIn --exclude-dir='.git' --include='*.md' --include='*.yml' --include='*.yaml' --include='*.sh' \
+if grep -RIn --exclude-dir='.git' --include='*.md' --include='*.yml' --include='*.yaml' --include='*.sh' --include='*.ps1' --include='*.conf' \
   -E '(sk-[A-Za-z0-9_-]{20,}|ghp_[A-Za-z0-9_]{20,}|AKIA[0-9A-Z]{16}|-----BEGIN (RSA |OPENSSH |EC )?PRIVATE KEY-----)' \
   .; then
   echo "Potential secret found. Remove it or replace it with a safe example." >&2

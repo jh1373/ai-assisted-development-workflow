@@ -4,9 +4,18 @@
 新しいセッションを始めるとき、最初に読むことを想定しています。
 ROADMAPが全体計画であるのに対し、PROJECT_STATUSは直近の現在地と次の候補タスクを示します。
 
+初期設定状態の正式な判定元ではありません。
+正式な状態は `.ai-workflow/project-state.conf` と判定スクリプトを使います。
+
 ## 現在地
 
 <!-- 現在のフェーズ、直近の状態を書く -->
+
+初期設定時の例:
+
+```text
+Project Initialization: PROJECT_BRIEFとROADMAPを作成中
+```
 
 ## 最終セッション
 
@@ -49,3 +58,4 @@ Task records -> docs/tasks/YYYY-MM-DD-HHMM-task-name/
 - 最新の現在地だけを書く
 - 詳しい判断理由はdevlogに書く
 - 次のセッションで必要な情報だけ残す
+- 初期設定statusの代わりに使わない

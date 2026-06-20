@@ -6,6 +6,9 @@
 Workflow Modeは、導入時にユーザーが固定する設定ではありません。
 session-startで現在の開発状況を把握し、今回のタスクが決まったあと、AIがタスク内容とリスクを見て判定します。
 
+Project InitializationはWorkflow Modeではありません。
+初期設定チェッカーが `INITIALIZATION_READY` を返した後、最初の通常タスクに対してMinimal、Standard、Strictを判定します。
+
 ## Mode Selection Rule
 
 デフォルトは **Standard mode** です。

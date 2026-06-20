@@ -6,6 +6,9 @@
 Workflow Modeは、導入時にユーザーが固定する設定ではありません。
 session-startで現在の開発状況を把握し、今回のタスクが決まったあと、AIがタスク内容とリスクを見て判定します。
 
+Project InitializationはWorkflow Modeではありません。
+初期設定チェッカーが `INITIALIZATION_READY` を返した後、最初の通常タスクに対してMinimal、Standard、Strictを判定します。
+
 ## Mode Selection Rule
 
 デフォルトは **Standard mode** です。
@@ -135,8 +138,8 @@ Strictに上げる場合、AIは理由を明示します。
 ### 使うファイル
 
 - Standard の全ファイル
-- `docs/review-checklist.md`
-- `docs/security.md`
+- `docs/ai-workflow/review-checklist.md`
+- `docs/ai-workflow/security.md`
 - `docs/ai-workflow/definition-of-done.md`
 - `docs/ai-workflow/strict-mode.md`
 - 必要に応じてプロジェクト固有の `docs/ARCHITECTURE.md`

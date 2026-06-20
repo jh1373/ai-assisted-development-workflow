@@ -5,6 +5,31 @@
 AI駆動開発では、実装速度が上がる一方で、誤った変更や範囲外の変更も速く混ざります。
 そのため、作業の途中と完了前に、証拠をもって確認する関門を置きます。
 
+## Project Initialization Gate
+
+新規プロジェクトで通常タスクへ進む前に、一度通します。
+このゲートはMinimal、Standard、Strictより前にあり、Workflow Modeで省略できません。
+
+- 判定スクリプトが `INITIALIZATION_READY` を返したか
+- `docs/PROJECT_BRIEF.md` が存在するか
+- Confirmed、Hypothesis、Unknown、Deferredが区別されているか
+- ROADMAPが現在のDiscoveryまたはBuild-readyの経路に合っているか
+- PROJECT_STATUSが最初の候補タスクと注意点を示しているか
+- DIRECTORY_MAPがProvisionalまたはVerifiedを明示しているか
+- AGENTS.mdがプロジェクト固有の確定事項に基づいているか
+- 初期設定レビューにユーザーの明示承認があるか
+
+証拠:
+
+- `.ai-workflow/project-state.conf`
+- initialization checker result
+- `docs/PROJECT_BRIEF.md`
+- `docs/INITIALIZATION_REVIEW.md`
+- user approval evidence
+
+このゲートを通過できない場合、通常タスクのRequirement Alignment Gateへ進みません。
+`INITIALIZATION_INVALID` を未設定と解釈して初期設定をやり直してはいけません。
+
 ## 0. Requirement Alignment Gate
 
 すべての作業で最初に確認します。
