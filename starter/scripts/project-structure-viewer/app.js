@@ -26,7 +26,7 @@
   };
   function statusLabel(value) {
     return {
-      DIRECTORY_MAP_PROVISIONAL: "準備中",
+      DIRECTORY_MAP_PROVISIONAL: "初回設定中",
       DIRECTORY_MAP_VERIFIED: "確認済み",
       DIRECTORY_MAP_DRIFT_DETECTED: "構成変更あり",
       DIRECTORY_MAP_INVALID: "設定エラー",

@@ -646,7 +646,7 @@ def markdown_escape(value: str) -> str:
 
 
 def render_markdown(state: dict[str, Any], mapping: dict[str, Any]) -> str:
-    status_labels = {"provisional": "準備中", "verified": "確認済み"}
+    status_labels = {"provisional": "初回設定中", "verified": "確認済み"}
     layer_labels = {
         "experience": "ユーザーが触れる画面",
         "feature": "プロダクトの機能",
