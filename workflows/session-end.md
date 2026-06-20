@@ -116,7 +116,7 @@ python scripts/project-structure.py diff
 - 次回のAIが迷いそうな構成変更をした
 - 新しい入口、中心ファイル、重要ファイルを追加または改名した
 - ファイルの責務、入力、出力、依存先、所属区域が変わった
-- Guided TourまたはTask Lensの経路が変わった
+- 処理の流れ、または作業場所の案内が変わった
 
 更新不要な例:
 
@@ -126,7 +126,7 @@ python scripts/project-structure.py diff
 - README更新のみ
 - ディレクトリ責務に影響しない小さな修正
 
-構造または意味情報の変更を受け入れる場合は、先に `.ai-workflow/directory-map.json` の区域、File Passport、フロー、Task Lens、役割、境界を更新します。
+構成または役割説明の変更を受け入れる場合は、先に `.ai-workflow/directory-map.json` の主な役割、ファイルの役割説明、処理の流れ、作業場所の案内、変更時の注意事項を更新します。
 未分類、登録パス欠落、走査警告を解消した後、基準線とMarkdownを更新します。
 
 ```bash

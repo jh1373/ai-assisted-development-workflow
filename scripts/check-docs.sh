@@ -195,13 +195,13 @@ if ! grep -Fq 'open-project-structure-map.cmd' starter/README.md; then
 fi
 
 if ! grep -Fq '"schema_version": 2' starter/.ai-workflow/directory-map.json; then
-  echo "Starter Project Atlas must use schema version 2." >&2
+  echo "Starter project guide must use schema version 2." >&2
   exit 1
 fi
 
-for term in '全体マップ' '処理の流れ' 'タスク案内' '全ファイル' '説明の健康状態'; do
+for term in 'プロジェクト全体' 'どう動くか' '作業場所を探す' 'ファイル一覧' '説明不足を確認'; do
   if ! grep -Fq "$term" starter/scripts/project-structure-viewer/index.html; then
-    echo "Project Atlas viewer is missing view: $term" >&2
+    echo "Project guide viewer is missing view: $term" >&2
     exit 1
   fi
 done

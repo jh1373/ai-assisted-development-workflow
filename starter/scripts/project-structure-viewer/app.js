@@ -23,6 +23,35 @@
     experience: "ユーザーが触れる画面", feature: "プロダクトの機能", data: "データと外部通信",
     platform: "自動化と運用基盤", workflow: "AIと人間の開発手順", documentation: "計画と判断の記録"
   };
+  function statusLabel(value) {
+    return {
+      DIRECTORY_MAP_PROVISIONAL: "準備中",
+      DIRECTORY_MAP_VERIFIED: "確認済み",
+      DIRECTORY_MAP_DRIFT_DETECTED: "構成変更あり",
+      DIRECTORY_MAP_INVALID: "設定エラー",
+      DIRECTORY_MAP_CHECK_FAILED: "確認できません"
+    }[value] || value;
+  }
+  function sourceLabel(value) {
+    return {
+      explicit: "このファイル専用の説明",
+      "explicit-pattern": "登録したまとめ説明",
+      inherited: "フォルダの説明を使用",
+      convention: "共通ルールの説明",
+      unclassified: "説明なし"
+    }[value] || value;
+  }
+  function evidenceLabel(value) {
+    return {
+      "human-confirmed": "ユーザーまたは開発者が確認",
+      "registered-when-created": "ファイル作成時に登録",
+      "project-initialization": "初期設定で登録",
+      convention: "共通ルールから判定"
+    }[value] || value;
+  }
+  function importanceLabel(value) {
+    return { "entry-point": "最初に見るファイル", core: "中心となるファイル", support: "補助ファイル" }[value] || value;
+  }
   function make(tag, className, text) {
     const node = document.createElement(tag);
     if (className) node.className = className;
@@ -83,11 +112,14 @@
       areas.forEach((area) => {
         const card = make("button", "area-card");
         card.type = "button";
-        card.append(make("span", "area-kicker", area.layer), make("h4", "", area.name), make("p", "", area.beginner_summary));
+        card.append(make("span", "area-kicker", layerLabels[area.layer] || area.layer), make("h4", "", area.name), make("p", "", area.beginner_summary));
         const meta = make("div", "area-meta");
-        meta.append(make("span", "", area.file_count + " files"), make("span", "", area.entry_points_present.length + " entry points"));
+        meta.append(make("span", "", "含まれるファイル " + area.file_count + "個"), make("span", "", "最初に見るファイル " + area.entry_points_present.length + "個"));
         card.append(meta);
-        if (area.depends_on.length) card.append(make("small", "", "次につながる区域: " + area.depends_on.join(", ")));
+        if (area.depends_on.length) {
+          const names = area.depends_on.map((id) => state.areas.find((item) => item.id === id)?.name || id);
+          card.append(make("small", "", "関係する役割: " + names.join("、")));
+        }
         card.addEventListener("click", () => openPath(area.resolved_paths[0] || area.paths[0]));
         cards.append(card);
       });
@@ -122,7 +154,7 @@
   }
   function renderLens() {
     const lens = state.task_lenses.find((item) => item.id === els["lens-select"].value) || state.task_lenses[0];
-    els["lens-intro"].textContent = lens?.beginner_summary || "タスク案内がまだ登録されていません。";
+    els["lens-intro"].textContent = lens?.beginner_summary || "この作業に対応する案内はまだ登録されていません。";
     renderLensColumn(els["lens-primary"], lens?.primary_paths || [], "最初に見る場所は未登録です。");
     renderLensColumn(els["lens-related"], lens?.related_paths || [], "関連場所は未登録です。");
     renderLensColumn(els["lens-avoid"], lens?.avoid_paths || [], "除外範囲は未登録です。");
@@ -153,7 +185,7 @@
   function treeLine(entry, name) {
     const line = make("span", "entry-line");
     line.append(make("span", "entry-name", name), make("span", "entry-summary", entry.beginner_summary));
-    const label = entry.role_source === "explicit" ? "個別Passport" : entry.role_source === "inherited" ? "親から継承" : entry.role_source === "convention" ? "一般説明" : entry.role_source === "unclassified" ? "説明なし" : "登録パターン";
+    const label = sourceLabel(entry.role_source);
     line.append(make("span", "badge " + entry.role_source, label));
     if (entry.change !== "unchanged") line.append(make("span", "badge changed", entry.change === "added" ? "追加" : "削除"));
     return line;
@@ -208,9 +240,12 @@
     els["detail-path"].textContent = entry.path;
     els["detail-summary"].textContent = entry.beginner_summary;
     const fields = [
-      ["担当すること", entry.responsibility], ["所属区域", entry.area || "区域未設定"], ["重要度", entry.importance],
-      ["説明の根拠", entry.role_source + " / " + entry.evidence], ["入力", (entry.inputs || []).join(" / ") || "なし"],
-      ["出力", (entry.outputs || []).join(" / ") || "なし"]
+      ["このファイルがすること", entry.responsibility],
+      ["どの役割に属するか", state.areas.find((item) => item.id === entry.area)?.name || "役割グループ未設定"],
+      ["このファイルの位置づけ", importanceLabel(entry.importance)],
+      ["この説明はどこから来たか", sourceLabel(entry.role_source) + " / " + evidenceLabel(entry.evidence)],
+      ["受け取るもの", (entry.inputs || []).join(" / ") || "特になし"],
+      ["ほかへ渡すもの", (entry.outputs || []).join(" / ") || "特になし"]
     ];
     els["passport-fields"].replaceChildren(...fields.map(([term, value]) => {
       const row = make("div", "passport-row");
@@ -238,14 +273,16 @@
     healthList(els["health-broken"], health.broken_references, (item) => item.source + " → " + item.target);
   }
   function renderAll() {
-    els["areas-count"].textContent = state.areas.length;
-    els["semantic-coverage"].textContent = state.health.semantic_coverage + "%";
-    els["passport-coverage"].textContent = state.health.passport_coverage + "%";
-    els["health-issues"].textContent = state.health.issue_count;
+    const explained = state.entries.length - state.health.unexplained_paths.length;
+    const individual = state.entries.filter((entry) => entry.kind === "file" && entry.role_source === "explicit").length;
+    els["areas-count"].textContent = state.areas.length + "個";
+    els["semantic-coverage"].textContent = explained + "個";
+    els["passport-coverage"].textContent = individual + "個";
+    els["health-issues"].textContent = state.health.issue_count + "個";
     els["project-name"].textContent = state.project_name;
     els["last-checked"].textContent = "最終確認 " + new Date(state.generated_at).toLocaleTimeString("ja-JP");
-    els["map-status"].textContent = state.validation_result.replace("DIRECTORY_MAP_", "");
-    els["verification-meta"].textContent = state.verified_at ? "最終検証 " + state.verified_at + " / " + state.verified_by : "構造の基準線は未確定です";
+    els["map-status"].textContent = statusLabel(state.validation_result);
+    els["verification-meta"].textContent = state.verified_at ? "構成の最終確認 " + state.verified_at + " / 確認者 " + state.verified_by : "プロジェクト構成はまだ最終確認されていません";
     fillSelect(els["flow-select"], state.flows);
     fillSelect(els["lens-select"], state.task_lenses);
     renderAtlas(); renderFlow(); renderLens(); renderTree(); renderHealth();
@@ -264,7 +301,7 @@
       const next = await response.json();
       const nextRevision = JSON.stringify([next.structure_hash, next.areas, next.flows, next.task_lenses, next.health]);
       state = next;
-      els["live-indicator"].textContent = "LIVE";
+      els["live-indicator"].textContent = "自動更新中";
       els["live-indicator"].className = "pill connected";
       if (nextRevision !== revision) { revision = nextRevision; renderAll(); }
       else els["last-checked"].textContent = "最終確認 " + new Date(next.generated_at).toLocaleTimeString("ja-JP");

@@ -53,7 +53,7 @@
       "kind": "directory",
       "area": "workflow-state",
       "layer": "workflow",
-      "role": "初期設定状態とProject Structure Mapの機械可読な定義を保存する",
+      "role": "初期設定状態とプロジェクト案内図の機械可読な定義を保存する",
       "boundaries": [
         "秘密情報や食事・健康情報を保存しない"
       ],

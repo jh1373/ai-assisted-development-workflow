@@ -108,7 +108,7 @@ case "$initialization_status" in
     if grep -Fq 'Project Initialization: Not started' "$project_root/docs/PROJECT_STATUS.md"; then
       emit "INITIALIZATION_INVALID"
     fi
-    if ! grep -Eq '^Map Status: (Provisional|Verified)$' "$project_root/docs/DIRECTORY_MAP.md"; then
+    if ! grep -Eq '^(Map Status: (Provisional|Verified)|案内図の状態: (準備中|確認済み))$' "$project_root/docs/DIRECTORY_MAP.md"; then
       emit "INITIALIZATION_INVALID"
     fi
     if grep -Eq '\[(PROJECT_ROOT|path|responsibility|boundary or important note|task type|primary path|related paths or tests|boundary not to cross)\]' "$project_root/docs/DIRECTORY_MAP.md"; then

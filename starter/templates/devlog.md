@@ -53,8 +53,8 @@ docs/tasks/YYYY-MM-DD-HHMM-task-name/
 - Checker result:
 - Reason:
 - Updated JSON / snapshot / generated Markdown:
-- Atlas areas / Guided Tours / Task Lenses changed:
-- File Passports changed or intentionally inherited:
+- 主な役割、処理の流れ、作業場所の案内の変更:
+- 個別に変更した、または親の説明を引き継いだファイル:
 
 ### 採用した方針
 

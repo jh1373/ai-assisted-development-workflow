@@ -115,7 +115,7 @@ try {
                 Write-ResultAndExit 'INITIALIZATION_INVALID'
             }
             $directoryMap = Get-Content -LiteralPath (Join-Path $projectRoot 'docs\DIRECTORY_MAP.md')
-            if (-not ($directoryMap -cmatch '^Map Status: (Provisional|Verified)$')) {
+            if (-not ($directoryMap -cmatch '^(Map Status: (Provisional|Verified)|案内図の状態: (準備中|確認済み))$')) {
                 Write-ResultAndExit 'INITIALIZATION_INVALID'
             }
             if ($directoryMap -cmatch '\[(PROJECT_ROOT|path|responsibility|boundary or important note|task type|primary path|related paths or tests|boundary not to cross)\]') {

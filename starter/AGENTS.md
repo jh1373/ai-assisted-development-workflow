@@ -105,10 +105,10 @@ The source of truth is `.ai-workflow/directory-map.json` plus the verified path
 snapshot. The localhost viewer is read-only and optional. Never assign a guessed
 role merely to make verification pass.
 
-Project Atlas is the default human-facing view. Before reading the full file
-tree, use its area map, Guided Tour, and Task Lens to understand the project.
+The project guide is the default human-facing view. Before reading the full file
+tree, use its project overview, process flow, and work-location guide to understand the project.
 
-When creating or renaming a file, update its File Passport in the same task.
+When creating or renaming a file, update its role description in the same task.
 Entry points and core files require an explicit passport with a beginner summary,
 responsibility, non-responsibilities, change triggers, dependencies, area, and
 evidence. A support file may inherit an approved parent passport only when that
@@ -125,7 +125,7 @@ For normal work:
    session unless the initialization state was intentionally changed.
 2. Continue only after the Project Structure Gate returns `DIRECTORY_MAP_VERIFIED`,
    except for the explicitly scoped first construction task while Provisional.
-3. After the task is selected, use Project Atlas and its Task Lens, then
+3. After the task is selected, use the project guide and its work-location guide, then
    `docs/DIRECTORY_MAP.md`, to identify the areas, responsibilities, boundaries,
    flows, and files to inspect before planning.
 4. Align requirements with `templates/requirement-alignment.md` when the task is

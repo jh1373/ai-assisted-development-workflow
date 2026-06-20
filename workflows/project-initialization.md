@@ -190,16 +190,16 @@ Discovery Trackでは、最初のフェーズを仮説検証にします。
 
 初期設定状態の正式な判定元はPROJECT_STATUSではなく、状態ファイルです。
 
-### 10. Project AtlasとDIRECTORY_MAPを作る
+### 10. プロジェクト案内図とDIRECTORY_MAPを作る
 
-`.ai-workflow/directory-map.json` を正本として、予定している役割区域、主要ディレクトリ、File Passport、責務、境界、処理フロー、Task Lensを記録します。
+`.ai-workflow/directory-map.json` を正本として、予定している主な役割、重要なフォルダ、ファイルの役割説明、変更時の注意事項、処理の流れ、作業場所の案内を記録します。
 コード作成前は `status` を `provisional` とします。
 
 初心者がフォルダ名を知らなくても理解できるよう、少なくとも次を決めます。
 
 - `areas`: UI、機能、データ、運用、開発手順、記録などの役割区域
-- `nodes`: 入口と中心ファイルのFile Passport
-- `flows`: ユーザー操作や開発手順を追うGuided Tour
+- `nodes`: 入口と中心ファイルの役割説明
+- `flows`: ユーザー操作や開発手順を追う処理の流れ
 - `task_lenses`: 最初に見る場所、関連場所、今回触らない場所
 
 AIは、まだ決まっていないWeb、モバイル、APIなどの構成を推測で追加しません。
@@ -219,7 +219,7 @@ python scripts/project-structure.py validate
 python scripts/project-structure.py serve --open-browser
 ```
 
-プロジェクトの初期構築後、実際の全ファイル構成、区域、Passport、フロー、境界をユーザーが確認してから `verify --verified-by` でVerifiedへ変更します。
+プロジェクトの初期構築後、実際の全ファイル構成、主な役割、ファイルの役割説明、処理の流れ、変更時の注意事項をユーザーが確認してから、`verify --verified-by`で確認済みの状態へ変更します。
 詳しくは [Project Structure Map](../docs/project-structure-map.md) を参照してください。
 
 ### 11. 初期設定レビューを行う

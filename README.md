@@ -125,11 +125,11 @@ starter/
 
 コピーすると、初期設定状態を持つ `.ai-workflow/`、AIが最初に読む `AGENTS.md`、プロダクト仮説を整理する `docs/PROJECT_BRIEF.md`、現在地を残す `docs/PROJECT_STATUS.md`、初期設定と通常タスクのワークフロー、作業用テンプレートが配置されます。
 `.ai-workflow/directory-map.json` を構造と意味情報の正本とし、`docs/DIRECTORY_MAP.md` を自動生成します。
-localhostのProject Atlasでは、役割区域、File Passport、Guided Tour、Task Lens、説明の健康状態を最初に表示し、必要な場合だけ全ファイルツリーへ移動できます。
+localhostのプロジェクト案内図では、プロジェクトの主な役割、処理の流れ、作業場所の案内、ファイルごとの役割を先に表示し、必要な場合だけ全ファイル一覧へ移動できます。
 
 詳しくは [starter/README.md](starter/README.md) を参照してください。
 
-Project AtlasはPython 3.10以降を推奨し、外部Pythonパッケージなしで動作します。
+プロジェクト案内図はPython 3.10以降を推奨し、外部Pythonパッケージなしで動作します。
 
 新規プロジェクトへ`starter/`の中身を導入した後は、プロジェクト直下の`open-project-structure-map.cmd`をダブルクリックすると、サーバーと既定ブラウザが自動で起動します。
 このリポジトリ上で試す場合は、`starter/open-project-structure-map.cmd`をダブルクリックしてください。
@@ -173,13 +173,13 @@ templates/devlog.md
 ```
 
 - `.ai-workflow/project-state.conf`: 初期設定状態を機械判定する唯一の状態ファイル
-- `.ai-workflow/directory-map.json`: 役割区域、File Passport、Guided Tour、Task Lens、主要パス、境界の正本
+- `.ai-workflow/directory-map.json`: 主な役割、ファイルの役割説明、処理の流れ、作業場所の案内、重要な場所、変更時の注意事項を保存する正本
 - `.ai-workflow/directory-snapshot.json`: Verified時点の全パス構造を保存する生成基準線
 - `PROJECT_BRIEF.md`: 確定事項、仮説、不明点、後で決めることを整理する
 - `INITIALIZATION_REVIEW.md`: ユーザー承認を含む初期設定レビュー
 - `ROADMAP.md`: プロジェクト全体のフェーズ、成果、見直し条件を残す
 - `PROJECT_STATUS.md`: 次のセッションで最初に読む現在地メモ
-- `DIRECTORY_MAP.md`: JSON正本から生成するProject Atlasと構造の要約
+- `DIRECTORY_MAP.md`: JSON正本から生成するプロジェクト案内図と構成の要約
 - `docs/tasks/`: 1タスクごとの認識合わせ、計画、完了レビューを残す場所
 - `requirement-alignment.md`: 実装前にユーザーとAIの認識を揃える確認メモ
 - `implementation-plan.md`: 実装前に目的、範囲、検証方法を固定する計画

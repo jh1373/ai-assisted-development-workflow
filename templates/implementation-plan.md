@@ -68,12 +68,12 @@ Directory Map update candidate:
 
 -
 
-Project Atlas context:
+プロジェクト案内図で確認した内容:
 
 - Related area:
-- Guided Tour impact:
-- Task Lens used or proposed:
-- File Passports to add or update:
+- 処理の流れへの影響:
+- 使用した、または追加を提案する作業場所の案内:
+- 追加または更新するファイルの役割説明:
 
 ## Workflow Mode
 

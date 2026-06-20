@@ -8,7 +8,7 @@
   "areas": [
     {
       "id": "atlas-config",
-      "name": "Project Atlasの設定",
+      "name": "プロジェクト案内図の設定",
       "beginner_summary": "構造と役割の正本を保存し、説明が古くならないようにする区域です。",
       "layer": "workflow",
       "paths": [".ai-workflow/**"],
@@ -71,7 +71,7 @@
       "kind": "directory",
       "area": "atlas-config",
       "layer": "workflow",
-      "role": "Project Structure Mapの機械可読な定義を保存する",
+      "role": "プロジェクト案内図の機械可読な定義を保存する",
       "boundaries": ["秘密情報を保存しない"],
       "task_types": ["構造定義の更新"]
     },

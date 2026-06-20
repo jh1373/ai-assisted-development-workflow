@@ -1,7 +1,7 @@
 {
   "schema_version": 2,
   "status": "provisional",
-  "project_name": "New Project",
+  "project_name": "新しいプロジェクト",
   "verified_at": null,
   "verified_by": null,
   "ignore_file": ".ai-workflow/directory-map.ignore",
@@ -27,7 +27,7 @@
     {
       "id": "automation",
       "name": "自動チェックとローカルツール",
-      "beginner_summary": "初期設定や構造の間違いを機械的に見つけ、Project Atlasを表示する区域です。",
+      "beginner_summary": "初期設定や構造の間違いを自動で見つけ、プロジェクト案内図を表示する役割です。",
       "layer": "platform",
       "paths": ["scripts/**", "open-project-structure-map.cmd"],
       "entry_points": ["open-project-structure-map.cmd", "scripts/project-structure.py"],
@@ -66,12 +66,12 @@
     },
     {
       "id": "open-atlas",
-      "name": "Project Atlasを表示する流れ",
+      "name": "プロジェクト案内図を表示する流れ",
       "beginner_summary": "ダブルクリックしてから、ブラウザで構造と役割を確認できるまでの流れです。",
       "steps": [
         {"path": "open-project-structure-map.cmd", "summary": "WindowsからPythonの起動処理を開始します。"},
         {"path": "scripts/project-structure.py", "summary": "構造と意味情報を検証し、localhostサーバーを起動します。"},
-        {"path": "scripts/project-structure-viewer/index.html", "summary": "Project Atlasの画面を表示します。"}
+        {"path": "scripts/project-structure-viewer/index.html", "summary": "プロジェクト案内図の画面を表示します。"}
       ]
     }
   ],
@@ -86,7 +86,7 @@
     },
     {
       "id": "change-atlas",
-      "name": "Project Atlasを変更する",
+      "name": "プロジェクト案内図を変更する",
       "beginner_summary": "構造検証、意味情報、localhost画面を変更するときに見る範囲です。",
       "primary_paths": ["scripts/project-structure.py", "scripts/project-structure-viewer/**"],
       "related_paths": [".ai-workflow/directory-map.json", "docs/project-structure-map.md"],
@@ -106,7 +106,7 @@
       ],
       "task_types": [
         "初期設定状態の確認",
-        "Project Structure Mapの管理"
+        "プロジェクト案内図の管理"
       ]
     },
     {
@@ -163,7 +163,7 @@
       ],
       "task_types": [
         "ローカル自動化変更",
-        "Project Structure Map変更"
+        "プロジェクト案内図の変更"
       ]
     },
     {
@@ -224,13 +224,13 @@
       "area": "automation",
       "layer": "platform",
       "importance": "entry-point",
-      "role": "Project Structure MapをWindowsからワンクリックで起動する",
+      "role": "プロジェクト案内図をWindowsからワンクリックで起動する",
       "boundaries": [
         "外部ネットワークへサーバーを公開しない",
         "Pythonスクリプトの構造検証を迂回しない"
       ],
       "task_types": [
-        "Project Structure Mapの起動"
+        "プロジェクト案内図の起動"
       ]
     },
     {
@@ -249,9 +249,9 @@
       "area": "workflow",
       "layer": "workflow",
       "importance": "core",
-      "display_name": "Project Atlasの正本",
-      "role": "区域、File Passport、Guided Tour、Task Lens、構造境界を保存する",
-      "beginner_summary": "Project Atlasに表示する意味情報を保存する中心ファイルです。"
+      "display_name": "プロジェクト案内図の元データ",
+      "role": "役割グループ、ファイルの役割説明、処理の流れ、作業場所の案内、構造上の注意を保存する",
+      "beginner_summary": "プロジェクト案内図に表示する説明を保存する中心ファイルです。"
     },
     {
       "path": "workflows/project-initialization.md",
@@ -270,7 +270,7 @@
       "layer": "workflow",
       "importance": "entry-point",
       "display_name": "タスク開始手順",
-      "role": "現在地、構造、Task Lensを確認して今回の1タスクを決める",
+      "role": "現在地、構造、作業場所の案内を確認して今回の1タスクを決める",
       "beginner_summary": "開発を始める前に、何をするかと何をしないかを確認する手順です。"
     },
     {
@@ -299,9 +299,9 @@
       "area": "automation",
       "layer": "platform",
       "importance": "core",
-      "display_name": "Project Atlasエンジン",
+      "display_name": "プロジェクト案内図を動かすプログラム",
       "role": "構造と意味情報を検証し、生成文書とlocalhost APIを提供する",
-      "beginner_summary": "Project Atlasの検査、データ作成、画面用サーバーを担当する中心プログラムです。"
+      "beginner_summary": "プロジェクト案内図の確認、表示データの作成、画面の起動を担当する中心プログラムです。"
     },
     {
       "path": "scripts/project-structure-viewer/index.html",
@@ -309,9 +309,9 @@
       "area": "automation",
       "layer": "platform",
       "importance": "entry-point",
-      "display_name": "Project Atlas画面",
-      "role": "全体マップ、Guided Tour、Task Lens、Explorer、Healthの画面構造を定義する",
-      "beginner_summary": "ブラウザで最初に表示されるProject Atlasの画面です。"
+      "display_name": "プロジェクト案内図の画面",
+      "role": "プロジェクト全体、処理の流れ、作業場所、ファイル一覧、説明不足確認の画面構造を定義する",
+      "beginner_summary": "ブラウザで最初に表示されるプロジェクト案内図の画面です。"
     },
     {
       "path": ".github/workflows/project-structure-check.yml",
@@ -319,9 +319,9 @@
       "area": "github",
       "layer": "platform",
       "importance": "core",
-      "display_name": "Project Atlas CI",
+      "display_name": "プロジェクト案内図の自動確認",
       "role": "GitHub上で構造と生成文書の整合性を検証する",
-      "beginner_summary": "pushやPull Requestの後に、Project Atlasが壊れていないか自動確認します。"
+      "beginner_summary": "pushやPull Requestの後に、プロジェクト案内図が壊れていないか自動確認します。"
     },
     {
       "path": "templates/implementation-plan.md",
@@ -330,7 +330,7 @@
       "layer": "documentation",
       "importance": "entry-point",
       "display_name": "実装計画テンプレート",
-      "role": "1タスクの範囲、完了条件、Atlas影響、検証方法を実装前に固定する",
+      "role": "1タスクの範囲、完了条件、案内図への影響、検証方法を実装前に固定する",
       "beginner_summary": "AIが作業を広げすぎないよう、実装前に今回の計画を書くひな型です。"
     }
   ],
