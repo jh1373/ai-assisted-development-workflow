@@ -123,6 +123,26 @@ if ! grep -Fq '## Initialization Routing' starter/AGENTS.md; then
   exit 1
 fi
 
+scope_files=(
+  "README.md"
+  "starter/README.md"
+  "docs/adoption-guide.md"
+  "workflows/project-initialization.md"
+  "starter/workflows/project-initialization.md"
+)
+
+for file in "${scope_files[@]}"; do
+  if ! grep -Fq '新規プロジェクト専用' "$file"; then
+    echo "New-project-only scope is missing from: $file" >&2
+    exit 1
+  fi
+done
+
+if ! grep -Fq 'Existing-project adoption is not supported.' starter/AGENTS.md; then
+  echo "starter/AGENTS.md must stop unsupported existing-project adoption." >&2
+  exit 1
+fi
+
 if ! grep -Fq '### 0. Initialization Gateを確認する' starter/workflows/session-start.md; then
   echo "starter session-start is missing the Initialization Gate." >&2
   exit 1

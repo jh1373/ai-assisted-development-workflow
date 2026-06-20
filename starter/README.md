@@ -1,5 +1,9 @@
 # AI-assisted Development Starter
 
+> [!IMPORTANT]
+> **このstarterは、新規プロジェクト専用です。**
+> 既存プロジェクトへはコピーしないでください。同名のREADME、AGENTS.md、`.github/`、`docs/` などを上書きする可能性があります。
+
 このディレクトリは、新規プロジェクトの立ち上げ時にコピーして使うための導入パッケージです。
 
 ## 使い方

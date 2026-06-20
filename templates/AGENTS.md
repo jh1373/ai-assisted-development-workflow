@@ -3,6 +3,14 @@
 Use this file at the root of a project to define rules for AI coding agents.
 Edit it to match the project before use.
 
+## Supported Scope
+
+- This starter is for a new project being started with this workflow.
+- Existing-project adoption is not supported.
+- If this starter appears to have been copied into an existing project, stop
+  before Project Initialization and tell the user that existing files may have
+  been overwritten. Do not treat the existing project as a new project.
+
 ## Project Rules
 
 - Read this file before making changes.
