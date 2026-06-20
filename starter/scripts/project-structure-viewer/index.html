@@ -3,67 +3,83 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="color-scheme" content="dark">
+  <meta name="color-scheme" content="light">
   <title>プロジェクト案内図</title>
   <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
-  <main class="app-shell">
-    <header class="topbar">
-      <div><p class="eyebrow">AIと進める新規プロジェクト開発</p><h1>プロジェクト案内図</h1><p class="subtitle">このプロジェクトの役割、動き方、変更するときに見る場所を確認できます。</p></div>
-      <div class="status-cluster" aria-live="polite"><span id="live-indicator" class="pill">接続中</span><span id="map-status" class="pill">読み込み中</span></div>
-    </header>
+  <div class="app-shell">
+    <aside class="side-rail">
+      <div class="brand"><span class="brand-mark" aria-hidden="true">P</span><div><strong>プロジェクト案内図</strong><small>PROJECT GUIDE</small></div></div>
+      <nav class="view-tabs" aria-label="プロジェクト案内図の表示切り替え">
+        <button class="tab active" data-view="atlas"><span aria-hidden="true">01</span><b>プロジェクト全体</b><small>役割から全体像を見る</small></button>
+        <button class="tab" data-view="tour"><span aria-hidden="true">02</span><b>どう動くか</b><small>処理を順番にたどる</small></button>
+        <button class="tab" data-view="lens"><span aria-hidden="true">03</span><b>作業場所を探す</b><small>今回見る範囲を絞る</small></button>
+        <button class="tab" data-view="explorer"><span aria-hidden="true">04</span><b>ファイル構成</b><small>フォルダと役割を調べる</small></button>
+        <button class="tab" data-view="health"><span aria-hidden="true">05</span><b>説明不足を確認</b><small>案内の抜けを見つける</small></button>
+      </nav>
+      <div class="rail-status" aria-live="polite"><span id="live-indicator" class="connection-dot">接続中</span><span id="map-status" class="state-pill">読み込み中</span></div>
+    </aside>
 
-    <nav class="view-tabs" aria-label="プロジェクト案内図の表示切り替え">
-      <button class="tab active" data-view="atlas">プロジェクト全体</button>
-      <button class="tab" data-view="tour">どう動くか</button>
-      <button class="tab" data-view="lens">作業場所を探す</button>
-      <button class="tab" data-view="explorer">ファイル一覧</button>
-      <button class="tab" data-view="health">説明不足を確認</button>
-    </nav>
+    <main class="workspace">
+      <header class="topbar">
+        <div><p class="overline">AIと進める新規プロジェクト開発</p><h1 id="project-name">新しいプロジェクト</h1><p class="subtitle">何がどこにあり、どの順番で動き、変更するときに何を見るべきかを確認できます。</p></div>
+        <div class="topbar-meta"><span id="last-checked">確認中</span><button id="help-button" class="help-button" type="button" aria-expanded="false" aria-controls="help-panel">この画面の見方</button></div>
+      </header>
 
-    <section id="alert" class="alert" hidden aria-live="assertive"></section>
-    <section class="summary-grid" aria-label="概要">
-      <article><span>主な役割</span><strong id="areas-count">—</strong></article>
-      <article><span>役割が分かる項目</span><strong id="semantic-coverage">—</strong></article>
-      <article><span>専用の説明があるファイル</span><strong id="passport-coverage">—</strong></article>
-      <article><span>説明の見直しが必要</span><strong id="health-issues">—</strong></article>
-    </section>
+      <section id="help-panel" class="help-panel" hidden>
+        <div><strong>初めて見る方へ</strong><p>まず「プロジェクト全体」で役割を把握し、実際に作業するときは「作業場所を探す」を使ってください。ファイル名から探したい場合だけ「ファイル構成」を開きます。</p></div>
+        <button id="help-close" type="button" aria-label="説明を閉じる">閉じる</button>
+      </section>
+      <section id="alert" class="alert" hidden aria-live="assertive"></section>
 
-    <section id="view-atlas" class="view active">
-      <div class="section-heading"><div><p class="section-label">プロジェクト全体</p><h2 id="project-name">新しいプロジェクト</h2></div><p id="last-checked" class="muted">確認中</p></div>
-      <div id="atlas-layers" class="atlas-layers"></div>
-    </section>
-
-    <section id="view-tour" class="view">
-      <div class="section-heading"><div><p class="section-label">どう動くか</p><h2>処理を順番に確認する</h2></div><select id="flow-select" aria-label="確認する処理"></select></div>
-      <div id="flow-intro" class="intro-card"></div><ol id="flow-steps" class="flow-steps"></ol>
-    </section>
-
-    <section id="view-lens" class="view">
-      <div class="section-heading"><div><p class="section-label">作業場所を探す</p><h2>今回見る場所だけに絞る</h2></div><select id="lens-select" aria-label="確認する作業"></select></div>
-      <div id="lens-intro" class="intro-card"></div>
-      <div class="lens-grid"><section><h3>最初に見る</h3><div id="lens-primary"></div></section><section><h3>関連して確認</h3><div id="lens-related"></div></section><section class="avoid"><h3>今回は触らない</h3><div id="lens-avoid"></div></section></div>
-    </section>
-
-    <section id="view-explorer" class="view">
-      <div class="explorer-layout">
-        <div class="explorer-panel">
-          <div class="section-heading"><div><p class="section-label">ファイル一覧</p><h2>すべてのファイルとフォルダ</h2></div></div>
-          <div class="toolbar"><label><span>ファイル名または役割を検索</span><input id="search" type="search" placeholder="例: ログイン、テスト、README"></label><label><span>説明の種類</span><select id="role-filter"><option value="all">すべて</option><option value="explicit">このファイル専用の説明</option><option value="inherited">フォルダの説明を使用</option><option value="convention">共通ルールの説明</option><option value="unclassified">説明なし</option></select></label><label class="checkbox"><input id="changes-only" type="checkbox">変更だけ表示</label></div>
-          <div id="tree-summary" class="tree-summary"></div><div id="tree" class="tree" role="tree"></div>
+      <section class="status-summary" aria-label="現在の案内状況">
+        <div class="status-copy"><p class="overline">いまの状態</p><h2 id="summary-headline">プロジェクトを確認しています</h2><p id="summary-detail">ファイル構成と役割説明を読み込んでいます。</p></div>
+        <div class="summary-grid">
+          <article><span>主な役割</span><div><strong id="areas-count">—</strong><small>種類</small></div><p>プロジェクトを役割別に整理</p></article>
+          <article><span>役割を説明できる項目</span><div><strong id="semantic-coverage">—</strong><small id="semantic-total">/ —項目</small></div><div class="progress"><i id="semantic-progress"></i></div><p id="semantic-caption">確認中</p></article>
+          <article><span>個別説明があるファイル</span><div><strong id="passport-coverage">—</strong><small id="passport-total">件</small></div><p id="passport-caption">確認中</p></article>
+          <article class="issue-metric"><span>説明の見直し</span><div><strong id="health-issues">—</strong><small>件</small></div><p id="health-caption">確認中</p></article>
         </div>
-        <aside class="passport-panel"><p class="section-label">このファイルの役割</p><h2 id="detail-title">ファイルを選択してください</h2><p id="detail-path" class="path"></p><p id="detail-summary" class="passport-summary">ファイルを選ぶと、何をするファイルなのかを表示します。</p><dl id="passport-fields" class="passport-fields"></dl><section><h3>このファイルでは行わないこと</h3><ul id="detail-not-responsible"></ul></section><section><h3>どんなときに変更するか</h3><ul id="detail-when"></ul></section><section><h3>関係するファイル</h3><ul id="detail-dependencies"></ul></section><section><h3>変更するときの注意</h3><ul id="detail-boundaries"></ul></section></aside>
-      </div>
-    </section>
+      </section>
 
-    <section id="view-health" class="view">
-      <div class="section-heading"><div><p class="section-label">説明不足を確認</p><h2>役割を説明できない場所を確認する</h2></div></div>
-      <div class="health-grid"><article><strong id="health-unexplained-count">0</strong><h3>役割の説明がない項目</h3><div id="health-unexplained"></div></article><article><strong id="health-generic-count">0</strong><h3>詳しい説明がまだないファイル</h3><div id="health-generic"></div></article><article><strong id="health-broken-count">0</strong><h3>存在しない場所への案内</h3><div id="health-broken"></div></article></div>
-    </section>
+      <section id="view-atlas" class="view active">
+        <div class="section-heading"><div><p class="section-label">プロジェクト全体</p><h2>コードを見る前に、役割のつながりをつかむ</h2><p>上から順に読む必要はありません。知りたい役割を選ぶと、関係するファイルへ移動します。</p></div><div class="legend"><span><i class="legend-dot primary"></i>役割</span><span><i class="legend-dot relation"></i>関係先</span></div></div>
+        <div id="atlas-layers" class="atlas-layers"></div>
+      </section>
 
-    <footer><p>この画面からファイルや設定を書き換えることはできません。説明の元データは <code>.ai-workflow/directory-map.json</code> です。</p><p id="verification-meta"></p></footer>
-  </main>
+      <section id="view-tour" class="view">
+        <div class="section-heading"><div><p class="section-label">どう動くか</p><h2>処理を順番にたどる</h2><p>一つの操作や開発手順が、どのファイルを通るのかを左から順に確認します。</p></div><label class="select-label"><span>確認する流れ</span><select id="flow-select" aria-label="確認する処理"></select></label></div>
+        <div id="flow-intro" class="intro-card"></div><ol id="flow-steps" class="flow-steps"></ol>
+      </section>
+
+      <section id="view-lens" class="view">
+        <div class="section-heading"><div><p class="section-label">作業場所を探す</p><h2>今回見る場所だけに絞る</h2><p>作業と無関係なファイルを先に除外し、読む順番を明確にします。</p></div><label class="select-label"><span>行いたい作業</span><select id="lens-select" aria-label="確認する作業"></select></label></div>
+        <div id="lens-intro" class="intro-card"></div>
+        <div class="lens-grid"><section class="primary-scope"><span>1</span><h3>最初に見る</h3><p>作業の中心になる場所</p><div id="lens-primary"></div></section><section><span>2</span><h3>関連して確認</h3><p>影響を受ける可能性がある場所</p><div id="lens-related"></div></section><section class="avoid"><span>×</span><h3>今回は触らない</h3><p>変更範囲を広げないための境界</p><div id="lens-avoid"></div></section></div>
+      </section>
+
+      <section id="view-explorer" class="view">
+        <div class="section-heading"><div><p class="section-label">ファイル構成</p><h2>フォルダの役割から、目的のファイルへ進む</h2><p>最初にルート直下の構成を確認し、必要な場所だけツリーで開きます。</p></div></div>
+        <section class="root-overview"><div class="subsection-heading"><div><h3>最上位の構成</h3><p>プロジェクト直下にある主要なフォルダと入口です。</p></div></div><div id="root-overview-grid" class="root-overview-grid"></div></section>
+        <div class="explorer-layout">
+          <div class="explorer-panel">
+            <div class="subsection-heading tree-heading"><div><h3>すべてのファイルとフォルダ</h3><p id="tree-summary">読み込み中</p></div></div>
+            <div class="toolbar"><label class="search-field"><span>名前または役割で検索</span><input id="search" type="search" placeholder="例: ログイン、テスト、README"></label><label><span>説明の状態</span><select id="role-filter"><option value="all">すべて表示</option><option value="explicit">個別説明あり</option><option value="inherited">フォルダの説明を使用</option><option value="convention">共通ルールの説明</option><option value="unclassified">説明なし</option></select></label><label class="checkbox"><input id="changes-only" type="checkbox"><span>変更された項目だけ</span></label></div>
+            <div id="tree" class="tree" role="tree"></div>
+          </div>
+          <aside class="passport-panel"><p class="section-label">選択した項目</p><h2 id="detail-title">ファイルを選択してください</h2><p id="detail-path" class="path"></p><p id="detail-summary" class="passport-summary">左の構成から項目を選ぶと、役割と変更時の注意点を表示します。</p><dl id="passport-fields" class="passport-fields"></dl><section><h3>この場所では行わないこと</h3><ul id="detail-not-responsible"></ul></section><section><h3>どんなときに変更するか</h3><ul id="detail-when"></ul></section><section><h3>関係するファイル</h3><ul id="detail-dependencies"></ul></section><section><h3>変更するときの注意</h3><ul id="detail-boundaries"></ul></section></aside>
+        </div>
+      </section>
+
+      <section id="view-health" class="view">
+        <div class="section-heading"><div><p class="section-label">説明不足を確認</p><h2>案内図の信頼性を保つ</h2><p>説明がない項目や、存在しない場所への案内を修正対象としてまとめます。</p></div></div>
+        <div class="health-grid"><article><header><strong id="health-unexplained-count">0</strong><div><h3>役割の説明がない項目</h3><p>何のための場所か判断できません</p></div></header><div id="health-unexplained"></div></article><article><header><strong id="health-generic-count">0</strong><div><h3>個別説明がないファイル</h3><p>共通ルールだけで説明しています</p></div></header><div id="health-generic"></div></article><article><header><strong id="health-broken-count">0</strong><div><h3>存在しない場所への案内</h3><p>古くなった参照を修正する必要があります</p></div></header><div id="health-broken"></div></article></div>
+      </section>
+
+      <footer><p>この画面は閲覧専用です。ファイルや設定が書き換わることはありません。</p><p id="verification-meta"></p></footer>
+    </main>
+  </div>
   <script src="/app.js" defer></script>
 </body>
 </html>

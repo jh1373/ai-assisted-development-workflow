@@ -298,7 +298,7 @@ class ProjectStructureTests(unittest.TestCase):
         for view in ("atlas", "tour", "lens", "explorer", "health"):
             self.assertIn(f'data-view="{view}"', html)
             self.assertIn(f'id="view-{view}"', html)
-        self.assertIn("このファイルの役割", html)
+        self.assertIn("フォルダの役割から、目的のファイルへ進む", html)
 
 
 if __name__ == "__main__":

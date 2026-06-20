@@ -9,12 +9,13 @@
   }
   const byId = (id) => document.getElementById(id);
   const els = Object.fromEntries([
-    "live-indicator","map-status","alert","areas-count","semantic-coverage","passport-coverage","health-issues",
-    "project-name","last-checked","atlas-layers","flow-select","flow-intro","flow-steps","lens-select","lens-intro",
+    "live-indicator","map-status","alert","areas-count","semantic-coverage","semantic-total","semantic-progress","semantic-caption",
+    "passport-coverage","passport-total","passport-caption","health-issues","health-caption","summary-headline","summary-detail",
+    "project-name","last-checked","help-button","help-panel","help-close","atlas-layers","flow-select","flow-intro","flow-steps","lens-select","lens-intro",
     "lens-primary","lens-related","lens-avoid","search","role-filter","changes-only","tree-summary","tree",
     "detail-title","detail-path","detail-summary","passport-fields","detail-not-responsible","detail-when",
     "detail-dependencies","detail-boundaries","health-unexplained-count","health-generic-count","health-broken-count",
-    "health-unexplained","health-generic","health-broken","verification-meta"
+    "health-unexplained","health-generic","health-broken","root-overview-grid","verification-meta"
   ].map((id) => [id, byId(id)]));
   let state = null;
   let selectedPath = null;
@@ -59,8 +60,12 @@
     return node;
   }
   function switchView(name) {
+    if (!["atlas", "tour", "lens", "explorer", "health"].includes(name)) name = "atlas";
     document.querySelectorAll(".view").forEach((view) => view.classList.toggle("active", view.id === "view-" + name));
     document.querySelectorAll(".tab").forEach((tab) => tab.classList.toggle("active", tab.dataset.view === name));
+    const nextUrl = new URL(location.href);
+    nextUrl.searchParams.set("view", name);
+    history.replaceState(null, "", nextUrl.pathname + nextUrl.search);
   }
   function patternRegex(pattern) {
     const escaped = pattern.replace(/[.+^$(){}|[\]\\]/g, "\\$&").replace(/\*\*/g, "§§").replace(/\*/g, "[^/]*").replace(/§§/g, ".*").replace(/\?/g, ".");
@@ -126,7 +131,7 @@
       lane.append(cards);
       container.append(lane);
     });
-    if (!state.areas.length) container.append(make("p", "empty", "区域がまだ定義されていません。Project Initializationで役割区域を登録してください。"));
+    if (!state.areas.length) container.append(make("p", "empty", "プロジェクトの主な役割がまだ登録されていません。初回設定で、何を作るプロジェクトなのか整理してください。"));
   }
   function fillSelect(select, values) {
     const previous = select.value;
@@ -184,7 +189,7 @@
   }
   function treeLine(entry, name) {
     const line = make("span", "entry-line");
-    line.append(make("span", "entry-name", name), make("span", "entry-summary", entry.beginner_summary));
+    line.append(make("span", "node-icon " + (entry.kind === "directory" ? "folder" : "file")), make("span", "entry-name", name), make("span", "entry-summary", entry.beginner_summary));
     const label = sourceLabel(entry.role_source);
     line.append(make("span", "badge " + entry.role_source, label));
     if (entry.change !== "unchanged") line.append(make("span", "badge changed", entry.change === "added" ? "追加" : "削除"));
@@ -228,6 +233,21 @@
     els["tree-summary"].textContent = entries.length + "項目中、条件に一致するトップレベル項目は" + shown + "件です。";
     if (!shown) els.tree.append(make("p", "empty", "条件に一致する項目がありません。"));
     if (selectedPath) els.tree.querySelector('[data-path="' + CSS.escape(selectedPath) + '"]')?.classList.add("selected");
+  }
+  function renderRootOverview() {
+    const container = els["root-overview-grid"];
+    container.replaceChildren();
+    const rootEntries = state.entries.filter((entry) => !entry.path.includes("/") && (entry.kind === "directory" || entry.importance === "entry-point"));
+    rootEntries.slice(0, 12).forEach((entry) => {
+      const count = entry.kind === "directory" ? state.entries.filter((item) => item.path.startsWith(entry.path + "/")).length : 0;
+      const card = make("button", "root-card");
+      card.type = "button";
+      card.append(make("span", "node-icon " + (entry.kind === "directory" ? "folder" : "file")), make("strong", "", entry.path), make("p", "", entry.beginner_summary));
+      card.append(make("small", "", entry.kind === "directory" ? "中に " + count + "項目" : "プロジェクトの入口"));
+      card.addEventListener("click", () => openPath(entry.path));
+      container.append(card);
+    });
+    if (!rootEntries.length) container.append(make("p", "empty", "最上位の構成を取得できませんでした。"));
   }
   function replaceList(element, values, emptyText = "登録されていません") {
     element.replaceChildren(...(values.length ? values : [emptyText]).map((value) => make("li", "", value)));
@@ -275,20 +295,30 @@
   function renderAll() {
     const explained = state.entries.length - state.health.unexplained_paths.length;
     const individual = state.entries.filter((entry) => entry.kind === "file" && entry.role_source === "explicit").length;
-    els["areas-count"].textContent = state.areas.length + "個";
-    els["semantic-coverage"].textContent = explained + "個";
-    els["passport-coverage"].textContent = individual + "個";
-    els["health-issues"].textContent = state.health.issue_count + "個";
+    const total = state.entries.length;
+    const explainedPercent = total ? Math.round(explained / total * 100) : 0;
+    els["areas-count"].textContent = state.areas.length;
+    els["semantic-coverage"].textContent = explained;
+    els["semantic-total"].textContent = "/ " + total + "項目";
+    els["semantic-progress"].style.width = explainedPercent + "%";
+    els["semantic-caption"].textContent = explained === total ? "すべての項目を説明できます" : (total - explained) + "項目の説明が必要です";
+    els["passport-coverage"].textContent = individual;
+    els["passport-caption"].textContent = individual ? "ファイルごとに専用の説明を登録" : "個別説明はまだありません";
+    els["health-issues"].textContent = state.health.issue_count;
+    els["health-caption"].textContent = state.health.issue_count ? "確認が必要です" : "現在、問題はありません";
+    els["health-issues"].closest("article").classList.toggle("has-issues", Boolean(state.health.issue_count));
+    els["summary-headline"].textContent = state.health.issue_count ? "案内図に " + state.health.issue_count + "件の確認事項があります" : "全" + total + "項目の役割を確認できます";
+    els["summary-detail"].textContent = state.health.issue_count ? "「説明不足を確認」から、古い説明や不足している案内を確認してください。" : "構成と役割説明は整っています。作業を始めるときは「作業場所を探す」を使用してください。";
     els["project-name"].textContent = state.project_name;
     els["last-checked"].textContent = "最終確認 " + new Date(state.generated_at).toLocaleTimeString("ja-JP");
     els["map-status"].textContent = statusLabel(state.validation_result);
     els["verification-meta"].textContent = state.verified_at ? "構成の最終確認 " + state.verified_at + " / 確認者 " + state.verified_by : "プロジェクト構成はまだ最終確認されていません";
     fillSelect(els["flow-select"], state.flows);
     fillSelect(els["lens-select"], state.task_lenses);
-    renderAtlas(); renderFlow(); renderLens(); renderTree(); renderHealth();
+    renderAtlas(); renderFlow(); renderLens(); renderRootOverview(); renderTree(); renderHealth();
     const issues = [];
     if (state.validation_result === "DIRECTORY_MAP_DRIFT_DETECTED") issues.push("承認済み構造との差分があります。");
-    if (state.health.broken_references.length) issues.push("壊れた意味参照があります。");
+    if (state.health.broken_references.length) issues.push("存在しない場所を指している案内があります。");
     if (state.summary.unclassified) issues.push("説明できない項目があります。");
     els.alert.hidden = !issues.length;
     els.alert.textContent = issues.join(" ");
@@ -302,17 +332,27 @@
       const nextRevision = JSON.stringify([next.structure_hash, next.areas, next.flows, next.task_lenses, next.health]);
       state = next;
       els["live-indicator"].textContent = "自動更新中";
-      els["live-indicator"].className = "pill connected";
+      els["live-indicator"].className = "connection-dot connected";
       if (nextRevision !== revision) { revision = nextRevision; renderAll(); }
       else els["last-checked"].textContent = "最終確認 " + new Date(next.generated_at).toLocaleTimeString("ja-JP");
     } catch (error) {
       els["live-indicator"].textContent = "接続エラー";
-      els["live-indicator"].className = "pill disconnected";
+      els["live-indicator"].className = "connection-dot disconnected";
       els.alert.hidden = false;
       els.alert.textContent = error.message;
     }
   }
   document.querySelectorAll(".tab").forEach((tab) => tab.addEventListener("click", () => switchView(tab.dataset.view)));
+  switchView(params.get("view") || "atlas");
+  els["help-button"].addEventListener("click", () => {
+    const opening = els["help-panel"].hidden;
+    els["help-panel"].hidden = !opening;
+    els["help-button"].setAttribute("aria-expanded", String(opening));
+  });
+  els["help-close"].addEventListener("click", () => {
+    els["help-panel"].hidden = true;
+    els["help-button"].setAttribute("aria-expanded", "false");
+  });
   els["flow-select"].addEventListener("change", renderFlow);
   els["lens-select"].addEventListener("change", renderLens);
   els.search.addEventListener("input", renderTree);

@@ -199,7 +199,7 @@ if ! grep -Fq '"schema_version": 2' starter/.ai-workflow/directory-map.json; the
   exit 1
 fi
 
-for term in 'プロジェクト全体' 'どう動くか' '作業場所を探す' 'ファイル一覧' '説明不足を確認'; do
+for term in 'プロジェクト全体' 'どう動くか' '作業場所を探す' 'ファイル構成' '説明不足を確認'; do
   if ! grep -Fq "$term" starter/scripts/project-structure-viewer/index.html; then
     echo "Project guide viewer is missing view: $term" >&2
     exit 1
