@@ -10,6 +10,8 @@ AI支援開発で、完了前に確認するためのチェックリストです
 - 対象ユーザーや収益化の仮説を確定事項として扱っていないか
 - ROADMAPがDiscoveryまたはBuild-readyの現在地に合っているか
 - Project Structure MapがProvisionalまたはVerifiedを返しているか
+- Project Atlasの区域とTask Lensが初心者にも理解できる説明になっているか
+- 入口・中心ファイルのFile Passportが作成時の意図を記録しているか
 - JSON正本からDIRECTORY_MAPを生成しているか
 - AGENTS.mdに未設定のプロジェクト固有欄が残っていないか
 - 初期設定レビューにユーザーの明示承認があるか
@@ -26,6 +28,7 @@ AI支援開発で、完了前に確認するためのチェックリストです
 - 変更しない範囲は明確か
 - 既存仕様との矛盾はないか
 - Project Structure GateがDrift、Invalid、Check Failedのままではないか
+- Guided Tour、Task Lens、Passportに壊れた参照が残っていないか
 - テスト方法は決まっているか
 - セキュリティやプライバシーへの影響はないか
 - workflow modeは適切か

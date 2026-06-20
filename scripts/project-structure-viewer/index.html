@@ -4,97 +4,65 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="dark">
-  <title>Project Structure Map</title>
+  <title>Project Atlas</title>
   <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
   <main class="app-shell">
     <header class="topbar">
-      <div>
-        <p class="eyebrow">AI-assisted Development Workflow</p>
-        <h1>Project Structure Map</h1>
-      </div>
-      <div class="status-cluster" aria-live="polite">
-        <span id="live-indicator" class="live-indicator">接続中</span>
-        <span id="map-status" class="status-pill">読み込み中</span>
-      </div>
+      <div><p class="eyebrow">AI-assisted Development Workflow</p><h1>Project Atlas</h1><p class="subtitle">フォルダ名ではなく、プロジェクトの仕組みから理解する</p></div>
+      <div class="status-cluster" aria-live="polite"><span id="live-indicator" class="pill">接続中</span><span id="map-status" class="pill">読み込み中</span></div>
     </header>
 
+    <nav class="view-tabs" aria-label="Project Atlasの表示切り替え">
+      <button class="tab active" data-view="atlas">全体マップ</button>
+      <button class="tab" data-view="tour">処理の流れ</button>
+      <button class="tab" data-view="lens">タスク案内</button>
+      <button class="tab" data-view="explorer">全ファイル</button>
+      <button class="tab" data-view="health">説明の健康状態</button>
+    </nav>
+
     <section id="alert" class="alert" hidden aria-live="assertive"></section>
-
-    <section class="summary-grid" aria-label="プロジェクト構造の概要">
-      <article class="metric-card"><span>ファイル</span><strong id="files-count">—</strong></article>
-      <article class="metric-card"><span>ディレクトリ</span><strong id="directories-count">—</strong></article>
-      <article class="metric-card"><span>構造差分</span><strong id="changes-count">—</strong></article>
-      <article class="metric-card"><span>未分類</span><strong id="unclassified-count">—</strong></article>
+    <section class="summary-grid" aria-label="概要">
+      <article><span>役割区域</span><strong id="areas-count">—</strong></article>
+      <article><span>意味を説明できる割合</span><strong id="semantic-coverage">—</strong></article>
+      <article><span>プロジェクト固有説明</span><strong id="passport-coverage">—</strong></article>
+      <article><span>確認が必要</span><strong id="health-issues">—</strong></article>
     </section>
 
-    <section class="workspace">
-      <div class="explorer-panel">
-        <div class="panel-heading">
-          <div>
-            <p class="section-label">Live structure</p>
-            <h2 id="project-name">プロジェクト</h2>
-          </div>
-          <p id="last-checked" class="muted">確認中</p>
-        </div>
+    <section id="view-atlas" class="view active">
+      <div class="section-heading"><div><p class="section-label">Big picture</p><h2 id="project-name">プロジェクト全体</h2></div><p id="last-checked" class="muted">確認中</p></div>
+      <div id="atlas-layers" class="atlas-layers"></div>
+    </section>
 
-        <div class="toolbar" aria-label="ツリー表示設定">
-          <label class="search-field">
-            <span>パスまたは役割を検索</span>
-            <input id="search" type="search" placeholder="例: auth、テスト、README" autocomplete="off">
-          </label>
-          <label>
-            <span>役割の状態</span>
-            <select id="role-filter">
-              <option value="all">すべて</option>
-              <option value="explicit">明示済み</option>
-              <option value="inherited">親から継承</option>
-              <option value="convention">慣例判定</option>
-              <option value="unclassified">未分類</option>
-            </select>
-          </label>
-          <label class="checkbox-field">
-            <input id="changes-only" type="checkbox">
-            <span>変更だけ表示</span>
-          </label>
-          <div class="toolbar-actions">
-            <button id="expand-all" type="button">すべて展開</button>
-            <button id="collapse-all" type="button">折り畳む</button>
-          </div>
-        </div>
+    <section id="view-tour" class="view">
+      <div class="section-heading"><div><p class="section-label">Guided tour</p><h2>処理を物語として追う</h2></div><select id="flow-select" aria-label="確認する処理"></select></div>
+      <div id="flow-intro" class="intro-card"></div><ol id="flow-steps" class="flow-steps"></ol>
+    </section>
 
-        <div id="tree-summary" class="tree-summary" aria-live="polite"></div>
-        <div id="tree" class="tree" role="tree" aria-label="プロジェクトのファイルツリー"></div>
+    <section id="view-lens" class="view">
+      <div class="section-heading"><div><p class="section-label">Task lens</p><h2>今回見る場所だけに絞る</h2></div><select id="lens-select" aria-label="確認するタスク"></select></div>
+      <div id="lens-intro" class="intro-card"></div>
+      <div class="lens-grid"><section><h3>最初に見る</h3><div id="lens-primary"></div></section><section><h3>関連して確認</h3><div id="lens-related"></div></section><section class="avoid"><h3>今回は触らない</h3><div id="lens-avoid"></div></section></div>
+    </section>
+
+    <section id="view-explorer" class="view">
+      <div class="explorer-layout">
+        <div class="explorer-panel">
+          <div class="section-heading"><div><p class="section-label">File explorer</p><h2>全ファイル</h2></div></div>
+          <div class="toolbar"><label><span>パスまたは説明を検索</span><input id="search" type="search" placeholder="例: ログイン、テスト、README"></label><label><span>説明の根拠</span><select id="role-filter"><option value="all">すべて</option><option value="explicit">個別Passport</option><option value="inherited">区域・親から継承</option><option value="convention">一般規則</option><option value="unclassified">説明なし</option></select></label><label class="checkbox"><input id="changes-only" type="checkbox">変更だけ表示</label></div>
+          <div id="tree-summary" class="tree-summary"></div><div id="tree" class="tree" role="tree"></div>
+        </div>
+        <aside class="passport-panel"><p class="section-label">File Passport</p><h2 id="detail-title">項目を選択</h2><p id="detail-path" class="path"></p><p id="detail-summary" class="passport-summary">ファイルを選ぶと、初心者向け説明を表示します。</p><dl id="passport-fields" class="passport-fields"></dl><section><h3>ここでは行わない</h3><ul id="detail-not-responsible"></ul></section><section><h3>変更するタイミング</h3><ul id="detail-when"></ul></section><section><h3>関係する場所</h3><ul id="detail-dependencies"></ul></section><section><h3>境界・禁止事項</h3><ul id="detail-boundaries"></ul></section></aside>
       </div>
-
-      <aside class="detail-panel" aria-labelledby="detail-title">
-        <p class="section-label">Selected item</p>
-        <h2 id="detail-title">項目を選択してください</h2>
-        <p id="detail-path" class="path-value">ツリーからファイルまたはディレクトリを選ぶと、役割と境界を確認できます。</p>
-
-        <dl class="detail-list">
-          <div><dt>種類</dt><dd id="detail-kind">—</dd></div>
-          <div><dt>変更状態</dt><dd id="detail-change">—</dd></div>
-          <div><dt>役割</dt><dd id="detail-role">—</dd></div>
-          <div><dt>役割の根拠</dt><dd id="detail-source">—</dd></div>
-        </dl>
-
-        <section class="detail-section">
-          <h3>境界・禁止事項</h3>
-          <ul id="detail-boundaries"><li>登録されていません</li></ul>
-        </section>
-        <section class="detail-section">
-          <h3>関連タスク</h3>
-          <ul id="detail-tasks"><li>登録されていません</li></ul>
-        </section>
-      </aside>
     </section>
 
-    <footer>
-      <p>閲覧専用です。役割の正本は <code>.ai-workflow/directory-map.json</code> です。</p>
-      <p id="verification-meta">基準線を確認中</p>
-    </footer>
+    <section id="view-health" class="view">
+      <div class="section-heading"><div><p class="section-label">Semantic health</p><h2>説明不足と壊れた参照</h2></div></div>
+      <div class="health-grid"><article><strong id="health-unexplained-count">0</strong><h3>説明がない項目</h3><div id="health-unexplained"></div></article><article><strong id="health-generic-count">0</strong><h3>一般説明だけのファイル</h3><div id="health-generic"></div></article><article><strong id="health-broken-count">0</strong><h3>壊れた参照</h3><div id="health-broken"></div></article></div>
+    </section>
+
+    <footer><p>閲覧専用です。意味情報の正本は <code>.ai-workflow/directory-map.json</code> です。</p><p id="verification-meta"></p></footer>
   </main>
   <script src="/app.js" defer></script>
 </body>

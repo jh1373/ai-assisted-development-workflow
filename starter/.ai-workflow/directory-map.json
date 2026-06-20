@@ -1,14 +1,104 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "status": "provisional",
   "project_name": "New Project",
   "verified_at": null,
   "verified_by": null,
   "ignore_file": ".ai-workflow/directory-map.ignore",
+  "areas": [
+    {
+      "id": "workflow",
+      "name": "AI開発の進め方",
+      "beginner_summary": "AIと人間が、いつ確認し、いつ実装し、何を記録するかを決める区域です。",
+      "layer": "workflow",
+      "paths": [".ai-workflow/**", "AGENTS.md", "workflows/**"],
+      "entry_points": ["AGENTS.md", "workflows/project-initialization.md"],
+      "depends_on": ["documentation"]
+    },
+    {
+      "id": "documentation",
+      "name": "プロジェクトの説明と記録",
+      "beginner_summary": "プロジェクトの目的、現在地、計画、判断理由を後から確認できる区域です。",
+      "layer": "documentation",
+      "paths": ["README.md", "docs/**"],
+      "entry_points": ["README.md", "docs/PROJECT_STATUS.md"],
+      "depends_on": []
+    },
+    {
+      "id": "automation",
+      "name": "自動チェックとローカルツール",
+      "beginner_summary": "初期設定や構造の間違いを機械的に見つけ、Project Atlasを表示する区域です。",
+      "layer": "platform",
+      "paths": ["scripts/**", "open-project-structure-map.cmd"],
+      "entry_points": ["open-project-structure-map.cmd", "scripts/project-structure.py"],
+      "depends_on": ["workflow"]
+    },
+    {
+      "id": "github",
+      "name": "GitHubでの確認と自動検証",
+      "beginner_summary": "Pull RequestやGitHub Actionsを使って、公開前の品質を確認する区域です。",
+      "layer": "platform",
+      "paths": [".github/**"],
+      "entry_points": [".github/workflows/project-structure-check.yml"],
+      "depends_on": ["automation"]
+    },
+    {
+      "id": "templates",
+      "name": "計画と記録のひな型",
+      "beginner_summary": "要件整理、実装計画、完了確認、devlogを同じ形式で残すための区域です。",
+      "layer": "documentation",
+      "paths": ["templates/**"],
+      "entry_points": ["templates/implementation-plan.md"],
+      "depends_on": ["workflow"]
+    }
+  ],
+  "flows": [
+    {
+      "id": "project-start",
+      "name": "新規プロジェクトを開始する流れ",
+      "beginner_summary": "曖昧な構想から、安全に最初の開発タスクを始めるまでの順番です。",
+      "steps": [
+        {"path": "workflows/project-initialization.md", "summary": "ユーザーとAIが目的、対象ユーザー、仮説を整理します。"},
+        {"path": "docs/ROADMAP.md", "summary": "プロジェクト全体を段階に分けます。"},
+        {"path": "docs/PROJECT_STATUS.md", "summary": "現在地と次に行う候補を記録します。"},
+        {"path": "workflows/session-start.md", "summary": "構造と現在地を確認し、今回の1タスクを選びます。"}
+      ]
+    },
+    {
+      "id": "open-atlas",
+      "name": "Project Atlasを表示する流れ",
+      "beginner_summary": "ダブルクリックしてから、ブラウザで構造と役割を確認できるまでの流れです。",
+      "steps": [
+        {"path": "open-project-structure-map.cmd", "summary": "WindowsからPythonの起動処理を開始します。"},
+        {"path": "scripts/project-structure.py", "summary": "構造と意味情報を検証し、localhostサーバーを起動します。"},
+        {"path": "scripts/project-structure-viewer/index.html", "summary": "Project Atlasの画面を表示します。"}
+      ]
+    }
+  ],
+  "task_lenses": [
+    {
+      "id": "change-workflow",
+      "name": "開発手順を変更する",
+      "beginner_summary": "初期設定や通常タスクの進め方を変更するときに見る範囲です。",
+      "primary_paths": ["workflows/**", "AGENTS.md"],
+      "related_paths": ["docs/ai-workflow/**", "templates/**"],
+      "avoid_paths": [".github/**"]
+    },
+    {
+      "id": "change-atlas",
+      "name": "Project Atlasを変更する",
+      "beginner_summary": "構造検証、意味情報、localhost画面を変更するときに見る範囲です。",
+      "primary_paths": ["scripts/project-structure.py", "scripts/project-structure-viewer/**"],
+      "related_paths": [".ai-workflow/directory-map.json", "docs/project-structure-map.md"],
+      "avoid_paths": ["docs/ROADMAP.md", "docs/PROJECT_STATUS.md"]
+    }
+  ],
   "nodes": [
     {
       "path": ".ai-workflow",
       "kind": "directory",
+      "area": "workflow",
+      "layer": "workflow",
       "role": "AI開発ワークフローの機械判定用状態と構造定義を保存する",
       "boundaries": [
         "秘密情報や認証情報を保存しない",
@@ -22,6 +112,8 @@
     {
       "path": ".github",
       "kind": "directory",
+      "area": "github",
+      "layer": "platform",
       "role": "GitHub上のIssue、Pull Request、CI設定を管理する",
       "boundaries": [
         "ワークフロー権限を必要以上に広げない"
@@ -34,6 +126,8 @@
     {
       "path": "docs",
       "kind": "directory",
+      "area": "documentation",
+      "layer": "documentation",
       "role": "プロジェクトの現在地、全体計画、判断記録、開発証拠を保存する",
       "boundaries": [
         "秘密情報、個人情報、内部URLを記録しない",
@@ -47,6 +141,8 @@
     {
       "path": "docs/ai-workflow",
       "kind": "directory",
+      "area": "documentation",
+      "layer": "documentation",
       "role": "導入済みAI開発ワークフローの参照文書を保存する",
       "boundaries": [
         "プロダクト固有のタスク記録を置かない"
@@ -58,6 +154,8 @@
     {
       "path": "scripts",
       "kind": "directory",
+      "area": "automation",
+      "layer": "platform",
       "role": "初期設定、構造検証、ローカル可視化などの自動化を提供する",
       "boundaries": [
         "外部サービスへプロジェクト情報を送信しない",
@@ -71,6 +169,8 @@
     {
       "path": "templates",
       "kind": "directory",
+      "area": "templates",
+      "layer": "documentation",
       "role": "タスク計画、レビュー、devlogなどの再利用テンプレートを保存する",
       "boundaries": [
         "実際のタスク記録をテンプレートへ直接書き込まない"
@@ -82,6 +182,8 @@
     {
       "path": "workflows",
       "kind": "directory",
+      "area": "workflow",
+      "layer": "workflow",
       "role": "Project Initialization、session-start、session-endの実行手順を定義する",
       "boundaries": [
         "ユーザー承認ゲートを省略しない"
@@ -93,6 +195,9 @@
     {
       "path": "AGENTS.md",
       "kind": "file",
+      "area": "workflow",
+      "layer": "workflow",
+      "importance": "entry-point",
       "role": "AIエージェントが必ず守るプロジェクト固有ルールを定義する",
       "boundaries": [
         "Hypothesisを恒久ルールとして確定しない"
@@ -104,6 +209,9 @@
     {
       "path": "README.md",
       "kind": "file",
+      "area": "documentation",
+      "layer": "documentation",
+      "importance": "entry-point",
       "role": "プロジェクトの目的、導入方法、主要な利用手順を説明する",
       "boundaries": [],
       "task_types": [
@@ -113,6 +221,9 @@
     {
       "path": "open-project-structure-map.cmd",
       "kind": "file",
+      "area": "automation",
+      "layer": "platform",
+      "importance": "entry-point",
       "role": "Project Structure MapをWindowsからワンクリックで起動する",
       "boundaries": [
         "外部ネットワークへサーバーを公開しない",
@@ -121,6 +232,106 @@
       "task_types": [
         "Project Structure Mapの起動"
       ]
+    },
+    {
+      "path": ".ai-workflow/project-state.conf",
+      "kind": "file",
+      "area": "workflow",
+      "layer": "workflow",
+      "importance": "core",
+      "display_name": "初期設定状態",
+      "role": "初期設定の進行状態とユーザー承認を機械判定する",
+      "beginner_summary": "初期設定が未開始、作業中、完了のどれかをAIの推測なしで判定します。"
+    },
+    {
+      "path": ".ai-workflow/directory-map.json",
+      "kind": "file",
+      "area": "workflow",
+      "layer": "workflow",
+      "importance": "core",
+      "display_name": "Project Atlasの正本",
+      "role": "区域、File Passport、Guided Tour、Task Lens、構造境界を保存する",
+      "beginner_summary": "Project Atlasに表示する意味情報を保存する中心ファイルです。"
+    },
+    {
+      "path": "workflows/project-initialization.md",
+      "kind": "file",
+      "area": "workflow",
+      "layer": "workflow",
+      "importance": "entry-point",
+      "display_name": "新規プロジェクト初期設定",
+      "role": "曖昧な構想を安全に最初の開発タスクへ変える手順を定義する",
+      "beginner_summary": "ユーザーとAIが最初に話し合い、目的、仮説、計画、ルールを決める手順です。"
+    },
+    {
+      "path": "workflows/session-start.md",
+      "kind": "file",
+      "area": "workflow",
+      "layer": "workflow",
+      "importance": "entry-point",
+      "display_name": "タスク開始手順",
+      "role": "現在地、構造、Task Lensを確認して今回の1タスクを決める",
+      "beginner_summary": "開発を始める前に、何をするかと何をしないかを確認する手順です。"
+    },
+    {
+      "path": "docs/ROADMAP.md",
+      "kind": "file",
+      "area": "documentation",
+      "layer": "documentation",
+      "importance": "core",
+      "display_name": "プロジェクト全体計画",
+      "role": "プロジェクトを段階に分け、到達点と順序を定義する",
+      "beginner_summary": "プロジェクト全体で、何をどの順番で作るかを示す地図です。"
+    },
+    {
+      "path": "docs/PROJECT_STATUS.md",
+      "kind": "file",
+      "area": "documentation",
+      "layer": "documentation",
+      "importance": "entry-point",
+      "display_name": "現在地と次の候補",
+      "role": "現在のフェーズ、完了事項、次のタスク候補、注意点を記録する",
+      "beginner_summary": "今どこまで終わり、次に何をする可能性があるかを確認するファイルです。"
+    },
+    {
+      "path": "scripts/project-structure.py",
+      "kind": "file",
+      "area": "automation",
+      "layer": "platform",
+      "importance": "core",
+      "display_name": "Project Atlasエンジン",
+      "role": "構造と意味情報を検証し、生成文書とlocalhost APIを提供する",
+      "beginner_summary": "Project Atlasの検査、データ作成、画面用サーバーを担当する中心プログラムです。"
+    },
+    {
+      "path": "scripts/project-structure-viewer/index.html",
+      "kind": "file",
+      "area": "automation",
+      "layer": "platform",
+      "importance": "entry-point",
+      "display_name": "Project Atlas画面",
+      "role": "全体マップ、Guided Tour、Task Lens、Explorer、Healthの画面構造を定義する",
+      "beginner_summary": "ブラウザで最初に表示されるProject Atlasの画面です。"
+    },
+    {
+      "path": ".github/workflows/project-structure-check.yml",
+      "kind": "file",
+      "area": "github",
+      "layer": "platform",
+      "importance": "core",
+      "display_name": "Project Atlas CI",
+      "role": "GitHub上で構造と生成文書の整合性を検証する",
+      "beginner_summary": "pushやPull Requestの後に、Project Atlasが壊れていないか自動確認します。"
+    },
+    {
+      "path": "templates/implementation-plan.md",
+      "kind": "file",
+      "area": "templates",
+      "layer": "documentation",
+      "importance": "entry-point",
+      "display_name": "実装計画テンプレート",
+      "role": "1タスクの範囲、完了条件、Atlas影響、検証方法を実装前に固定する",
+      "beginner_summary": "AIが作業を広げすぎないよう、実装前に今回の計画を書くひな型です。"
     }
   ],
   "conventions": [

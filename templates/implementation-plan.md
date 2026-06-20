@@ -68,6 +68,13 @@ Directory Map update candidate:
 
 -
 
+Project Atlas context:
+
+- Related area:
+- Guided Tour impact:
+- Task Lens used or proposed:
+- File Passports to add or update:
+
 ## Workflow Mode
 
 <!-- AIが今回のタスク内容とリスクを見て判定する。導入時に固定しない。Default is Standard. Minimalに下げる場合、またはStrictに上げる場合は理由を書く -->

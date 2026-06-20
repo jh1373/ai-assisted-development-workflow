@@ -1,277 +1,286 @@
 (() => {
   "use strict";
-
-  const params = new URLSearchParams(window.location.search);
-  const token = params.get("token") || sessionStorage.getItem("project-structure-token") || "";
-  if (token) sessionStorage.setItem("project-structure-token", token);
+  const params = new URLSearchParams(location.search);
+  const token = params.get("token") || sessionStorage.getItem("project-atlas-token") || "";
+  if (token) sessionStorage.setItem("project-atlas-token", token);
   if (params.has("token")) {
     params.delete("token");
-    const clean = `${window.location.pathname}${params.toString() ? `?${params}` : ""}`;
-    window.history.replaceState(null, "", clean);
+    history.replaceState(null, "", location.pathname + (params.toString() ? "?" + params : ""));
   }
-
-  const elements = Object.fromEntries([
-    "live-indicator", "map-status", "alert", "files-count", "directories-count",
-    "changes-count", "unclassified-count", "project-name", "last-checked", "search",
-    "role-filter", "changes-only", "expand-all", "collapse-all", "tree-summary", "tree",
-    "detail-title", "detail-path", "detail-kind", "detail-change", "detail-role",
-    "detail-source", "detail-boundaries", "detail-tasks", "verification-meta"
-  ].map((id) => [id, document.getElementById(id)]));
-
-  let currentState = null;
+  const byId = (id) => document.getElementById(id);
+  const els = Object.fromEntries([
+    "live-indicator","map-status","alert","areas-count","semantic-coverage","passport-coverage","health-issues",
+    "project-name","last-checked","atlas-layers","flow-select","flow-intro","flow-steps","lens-select","lens-intro",
+    "lens-primary","lens-related","lens-avoid","search","role-filter","changes-only","tree-summary","tree",
+    "detail-title","detail-path","detail-summary","passport-fields","detail-not-responsible","detail-when",
+    "detail-dependencies","detail-boundaries","health-unexplained-count","health-generic-count","health-broken-count",
+    "health-unexplained","health-generic","health-broken","verification-meta"
+  ].map((id) => [id, byId(id)]));
+  let state = null;
   let selectedPath = null;
-  let renderedRevision = "";
-
-  function labelForSource(source) {
-    return {
-      explicit: "明示された役割",
-      "explicit-pattern": "登録パターン",
-      inherited: "親ディレクトリから継承",
-      convention: "標準ファイル名から判定",
-      unclassified: "未分類"
-    }[source] || source;
+  let revision = "";
+  const layerLabels = {
+    experience: "ユーザーが触れる画面", feature: "プロダクトの機能", data: "データと外部通信",
+    platform: "自動化と運用基盤", workflow: "AIと人間の開発手順", documentation: "計画と判断の記録"
+  };
+  function make(tag, className, text) {
+    const node = document.createElement(tag);
+    if (className) node.className = className;
+    if (text !== undefined) node.textContent = text;
+    return node;
   }
-
-  function labelForKind(kind) {
-    return { file: "ファイル", directory: "ディレクトリ", symlink: "シンボリックリンク" }[kind] || kind;
+  function switchView(name) {
+    document.querySelectorAll(".view").forEach((view) => view.classList.toggle("active", view.id === "view-" + name));
+    document.querySelectorAll(".tab").forEach((tab) => tab.classList.toggle("active", tab.dataset.view === name));
   }
-
-  function labelForChange(change) {
-    return { unchanged: "基準線と一致", added: "追加", removed: "削除" }[change] || change;
+  function patternRegex(pattern) {
+    const escaped = pattern.replace(/[.+^$(){}|[\]\\]/g, "\\$&").replace(/\*\*/g, "§§").replace(/\*/g, "[^/]*").replace(/§§/g, ".*").replace(/\?/g, ".");
+    return new RegExp("^" + escaped + "$");
   }
-
-  function statusClass(result) {
-    if (result === "DIRECTORY_MAP_VERIFIED") return "verified";
-    if (result === "DIRECTORY_MAP_PROVISIONAL") return "provisional";
-    return "drift";
+  function entriesFor(pattern) {
+    if (!state) return [];
+    const base = pattern.endsWith("/**") ? pattern.slice(0, -3) : null;
+    const regex = patternRegex(pattern);
+    return state.entries.filter((entry) => entry.path === pattern || entry.path === base || regex.test(entry.path));
   }
-
-  function statusLabel(result) {
-    return {
-      DIRECTORY_MAP_VERIFIED: "VERIFIED",
-      DIRECTORY_MAP_PROVISIONAL: "PROVISIONAL",
-      DIRECTORY_MAP_DRIFT_DETECTED: "DRIFT DETECTED",
-      DIRECTORY_MAP_INVALID: "INVALID",
-      DIRECTORY_MAP_CHECK_FAILED: "CHECK FAILED"
-    }[result] || result;
+  function openPath(pattern) {
+    const entry = entriesFor(pattern)[0] || state?.entries.find((item) => item.path === pattern);
+    switchView("explorer");
+    if (entry) {
+      selectedPath = entry.path;
+      renderTree();
+      selectEntry(entry);
+      els.tree.querySelector('[data-path="' + CSS.escape(entry.path) + '"]')?.scrollIntoView({ block: "center" });
+    } else {
+      els.search.value = pattern;
+      renderTree();
+    }
   }
-
+  function pathButton(path, summary) {
+    const button = make("button", "path-card");
+    button.type = "button";
+    button.append(make("code", "", path));
+    if (summary) button.append(make("span", "", summary));
+    button.addEventListener("click", () => openPath(path));
+    return button;
+  }
+  function renderAtlas() {
+    const container = els["atlas-layers"];
+    container.replaceChildren();
+    const grouped = new Map();
+    state.areas.forEach((area) => {
+      if (!grouped.has(area.layer)) grouped.set(area.layer, []);
+      grouped.get(area.layer).push(area);
+    });
+    Object.keys(layerLabels).forEach((layer) => {
+      const areas = grouped.get(layer);
+      if (!areas?.length) return;
+      const lane = make("section", "atlas-lane");
+      const heading = make("div", "lane-heading");
+      heading.append(make("span", "lane-number", String(areas.length)), make("h3", "", layerLabels[layer]));
+      lane.append(heading);
+      const cards = make("div", "area-cards");
+      areas.forEach((area) => {
+        const card = make("button", "area-card");
+        card.type = "button";
+        card.append(make("span", "area-kicker", area.layer), make("h4", "", area.name), make("p", "", area.beginner_summary));
+        const meta = make("div", "area-meta");
+        meta.append(make("span", "", area.file_count + " files"), make("span", "", area.entry_points_present.length + " entry points"));
+        card.append(meta);
+        if (area.depends_on.length) card.append(make("small", "", "次につながる区域: " + area.depends_on.join(", ")));
+        card.addEventListener("click", () => openPath(area.resolved_paths[0] || area.paths[0]));
+        cards.append(card);
+      });
+      lane.append(cards);
+      container.append(lane);
+    });
+    if (!state.areas.length) container.append(make("p", "empty", "区域がまだ定義されていません。Project Initializationで役割区域を登録してください。"));
+  }
+  function fillSelect(select, values) {
+    const previous = select.value;
+    select.replaceChildren(...values.map((value) => {
+      const option = make("option", "", value.name);
+      option.value = value.id;
+      return option;
+    }));
+    if (values.some((value) => value.id === previous)) select.value = previous;
+  }
+  function renderFlow() {
+    const flow = state.flows.find((item) => item.id === els["flow-select"].value) || state.flows[0];
+    els["flow-intro"].textContent = flow?.beginner_summary || "処理の流れがまだ登録されていません。";
+    els["flow-steps"].replaceChildren();
+    flow?.steps.forEach((step, index) => {
+      const item = make("li", "flow-step");
+      item.append(make("span", "step-number", String(index + 1)), pathButton(step.path, step.summary));
+      els["flow-steps"].append(item);
+    });
+  }
+  function renderLensColumn(element, paths, emptyText) {
+    element.replaceChildren();
+    if (!paths.length) element.append(make("p", "empty-small", emptyText));
+    paths.forEach((path) => element.append(pathButton(path)));
+  }
+  function renderLens() {
+    const lens = state.task_lenses.find((item) => item.id === els["lens-select"].value) || state.task_lenses[0];
+    els["lens-intro"].textContent = lens?.beginner_summary || "タスク案内がまだ登録されていません。";
+    renderLensColumn(els["lens-primary"], lens?.primary_paths || [], "最初に見る場所は未登録です。");
+    renderLensColumn(els["lens-related"], lens?.related_paths || [], "関連場所は未登録です。");
+    renderLensColumn(els["lens-avoid"], lens?.avoid_paths || [], "除外範囲は未登録です。");
+  }
   function buildHierarchy(entries) {
     const root = { children: new Map(), entry: null };
-    for (const entry of entries) {
-      const parts = entry.path.split("/");
+    entries.forEach((entry) => {
       let cursor = root;
-      parts.forEach((part, index) => {
+      entry.path.split("/").forEach((part, index, parts) => {
         if (!cursor.children.has(part)) cursor.children.set(part, { children: new Map(), entry: null });
         cursor = cursor.children.get(part);
         if (index === parts.length - 1) cursor.entry = entry;
       });
-    }
+    });
     return root;
   }
-
   function entryMatches(entry) {
-    const query = elements.search.value.trim().toLocaleLowerCase("ja");
-    if (query && !`${entry.path} ${entry.role}`.toLocaleLowerCase("ja").includes(query)) return false;
-    const roleFilter = elements["role-filter"].value;
-    if (roleFilter === "explicit" && !entry.role_source.startsWith("explicit")) return false;
-    if (roleFilter !== "all" && roleFilter !== "explicit" && entry.role_source !== roleFilter) return false;
-    if (elements["changes-only"].checked && entry.change === "unchanged") return false;
-    return true;
+    const query = els.search.value.trim().toLocaleLowerCase("ja");
+    if (query && ![entry.path, entry.beginner_summary, entry.responsibility].join(" ").toLocaleLowerCase("ja").includes(query)) return false;
+    const filter = els["role-filter"].value;
+    if (filter === "explicit" && !entry.role_source.startsWith("explicit")) return false;
+    if (!["all", "explicit"].includes(filter) && entry.role_source !== filter) return false;
+    return !(els["changes-only"].checked && entry.change === "unchanged");
   }
-
-  function nodeHasMatch(node) {
-    if (node.entry && entryMatches(node.entry)) return true;
-    return [...node.children.values()].some(nodeHasMatch);
+  function nodeMatches(node) {
+    return (node.entry && entryMatches(node.entry)) || [...node.children.values()].some(nodeMatches);
   }
-
-  function roleBadge(entry) {
-    const badge = document.createElement("span");
-    badge.className = `entry-badge ${entry.role_source}`;
-    badge.textContent = entry.role_source === "unclassified" ? "未分類" : labelForSource(entry.role_source);
-    return badge;
-  }
-
-  function changeBadge(entry) {
-    if (entry.change === "unchanged") return null;
-    const badge = document.createElement("span");
-    badge.className = `change-badge ${entry.change}`;
-    badge.textContent = labelForChange(entry.change);
-    return badge;
-  }
-
-  function entryLine(entry, name) {
-    const line = document.createElement("span");
-    line.className = "entry-line";
-    const title = document.createElement("span");
-    title.className = "entry-name";
-    title.textContent = name;
-    const role = document.createElement("span");
-    role.className = "entry-role";
-    role.textContent = entry.role;
-    line.append(title, role, roleBadge(entry));
-    const change = changeBadge(entry);
-    if (change) line.append(change);
+  function treeLine(entry, name) {
+    const line = make("span", "entry-line");
+    line.append(make("span", "entry-name", name), make("span", "entry-summary", entry.beginner_summary));
+    const label = entry.role_source === "explicit" ? "個別Passport" : entry.role_source === "inherited" ? "親から継承" : entry.role_source === "convention" ? "一般説明" : entry.role_source === "unclassified" ? "説明なし" : "登録パターン";
+    line.append(make("span", "badge " + entry.role_source, label));
+    if (entry.change !== "unchanged") line.append(make("span", "badge changed", entry.change === "added" ? "追加" : "削除"));
     return line;
   }
-
-  function renderNode(name, node, depth) {
-    if (!nodeHasMatch(node)) return null;
-    const entry = node.entry || {
-      path: name,
-      kind: "directory",
-      role: "親ディレクトリ",
-      role_source: "inherited",
-      role_from: null,
-      boundaries: [],
-      task_types: [],
-      change: "unchanged"
-    };
-    const isDirectory = entry.kind === "directory" || node.children.size > 0;
+  function renderTreeNode(name, node, depth) {
+    if (!nodeMatches(node)) return null;
+    const entry = node.entry || { path: name, kind: "directory", beginner_summary: "親フォルダ", role_source: "inherited", change: "unchanged" };
+    const isDirectory = entry.kind === "directory" || node.children.size;
     if (isDirectory) {
-      const details = document.createElement("details");
-      details.open = depth < 2;
+      const details = make("details", "");
+      details.open = depth < 1;
       details.dataset.path = entry.path;
-      const summary = document.createElement("summary");
-      summary.append(entryLine(entry, name));
+      const summary = make("summary", "");
+      summary.append(treeLine(entry, name));
       summary.addEventListener("click", () => selectEntry(entry));
       details.append(summary);
-      [...node.children.entries()]
-        .sort(([a, nodeA], [b, nodeB]) => {
-          const aDir = nodeA.entry?.kind === "directory" || nodeA.children.size > 0;
-          const bDir = nodeB.entry?.kind === "directory" || nodeB.children.size > 0;
-          return aDir === bDir ? a.localeCompare(b, "ja") : aDir ? -1 : 1;
-        })
-        .forEach(([childName, childNode]) => {
-          const child = renderNode(childName, childNode, depth + 1);
-          if (child) details.append(child);
-        });
+      [...node.children.entries()].sort(([a],[b]) => a.localeCompare(b, "ja")).forEach(([childName, childNode]) => {
+        const child = renderTreeNode(childName, childNode, depth + 1);
+        if (child) details.append(child);
+      });
       return details;
     }
-    const button = document.createElement("button");
+    const button = make("button", "file-row");
     button.type = "button";
-    button.className = "file-row";
     button.dataset.path = entry.path;
-    button.append(entryLine(entry, name));
+    button.append(treeLine(entry, name));
     button.addEventListener("click", () => selectEntry(entry));
     return button;
   }
-
   function renderTree() {
-    if (!currentState) return;
-    const entries = [...currentState.entries, ...currentState.removed_entries];
+    const entries = [...state.entries, ...state.removed_entries];
     const hierarchy = buildHierarchy(entries);
     const fragment = document.createDocumentFragment();
     let shown = 0;
     [...hierarchy.children.entries()].forEach(([name, node]) => {
-      const child = renderNode(name, node, 0);
-      if (child) {
-        shown += 1;
-        fragment.append(child);
-      }
+      const child = renderTreeNode(name, node, 0);
+      if (child) { shown += 1; fragment.append(child); }
     });
-    elements.tree.replaceChildren(fragment);
-    elements["tree-summary"].textContent = `${entries.length}項目中、現在の条件に一致するトップレベル項目は${shown}件です。`;
-    if (!shown) {
-      const empty = document.createElement("p");
-      empty.className = "empty-state";
-      empty.textContent = "条件に一致する項目がありません。";
-      elements.tree.append(empty);
-    }
-    if (selectedPath) {
-      const selected = elements.tree.querySelector(`[data-path="${CSS.escape(selectedPath)}"]`);
-      selected?.classList.add("selected");
-    } else if (entries.length) {
-      selectEntry(entries[0]);
-    }
+    els.tree.replaceChildren(fragment);
+    els["tree-summary"].textContent = entries.length + "項目中、条件に一致するトップレベル項目は" + shown + "件です。";
+    if (!shown) els.tree.append(make("p", "empty", "条件に一致する項目がありません。"));
+    if (selectedPath) els.tree.querySelector('[data-path="' + CSS.escape(selectedPath) + '"]')?.classList.add("selected");
   }
-
-  function replaceList(element, values) {
-    const items = values.length ? values : ["登録されていません"];
-    element.replaceChildren(...items.map((value) => {
-      const item = document.createElement("li");
-      item.textContent = value;
-      return item;
-    }));
+  function replaceList(element, values, emptyText = "登録されていません") {
+    element.replaceChildren(...(values.length ? values : [emptyText]).map((value) => make("li", "", value)));
   }
-
   function selectEntry(entry) {
     selectedPath = entry.path;
-    elements.tree.querySelectorAll(".selected").forEach((node) => node.classList.remove("selected"));
-    elements.tree.querySelector(`[data-path="${CSS.escape(entry.path)}"]`)?.classList.add("selected");
-    elements["detail-title"].textContent = entry.path.split("/").pop();
-    elements["detail-path"].textContent = entry.path;
-    elements["detail-kind"].textContent = labelForKind(entry.kind);
-    elements["detail-change"].textContent = labelForChange(entry.change);
-    elements["detail-role"].textContent = entry.role;
-    elements["detail-source"].textContent = entry.role_from
-      ? `${labelForSource(entry.role_source)}: ${entry.role_from}`
-      : labelForSource(entry.role_source);
-    replaceList(elements["detail-boundaries"], entry.boundaries || []);
-    replaceList(elements["detail-tasks"], entry.task_types || []);
+    els.tree.querySelectorAll(".selected").forEach((node) => node.classList.remove("selected"));
+    els.tree.querySelector('[data-path="' + CSS.escape(entry.path) + '"]')?.classList.add("selected");
+    els["detail-title"].textContent = entry.display_name || entry.path.split("/").pop();
+    els["detail-path"].textContent = entry.path;
+    els["detail-summary"].textContent = entry.beginner_summary;
+    const fields = [
+      ["担当すること", entry.responsibility], ["所属区域", entry.area || "区域未設定"], ["重要度", entry.importance],
+      ["説明の根拠", entry.role_source + " / " + entry.evidence], ["入力", (entry.inputs || []).join(" / ") || "なし"],
+      ["出力", (entry.outputs || []).join(" / ") || "なし"]
+    ];
+    els["passport-fields"].replaceChildren(...fields.map(([term, value]) => {
+      const row = make("div", "passport-row");
+      row.append(make("dt", "", term), make("dd", "", value));
+      return row;
+    }));
+    replaceList(els["detail-not-responsible"], entry.not_responsible_for || []);
+    replaceList(els["detail-when"], entry.when_to_change || []);
+    replaceList(els["detail-dependencies"], entry.depends_on || []);
+    replaceList(els["detail-boundaries"], entry.boundaries || []);
   }
-
-  function updateSummary(state) {
-    const summary = state.summary;
-    elements["files-count"].textContent = summary.files.toLocaleString("ja-JP");
-    elements["directories-count"].textContent = summary.directories.toLocaleString("ja-JP");
-    elements["changes-count"].textContent = (summary.added + summary.removed + summary.type_changed).toLocaleString("ja-JP");
-    elements["unclassified-count"].textContent = summary.unclassified.toLocaleString("ja-JP");
-    elements["project-name"].textContent = state.project_name;
-    elements["last-checked"].textContent = `最終確認 ${new Date(state.generated_at).toLocaleTimeString("ja-JP")}`;
-    elements["map-status"].textContent = statusLabel(state.validation_result);
-    elements["map-status"].className = `status-pill ${statusClass(state.validation_result)}`;
-    elements["verification-meta"].textContent = state.verified_at
-      ? `最終検証 ${state.verified_at} / ${state.verified_by}`
-      : "構造の基準線はまだ確定していません。";
-
+  function healthList(element, values, formatter = (value) => value) {
+    element.replaceChildren();
+    if (!values.length) element.append(make("p", "healthy", "問題はありません"));
+    values.slice(0, 30).forEach((value) => element.append(make("div", "health-item", formatter(value))));
+    if (values.length > 30) element.append(make("p", "muted", "ほか" + (values.length - 30) + "件"));
+  }
+  function renderHealth() {
+    const health = state.health;
+    els["health-unexplained-count"].textContent = health.unexplained_paths.length;
+    els["health-generic-count"].textContent = health.generic_passports.length;
+    els["health-broken-count"].textContent = health.broken_references.length;
+    healthList(els["health-unexplained"], health.unexplained_paths);
+    healthList(els["health-generic"], health.generic_passports);
+    healthList(els["health-broken"], health.broken_references, (item) => item.source + " → " + item.target);
+  }
+  function renderAll() {
+    els["areas-count"].textContent = state.areas.length;
+    els["semantic-coverage"].textContent = state.health.semantic_coverage + "%";
+    els["passport-coverage"].textContent = state.health.passport_coverage + "%";
+    els["health-issues"].textContent = state.health.issue_count;
+    els["project-name"].textContent = state.project_name;
+    els["last-checked"].textContent = "最終確認 " + new Date(state.generated_at).toLocaleTimeString("ja-JP");
+    els["map-status"].textContent = state.validation_result.replace("DIRECTORY_MAP_", "");
+    els["verification-meta"].textContent = state.verified_at ? "最終検証 " + state.verified_at + " / " + state.verified_by : "構造の基準線は未確定です";
+    fillSelect(els["flow-select"], state.flows);
+    fillSelect(els["lens-select"], state.task_lenses);
+    renderAtlas(); renderFlow(); renderLens(); renderTree(); renderHealth();
     const issues = [];
-    if (state.validation_result === "DIRECTORY_MAP_DRIFT_DETECTED") {
-      issues.push(`基準線との差分があります。追加${summary.added}件、削除${summary.removed}件です。`);
-    }
-    if (state.missing_declared.length) issues.push(`登録済みの必須候補が${state.missing_declared.length}件見つかりません。`);
-    if (state.warnings.length) issues.push(`読み取り警告が${state.warnings.length}件あります。`);
-    elements.alert.hidden = issues.length === 0;
-    elements.alert.textContent = issues.join(" ");
+    if (state.validation_result === "DIRECTORY_MAP_DRIFT_DETECTED") issues.push("承認済み構造との差分があります。");
+    if (state.health.broken_references.length) issues.push("壊れた意味参照があります。");
+    if (state.summary.unclassified) issues.push("説明できない項目があります。");
+    els.alert.hidden = !issues.length;
+    els.alert.textContent = issues.join(" ");
   }
-
-  async function fetchState() {
-    if (!token) throw new Error("アクセス用トークンがありません。起動時に表示されたURLを使用してください。");
-    const response = await fetch(`/api/state?token=${encodeURIComponent(token)}`, { cache: "no-store" });
-    if (!response.ok) throw new Error(response.status === 403 ? "アクセス用トークンが無効です。" : `構造情報を取得できませんでした (${response.status})。`);
-    return response.json();
-  }
-
   async function refresh() {
     try {
-      const state = await fetchState();
-      elements["live-indicator"].textContent = "LIVE";
-      elements["live-indicator"].className = "live-indicator connected";
-      const revision = `${state.structure_hash}:${state.validation_result}:${state.summary.unclassified}`;
-      currentState = state;
-      updateSummary(state);
-      if (revision !== renderedRevision) {
-        renderedRevision = revision;
-        renderTree();
-        if (selectedPath) {
-          const selected = [...state.entries, ...state.removed_entries].find((entry) => entry.path === selectedPath);
-          if (selected) selectEntry(selected);
-        }
-      }
+      if (!token) throw new Error("アクセス用トークンがありません。起動時に表示されたURLを使用してください。");
+      const response = await fetch("/api/state?token=" + encodeURIComponent(token), { cache: "no-store" });
+      if (!response.ok) throw new Error(response.status === 403 ? "アクセス用トークンが無効です。" : "状態を取得できません。");
+      const next = await response.json();
+      const nextRevision = JSON.stringify([next.structure_hash, next.areas, next.flows, next.task_lenses, next.health]);
+      state = next;
+      els["live-indicator"].textContent = "LIVE";
+      els["live-indicator"].className = "pill connected";
+      if (nextRevision !== revision) { revision = nextRevision; renderAll(); }
+      else els["last-checked"].textContent = "最終確認 " + new Date(next.generated_at).toLocaleTimeString("ja-JP");
     } catch (error) {
-      elements["live-indicator"].textContent = "切断";
-      elements["live-indicator"].className = "live-indicator disconnected";
-      elements.alert.hidden = false;
-      elements.alert.textContent = error instanceof Error ? error.message : String(error);
+      els["live-indicator"].textContent = "接続エラー";
+      els["live-indicator"].className = "pill disconnected";
+      els.alert.hidden = false;
+      els.alert.textContent = error.message;
     }
   }
-
-  elements.search.addEventListener("input", renderTree);
-  elements["role-filter"].addEventListener("change", renderTree);
-  elements["changes-only"].addEventListener("change", renderTree);
-  elements["expand-all"].addEventListener("click", () => elements.tree.querySelectorAll("details").forEach((item) => { item.open = true; }));
-  elements["collapse-all"].addEventListener("click", () => elements.tree.querySelectorAll("details").forEach((item) => { item.open = false; }));
-
+  document.querySelectorAll(".tab").forEach((tab) => tab.addEventListener("click", () => switchView(tab.dataset.view)));
+  els["flow-select"].addEventListener("change", renderFlow);
+  els["lens-select"].addEventListener("change", renderLens);
+  els.search.addEventListener("input", renderTree);
+  els["role-filter"].addEventListener("change", renderTree);
+  els["changes-only"].addEventListener("change", renderTree);
   refresh();
-  window.setInterval(refresh, 2000);
+  setInterval(refresh, 2000);
 })();

@@ -1,186 +1,156 @@
-# Project Structure Map
+# Project Atlas
 
-新規プロジェクトの全ファイル構造、主要な責務、構造差分を、人間とAIが同じ情報から確認するための機能です。
+Project Atlasは、ファイルを並べるだけのツリーではありません。新規プロジェクトの「どの区域が何を担当し、処理がどこを通り、今回どこを見るべきか」を初心者向けの言葉で確認するread-only localhost画面です。
 
-## 目的
+## 解決する問題
 
-- 全ファイルと全ディレクトリをlocalhostで見やすく確認する
-- 主要ディレクトリと重要ファイルの役割を明文化する
-- AIが古いDIRECTORY_MAPを信じて誤った場所を変更することを防ぐ
-- 追加、削除、移動を機械的に検出する
-- Project Initialization、session-start、session-end、CIで同じ判定を使う
+通常のファイルツリーから分かるのは名前と配置だけです。Project Atlasは次を可視化します。
 
-ファイル内容は走査、保存、配信しません。扱うのは相対パス、種類、合意済みの役割と境界だけです。
+- どの区域がプロダクトのどの部分を担当するか
+- 入口となるファイルはどれか
+- ある処理がどの順番で進むか
+- 今回のタスクでどこを見て、どこを触らないか
+- ファイルの説明が古い、または不足していないか
 
-## 設計上の参考
+ソースコード内容は走査、保存、配信しません。
 
-[Egonex-AI/Understand-Anything](https://github.com/Egonex-AI/Understand-Anything) の「プロジェクト全体を視覚的に把握できる」「変更後も表示を更新する」「選択項目の詳細を確認できる」という考え方を参考にしています。
+## 5つの画面
 
-コード、依存パッケージ、知識グラフ、AI解析処理はコピーしていません。このリポジトリでは、ソースコードの意味解析ではなく、全パス、合意済みの責務、禁止事項、構造差分を安全かつ決定的に扱う独自実装にしています。
+### 全体マップ
 
-## 正式な情報源
+区域を、ユーザー画面、機能、データ、運用基盤、開発手順、記録の層に分けます。最初から全ファイルを見せず、プロジェクト全体の仕組みを表示します。
 
-### `.ai-workflow/directory-map.json`
+### 処理の流れ
 
-人間とAIが合意した役割、境界、タスク別の参照先を保存する正本です。
+Guided Tourとして、ユーザー操作や開発手順を順番に表示します。各ステップから該当ファイルのPassportへ移動できます。
 
-### `.ai-workflow/directory-snapshot.json`
+### タスク案内
 
-`Verified`時点の全パスと種類を保存する生成ファイルです。ファイル内容や内容ハッシュは含みません。
+Task Lensとして、最初に見る場所、関連して確認する場所、今回触らない場所を分けます。
 
-### `docs/DIRECTORY_MAP.md`
+### 全ファイル
 
-JSON正本から生成する、人間とAI向けの要約です。直接編集しません。
+従来のツリーです。全項目へ到達できますが、デフォルト画面ではありません。
 
-### `.ai-workflow/directory-map.ignore`
+### 説明の健康状態
 
-`.gitignore`に加えて、構造走査から除外するパターンを保存します。
+説明がない項目、一般説明だけのファイル、壊れた参照、意味情報カバレッジ、個別Passportカバレッジを表示します。
 
-## 状態
+## File Passport
 
-| Fixed output | Meaning |
+入口、中心ファイル、重要ファイルには個別Passportを登録します。
+
+主な項目:
+
+- path、display_name、beginner_summary
+- responsibility、not_responsible_for
+- when_to_change、inputs、outputs
+- depends_on、area、layer、importance、evidence
+- boundaries、task_types
+
+AIはファイルを作成または改名した同じタスク内でPassportを更新します。後からファイル名やコード内容だけを見て、説明を推測で確定しません。
+
+補助ファイルは、正確であれば親区域の説明を継承できます。個別Passportと継承説明は画面上で区別します。
+
+## schema version 2
+
+.ai-workflow/directory-map.jsonが意味情報の正本です。
+
+| Section | Role |
 |---|---|
-| `DIRECTORY_MAP_PROVISIONAL` | コード作成前または実構成との照合前 |
-| `DIRECTORY_MAP_VERIFIED` | 現在の構造が承認済み基準線と一致している |
-| `DIRECTORY_MAP_DRIFT_DETECTED` | Verified後に追加、削除、移動、種類変更がある |
-| `DIRECTORY_MAP_INVALID` | JSON、snapshot、役割定義などが不正 |
-| `DIRECTORY_MAP_CHECK_FAILED` | Python、権限、ファイル読み取りなどで検査できない |
+| areas | プロジェクトを役割区域と層に分ける |
+| nodes | ディレクトリ責務とFile Passport |
+| flows | Guided Tourの処理順序 |
+| task_lenses | タスク別の確認範囲 |
+| conventions | ほかに説明がない場合の補助規則 |
 
-状態はAIが文書の雰囲気から推測しません。
+schema version 1も読み取れますが、区域、Guided Tour、Task Lensは表示されません。新規プロジェクトはversion 2を使用します。
 
-## 役割の決め方
+## 役割の根拠
 
-画面では、すべての項目に役割と根拠を表示します。
+優先順位:
 
-1. `explicit`: JSONに個別登録された役割
-2. `explicit-pattern`: JSONのパターンに一致した役割
-3. `convention`: READMEや拡張子などの一般的な規則
-4. `inherited`: 最も近い親ディレクトリから継承した役割
-5. `unclassified`: 根拠のある役割を割り当てられない
+1. 個別File Passport
+2. 登録されたパターン
+3. 最も近い親区域・ディレクトリ
+4. 一般ファイル名・拡張子
+5. 説明なし
 
-AIは`unclassified`を推測で確定しません。基準線を`Verified`にする前に、明示、パターン、慣例、親からの継承のいずれかで役割を説明できる状態にします。
+一般的な「Markdownファイル」より、親区域の「プロジェクト計画を保存する」の方を優先します。
 
-## コマンド
+## 構造と意味情報
 
-状態確認:
+構造と説明は別に評価します。
 
-```bash
-python scripts/project-structure.py validate
-```
+- Structure: 承認済みパスと種類が一致するか
+- Semantic Coverage: 全項目を根拠付きで説明できるか
+- Individual Passport Coverage: ファイル単位の個別説明があるか
+- Broken References: Passport、Guided Tour、Task Lensの参照が壊れていないか
 
-差分確認:
-
-```bash
-python scripts/project-structure.py diff
-```
-
-Markdown再生成:
-
-```bash
-python scripts/project-structure.py generate
-```
-
-初回の構造承認後にVerifiedへ変更:
-
-```bash
-python scripts/project-structure.py verify --verified-by "User"
-```
-
-Verified後、確認済みの構造差分を新しい基準線として受け入れる:
-
-```bash
-python scripts/project-structure.py refresh --by "User"
-```
-
-localhost画面:
-
-```bash
-python scripts/project-structure.py serve --open-browser
-```
-
-起動時に、一時トークンを含む`http://127.0.0.1:4173/`のURLを表示します。
-
-### Windowsでワンクリック起動する
-
-新規プロジェクトのルートにある`open-project-structure-map.cmd`をダブルクリックします。
-
-1. `py -3`または`python`を検出する
-2. Python 3.10以降か確認する
-3. localhostサーバーを起動する
-4. token付きURLを既定ブラウザで開く
-
-起動中はコマンド画面を閉じません。終了するときは、その画面で`Ctrl+C`を押します。
-
-Pythonがない、Pythonが古い、ポートが使用中、JSONが不正などの場合は、エラー内容を表示して画面を保持します。ツールを自動インストールすることはありません。
-
-## localhost画面
-
-- 全ファイルと全ディレクトリを表示する
-- 2秒ごとに構造変更を確認する
-- 構造が変わった場合だけツリーを更新する
-- パス、役割、役割の根拠で検索・絞り込みできる
-- 追加、削除、未分類を強調する
-- 選択項目の責務、境界、関連タスクを表示する
-- ページ再読み込みなしで更新する
-
-画面は閲覧専用です。ブラウザから役割や基準線を書き換えることはできません。
+予定パスはProvisional中に存在しなくても構いません。JSONのpatternで計画済みなら、壊れた参照として扱いません。
 
 ## Project Initialization
 
-コード作成前は、予定している主要構造と責務をJSONへ記録し、`status`を`provisional`にします。
+コード作成前に次を設計します。
 
-存在しない予定パスがあっても、Provisionalでは失敗にしません。
+1. 役割区域と層
+2. 各区域の初心者向け説明
+3. 入口となる予定ファイル
+4. 主要な処理や開発手順のGuided Tour
+5. 最初のタスク向けTask Lens
+6. 触ってはいけない境界
 
-## 最初の構築タスク
+初期状態はDIRECTORY_MAP_PROVISIONALです。実構成と意味情報をユーザーが確認した後だけVerifiedへ進めます。
 
-実際のプロジェクト構成を作成した後、次を行います。
+## 通常タスク
 
-1. `diff`で実構成を確認する
-2. 未分類項目へ役割を追加するか、親の役割を適用する
-3. 登録済みパスの欠落を解消する
-4. ユーザーが構造と責務を確認する
-5. `verify --verified-by`を実行する
+session-startではTask Lensを全ファイルツリーより先に確認します。対応Lensがなければ追加候補としてimplementation planへ記録します。
 
-未分類、登録済みパス欠落、走査警告が残る場合、`verify`は失敗します。
+入口または中心ファイルを作成、改名、責務変更した場合、同じ変更内でPassportを更新します。
 
-## session-start
+session-endでは構造差分だけでなく、区域、Passport、Guided Tour、Task Lensへの影響を確認します。
 
-Initialization Gateの後で構造チェッカーを1回実行します。
+## コマンド
 
-- Provisional: 初期構築タスクに限り進める
-- Verified: 通常タスクへ進める
-- Drift Detected: 差分を確認し、地図を修復するまで実装へ進まない
-- Invalid / Check Failed: 原因を報告し、状態を推測しない
+Windowsではプロジェクト直下のopen-project-structure-map.cmdをダブルクリックします。
 
-## session-end
+    python scripts/project-structure.py validate
+    python scripts/project-structure.py diff
+    python scripts/project-structure.py generate
+    python scripts/project-structure.py serve --open-browser
 
-構造差分がある場合、追加・削除・移動と役割への影響を確認します。
+初回承認:
 
-承認済みの構造変更ならJSONを更新し、`refresh`でsnapshotとMarkdownを再生成します。
+    python scripts/project-structure.py verify --verified-by "User"
 
-## CI
+承認済み変更の基準線更新:
 
-CIではlocalhostを起動せず、次だけを実行します。
+    python scripts/project-structure.py refresh --by "User"
 
-```bash
-python scripts/project-structure.py validate --ci
-```
+## 固定出力
 
-Provisionalは許容します。Verified後のドリフト、Invalid、Check FailedはCIを失敗させます。
+| Output | Meaning |
+|---|---|
+| DIRECTORY_MAP_PROVISIONAL | 初回構築と意味情報の確認中 |
+| DIRECTORY_MAP_VERIFIED | 承認済み構造と一致 |
+| DIRECTORY_MAP_DRIFT_DETECTED | 承認後の構造差分あり |
+| DIRECTORY_MAP_INVALID | JSON、snapshot、意味情報の形式が不正 |
+| DIRECTORY_MAP_CHECK_FAILED | Python、権限、読み取りなどで検査不能 |
 
 ## セキュリティ
 
-- サーバーは`127.0.0.1`だけで待ち受ける
-- 起動ごとに新しい一時トークンを生成する
-- APIはトークンなしのアクセスを拒否する
-- ファイル内容を読まない、保存しない、配信しない
-- シンボリックリンク先を走査しない
-- 上位ディレクトリへ出るパスを拒否する
+- 127.0.0.1だけで待ち受ける
+- 起動ごとに一時tokenを生成する
+- APIはtokenなしアクセスを拒否する
 - リポジトリ全体を静的配信しない
-- Content Security Policyなどの保護ヘッダーを付ける
+- ソースコード内容を読まない、保存しない、配信しない
+- symlink先を走査しない
+- 上位パスへ出る定義を拒否する
+- Content Security Policyを付ける
+- 画面からJSONや基準線を書き換えない
 
 ## Python
 
 Python 3.10以降を推奨します。外部Pythonパッケージは使用しません。
 
-Pythonが利用できない場合、構造チェッカーは`DIRECTORY_MAP_CHECK_FAILED`を返します。AIはツールを勝手にインストールせず、ユーザーへ確認します。
+Pythonがない場合はDIRECTORY_MAP_CHECK_FAILEDとして扱います。ランチャーもツールを自動インストールしません。

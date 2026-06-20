@@ -12,7 +12,7 @@
 このディレクトリは開発運用の導入パッケージです。
 プロダクト本体は、導入先プロジェクト側で開発します。
 
-Project Structure MapはPython 3.10以降を推奨します。外部Pythonパッケージは使いません。
+Project AtlasはPython 3.10以降を推奨します。外部Pythonパッケージは使いません。
 Pythonがない場合、AIは勝手にインストールせず、ユーザーへ確認します。
 
 コピー直後は通常タスクを始めません。
@@ -124,7 +124,7 @@ Devlogは1タスクにつき1つ残します。
 - `ready` はすべてが確定した意味ではなく、最初のタスクを安全に開始できる意味です。
 - `PROJECT_BRIEF.md` では仮説と確定事項を分けてください。
 - `PROJECT_STATUS.md` と `ROADMAP.md` は初期設定でプロジェクト内容へ書き換えてください。
-- `.ai-workflow/directory-map.json` を主要ディレクトリと責務に合わせ、`DIRECTORY_MAP.md`を再生成してください。
+- `.ai-workflow/directory-map.json` の区域、File Passport、Guided Tour、Task Lensをプロジェクトに合わせ、`DIRECTORY_MAP.md`を再生成してください。
 - Windowsでは、プロジェクト直下の `open-project-structure-map.cmd` をダブルクリックすると、全ファイルのライブ表示と既定ブラウザが自動で起動します。
 - ターミナルから起動する場合は `python scripts/project-structure.py serve --open-browser` を使います。
 - 起動中の黒い画面は閉じず、終了するときはその画面で `Ctrl+C` を押します。

@@ -26,7 +26,8 @@ from typing import Any
 from urllib.parse import parse_qs, urlparse
 
 
-SCHEMA_VERSION = 1
+SCHEMA_VERSION = 2
+SNAPSHOT_SCHEMA_VERSION = 1
 TOKENS = {
     "provisional": "DIRECTORY_MAP_PROVISIONAL",
     "verified": "DIRECTORY_MAP_VERIFIED",
@@ -147,9 +148,68 @@ class IgnoreMatcher:
         return ignored
 
 
+def _string_list(value: Any, label: str) -> list[str]:
+    if not isinstance(value, list) or not all(isinstance(item, str) and item.strip() for item in value):
+        raise StructureError(f"{label} must contain non-empty strings.")
+    return [item.strip() for item in value]
+
+
+def _validate_flows(value: Any) -> list[dict[str, Any]]:
+    if not isinstance(value, list):
+        raise StructureError("flows must be an array.")
+    result: list[dict[str, Any]] = []
+    seen: set[str] = set()
+    for index, flow in enumerate(value):
+        if not isinstance(flow, dict):
+            raise StructureError(f"flows[{index}] must be an object.")
+        flow_id, name, summary = flow.get("id"), flow.get("name"), flow.get("beginner_summary")
+        if not isinstance(flow_id, str) or not flow_id.strip() or flow_id in seen:
+            raise StructureError(f"flows[{index}].id must be unique and non-empty.")
+        if not isinstance(name, str) or not name.strip() or not isinstance(summary, str) or not summary.strip():
+            raise StructureError(f"flows[{index}] requires name and beginner_summary.")
+        steps = flow.get("steps")
+        if not isinstance(steps, list) or not steps:
+            raise StructureError(f"flows[{index}].steps must be a non-empty array.")
+        normalized_steps = []
+        for step_index, step in enumerate(steps):
+            if not isinstance(step, dict) or not isinstance(step.get("summary"), str) or not step["summary"].strip():
+                raise StructureError(f"flows[{index}].steps[{step_index}] requires a summary.")
+            normalized_steps.append({
+                "path": normalize_relative(step.get("path", ""), allow_pattern=True),
+                "summary": step["summary"].strip(),
+            })
+        seen.add(flow_id.strip())
+        result.append({"id": flow_id.strip(), "name": name.strip(), "beginner_summary": summary.strip(), "steps": normalized_steps})
+    return result
+
+
+def _validate_task_lenses(value: Any) -> list[dict[str, Any]]:
+    if not isinstance(value, list):
+        raise StructureError("task_lenses must be an array.")
+    result: list[dict[str, Any]] = []
+    seen: set[str] = set()
+    for index, lens in enumerate(value):
+        if not isinstance(lens, dict):
+            raise StructureError(f"task_lenses[{index}] must be an object.")
+        lens_id, name, summary = lens.get("id"), lens.get("name"), lens.get("beginner_summary")
+        if not isinstance(lens_id, str) or not lens_id.strip() or lens_id in seen:
+            raise StructureError(f"task_lenses[{index}].id must be unique and non-empty.")
+        if not isinstance(name, str) or not name.strip() or not isinstance(summary, str) or not summary.strip():
+            raise StructureError(f"task_lenses[{index}] requires name and beginner_summary.")
+        seen.add(lens_id.strip())
+        result.append({
+            "id": lens_id.strip(), "name": name.strip(), "beginner_summary": summary.strip(),
+            **{key: [normalize_relative(item, allow_pattern=True) for item in _string_list(lens.get(key, []), f"task_lenses[{index}].{key}")]
+               for key in ("primary_paths", "related_paths", "avoid_paths")},
+        })
+    return result
+
+
 def validate_map(data: dict[str, Any]) -> dict[str, Any]:
-    if data.get("schema_version") != SCHEMA_VERSION:
-        raise StructureError(f"schema_version must be {SCHEMA_VERSION}.")
+    source_schema = data.get("schema_version")
+    if source_schema not in {1, SCHEMA_VERSION}:
+        raise StructureError(f"schema_version must be 1 or {SCHEMA_VERSION}.")
+    data["_source_schema_version"] = source_schema
     if data.get("status") not in {"provisional", "verified"}:
         raise StructureError("status must be provisional or verified.")
     project_name = data.get("project_name")
@@ -187,6 +247,18 @@ def validate_map(data: dict[str, Any]) -> dict[str, Any]:
                 "path": path,
                 "kind": kind,
                 "role": role.strip(),
+                "display_name": str(node.get("display_name") or PurePosixPath(path).name).strip(),
+                "beginner_summary": str(node.get("beginner_summary") or role).strip(),
+                "responsibility": str(node.get("responsibility") or role).strip(),
+                "not_responsible_for": _string_list(node.get("not_responsible_for", []), f"nodes[{index}].not_responsible_for"),
+                "when_to_change": _string_list(node.get("when_to_change", []), f"nodes[{index}].when_to_change"),
+                "inputs": _string_list(node.get("inputs", []), f"nodes[{index}].inputs"),
+                "outputs": _string_list(node.get("outputs", []), f"nodes[{index}].outputs"),
+                "depends_on": [normalize_relative(value, allow_pattern=True) for value in _string_list(node.get("depends_on", []), f"nodes[{index}].depends_on")],
+                "area": node.get("area"),
+                "layer": node.get("layer"),
+                "importance": node.get("importance", "support"),
+                "evidence": node.get("evidence", "human-confirmed" if kind != "pattern" else "project-initialization"),
                 "boundaries": [v.strip() for v in boundaries],
                 "task_types": [v.strip() for v in task_types],
             }
@@ -208,6 +280,50 @@ def validate_map(data: dict[str, Any]) -> dict[str, Any]:
             raise StructureError(f"conventions[{index}].role must be non-empty.")
         normalized_conventions.append({"pattern": pattern.strip().replace("\\", "/"), "role": role.strip()})
     data["conventions"] = normalized_conventions
+
+    areas = data.get("areas", [])
+    if not isinstance(areas, list):
+        raise StructureError("areas must be an array.")
+    normalized_areas: list[dict[str, Any]] = []
+    area_ids: set[str] = set()
+    for index, area in enumerate(areas):
+        if not isinstance(area, dict):
+            raise StructureError(f"areas[{index}] must be an object.")
+        area_id = area.get("id")
+        name = area.get("name")
+        summary = area.get("beginner_summary")
+        layer = area.get("layer")
+        if not isinstance(area_id, str) or not area_id.strip() or area_id in area_ids:
+            raise StructureError(f"areas[{index}].id must be unique and non-empty.")
+        if not isinstance(name, str) or not name.strip() or not isinstance(summary, str) or not summary.strip():
+            raise StructureError(f"areas[{index}] requires name and beginner_summary.")
+        if layer not in {"experience", "feature", "data", "platform", "workflow", "documentation"}:
+            raise StructureError(f"areas[{index}].layer is invalid.")
+        area_ids.add(area_id.strip())
+        normalized_areas.append({
+            "id": area_id.strip(), "name": name.strip(), "beginner_summary": summary.strip(), "layer": layer,
+            "paths": [normalize_relative(value, allow_pattern=True) for value in _string_list(area.get("paths", []), f"areas[{index}].paths")],
+            "entry_points": [normalize_relative(value, allow_pattern=True) for value in _string_list(area.get("entry_points", []), f"areas[{index}].entry_points")],
+            "depends_on": _string_list(area.get("depends_on", []), f"areas[{index}].depends_on"),
+        })
+    for area in normalized_areas:
+        unknown = set(area["depends_on"]) - area_ids
+        if unknown:
+            raise StructureError(f"area {area['id']} depends on unknown areas: {', '.join(sorted(unknown))}")
+    data["areas"] = normalized_areas
+
+    for index, node in enumerate(normalized_nodes):
+        if node["area"] is not None and node["area"] not in area_ids:
+            raise StructureError(f"nodes[{index}].area references an unknown area.")
+        if node["layer"] is not None and node["layer"] not in {area["layer"] for area in normalized_areas}:
+            raise StructureError(f"nodes[{index}].layer is invalid.")
+        if node["importance"] not in {"entry-point", "core", "support"}:
+            raise StructureError(f"nodes[{index}].importance is invalid.")
+        if node["evidence"] not in {"human-confirmed", "registered-when-created", "project-initialization", "convention"}:
+            raise StructureError(f"nodes[{index}].evidence is invalid.")
+
+    data["flows"] = _validate_flows(data.get("flows", []))
+    data["task_lenses"] = _validate_task_lenses(data.get("task_lenses", []))
 
     verified_at = data.get("verified_at")
     verified_by = data.get("verified_by")
@@ -264,8 +380,8 @@ def structure_hash(entries: list[dict[str, str]]) -> str:
 
 
 def validate_snapshot(data: dict[str, Any]) -> dict[str, Any]:
-    if data.get("schema_version") != SCHEMA_VERSION:
-        raise StructureError(f"snapshot schema_version must be {SCHEMA_VERSION}.")
+    if data.get("schema_version") != SNAPSHOT_SCHEMA_VERSION:
+        raise StructureError(f"snapshot schema_version must be {SNAPSHOT_SCHEMA_VERSION}.")
     paths = data.get("paths")
     if not isinstance(paths, list):
         raise StructureError("snapshot paths must be an array.")
@@ -348,6 +464,22 @@ def merged_context(nodes: list[dict[str, Any]]) -> dict[str, list[str]]:
     }
 
 
+PASSPORT_FIELDS = (
+    "display_name", "beginner_summary", "responsibility", "not_responsible_for", "when_to_change",
+    "inputs", "outputs", "depends_on", "area", "layer", "importance", "evidence",
+)
+
+
+def fallback_passport(path: str, role: str, *, evidence: str = "convention") -> dict[str, Any]:
+    return {
+        "display_name": PurePosixPath(path).name,
+        "beginner_summary": role,
+        "responsibility": role,
+        "not_responsible_for": [], "when_to_change": [], "inputs": [], "outputs": [], "depends_on": [],
+        "area": None, "layer": None, "importance": "support", "evidence": evidence,
+    }
+
+
 def role_for(path: str, kind: str, mapping: dict[str, Any]) -> dict[str, Any]:
     ancestors = explicit_ancestors(path, mapping)
     exact = next((node for node in mapping["nodes"] if node["kind"] != "pattern" and node["path"] == path), None)
@@ -361,16 +493,6 @@ def role_for(path: str, kind: str, mapping: dict[str, Any]) -> dict[str, Any]:
                 "role_source": "explicit-pattern",
                 "role_from": node["path"],
             }
-    for convention in mapping["conventions"]:
-        if fnmatch.fnmatchcase(path, convention["pattern"]) or fnmatch.fnmatchcase(PurePosixPath(path).name, convention["pattern"]):
-            return {
-                "path": path,
-                "kind": kind,
-                "role": convention["role"],
-                **merged_context(ancestors),
-                "role_source": "convention",
-                "role_from": convention["pattern"],
-            }
     if ancestors:
         inherited = ancestors[-1]
         return {
@@ -381,10 +503,22 @@ def role_for(path: str, kind: str, mapping: dict[str, Any]) -> dict[str, Any]:
             "role_source": "inherited",
             "role_from": inherited["path"],
         }
+    for convention in mapping["conventions"]:
+        if fnmatch.fnmatchcase(path, convention["pattern"]) or fnmatch.fnmatchcase(PurePosixPath(path).name, convention["pattern"]):
+            return {
+                "path": path,
+                "kind": kind,
+                "role": convention["role"],
+                **fallback_passport(path, convention["role"]),
+                **merged_context(ancestors),
+                "role_source": "convention",
+                "role_from": convention["pattern"],
+            }
     return {
         "path": path,
         "kind": kind,
         "role": "未分類",
+        **fallback_passport(path, "この項目の役割はまだ説明されていません。", evidence="convention"),
         "boundaries": [],
         "task_types": [],
         "role_source": "unclassified",
@@ -406,7 +540,7 @@ def build_state(root: Path) -> dict[str, Any]:
     for entry in entries:
         role = role_for(entry["path"], entry["kind"], mapping)
         change = "added" if snapshot is not None and entry["path"] not in baseline_paths else "unchanged"
-        enriched.append({**entry, **{k: role[k] for k in ("role", "role_source", "role_from", "boundaries", "task_types")}, "change": change})
+        enriched.append({**entry, **{k: role[k] for k in ("role", "role_source", "role_from", "boundaries", "task_types", *PASSPORT_FIELDS)}, "change": change})
     removed = [
         {**entry, **role_for(entry["path"], entry["kind"], mapping), "change": "removed"}
         for entry in (baseline_entries or [])
@@ -418,8 +552,65 @@ def build_state(root: Path) -> dict[str, Any]:
     missing_declared = [
         node for node in mapping["nodes"] if node["kind"] != "pattern" and node["path"] not in current_paths
     ]
+    current_map = {entry["path"]: entry for entry in enriched}
+
+    def declared_matches(pattern: str) -> list[str]:
+        return [path for path in current_paths if fnmatch.fnmatchcase(path, pattern) or path == pattern.removesuffix("/**")]
+
+    def reference_known(target: str) -> bool:
+        if declared_matches(target):
+            return True
+        target_prefix = target.split("*", 1)[0].split("?", 1)[0].rstrip("/")
+        for node in mapping["nodes"]:
+            node_path = node["path"]
+            node_prefix = node_path.split("*", 1)[0].split("?", 1)[0].rstrip("/")
+            if fnmatch.fnmatchcase(target, node_path) or fnmatch.fnmatchcase(node_path, target):
+                return True
+            if target_prefix and node_prefix and (target_prefix.startswith(node_prefix) or node_prefix.startswith(target_prefix)):
+                return True
+        return False
+
+    broken_references = []
+    for node in mapping["nodes"]:
+        for target in node["depends_on"]:
+            if not reference_known(target):
+                broken_references.append({"source": node["path"], "target": target, "kind": "dependency"})
+    for flow in mapping["flows"]:
+        for step in flow["steps"]:
+            if not reference_known(step["path"]):
+                broken_references.append({"source": flow["id"], "target": step["path"], "kind": "flow"})
+    for lens in mapping["task_lenses"]:
+        for key in ("primary_paths", "related_paths", "avoid_paths"):
+            for target in lens[key]:
+                if not reference_known(target):
+                    broken_references.append({"source": lens["id"], "target": target, "kind": "task-lens"})
+
+    resolved_areas = []
+    for area in mapping["areas"]:
+        paths = sorted({path for pattern in area["paths"] for path in declared_matches(pattern)}, key=str.casefold)
+        resolved_areas.append({
+            **area,
+            "resolved_paths": paths,
+            "entry_points_present": [path for pattern in area["entry_points"] for path in declared_matches(pattern)],
+            "file_count": sum(current_map[path]["kind"] == "file" for path in paths),
+        })
+
+    explained = [entry for entry in enriched if entry["role_source"] != "unclassified"]
+    exact_passports = [entry for entry in enriched if entry["kind"] == "file" and entry["role_source"] == "explicit"]
+    specific_passports = [entry for entry in enriched if entry["kind"] == "file" and entry["role_source"] not in {"convention", "unclassified"}]
+    generic_passports = [entry for entry in enriched if entry["kind"] == "file" and entry["role_source"] == "convention"]
+    health = {
+        "semantic_coverage": round(100 * len(explained) / len(enriched), 1) if enriched else 100.0,
+        "passport_coverage": round(100 * len(specific_passports) / max(1, sum(entry["kind"] == "file" for entry in enriched)), 1),
+        "individual_passport_coverage": round(100 * len(exact_passports) / max(1, sum(entry["kind"] == "file" for entry in enriched)), 1),
+        "unexplained_paths": [entry["path"] for entry in enriched if entry["role_source"] == "unclassified"],
+        "generic_passports": [entry["path"] for entry in generic_passports],
+        "broken_references": broken_references,
+    }
+    health["issue_count"] = len(health["unexplained_paths"]) + len(health["generic_passports"]) + len(broken_references)
     return {
         "schema_version": SCHEMA_VERSION,
+        "map_schema_version": mapping["_source_schema_version"],
         "project_name": mapping.get("project_name") or root.name,
         "map_status": mapping["status"],
         "validation_result": status_for(mapping, snapshot, current_hash),
@@ -433,6 +624,10 @@ def build_state(root: Path) -> dict[str, Any]:
         "diff": diff,
         "missing_declared": missing_declared,
         "warnings": warnings,
+        "areas": resolved_areas,
+        "flows": mapping["flows"],
+        "task_lenses": mapping["task_lenses"],
+        "health": health,
         "summary": {
             "files": sum(entry["kind"] == "file" for entry in entries),
             "directories": sum(entry["kind"] == "directory" for entry in entries),
@@ -452,7 +647,7 @@ def markdown_escape(value: str) -> str:
 
 def render_markdown(state: dict[str, Any], mapping: dict[str, Any]) -> str:
     lines = [
-        "# Directory Map",
+        "# Project Atlas / Directory Map",
         "",
         "<!-- Generated by scripts/project-structure.py. Edit .ai-workflow/directory-map.json instead. -->",
         "",
@@ -471,16 +666,47 @@ def render_markdown(state: dict[str, Any], mapping: dict[str, Any]) -> str:
         f"- Files: {state['summary']['files']}",
         f"- Directories: {state['summary']['directories']}",
         f"- Unclassified entries: {state['summary']['unclassified']}",
+        f"- Semantic coverage: {state['health']['semantic_coverage']}%",
+        f"- Project-specific explanation coverage: {state['health']['passport_coverage']}%",
+        f"- Individual passport coverage: {state['health']['individual_passport_coverage']}%",
+        f"- Semantic health issues: {state['health']['issue_count']}",
         "",
-        "## Responsibilities",
+        "## Atlas Areas",
         "",
-        "| Path | Kind | Role |",
-        "|---|---|---|",
+        "| Area | Layer | Beginner Summary | Files |",
+        "|---|---|---|---:|",
     ]
+    for area in state["areas"]:
+        lines.append(f"| {markdown_escape(area['name'])} | {area['layer']} | {markdown_escape(area['beginner_summary'])} | {area['file_count']} |")
+    if not state["areas"]:
+        lines.append("| Not defined | - | Define areas during Project Initialization | 0 |")
+
+    lines.extend([
+        "",
+        "## File Passports and Responsibilities",
+        "",
+        "| Path | Kind | Display Name | Beginner Summary |",
+        "|---|---|---|---|",
+    ])
     for node in mapping["nodes"]:
-        lines.append(f"| `{markdown_escape(node['path'])}` | {node['kind']} | {markdown_escape(node['role'])} |")
+        lines.append(f"| `{markdown_escape(node['path'])}` | {node['kind']} | {markdown_escape(node['display_name'])} | {markdown_escape(node['beginner_summary'])} |")
     if not mapping["nodes"]:
         lines.append("| None | - | No approved roles recorded |")
+
+    lines.extend(["", "## Guided Tours", ""])
+    for flow in mapping["flows"]:
+        lines.extend([f"### {flow['name']}", "", flow["beginner_summary"], ""])
+        for number, step in enumerate(flow["steps"], 1):
+            lines.append(f"{number}. `{step['path']}` — {step['summary']}")
+        lines.append("")
+    if not mapping["flows"]:
+        lines.append("- No guided tours recorded.")
+
+    lines.extend(["", "## Task Lenses", "", "| Task | Primary Paths | Related Paths | Avoid |", "|---|---|---|---|"])
+    for lens in mapping["task_lenses"]:
+        lines.append(f"| {markdown_escape(lens['name'])} | {markdown_escape(', '.join(lens['primary_paths']))} | {markdown_escape(', '.join(lens['related_paths']))} | {markdown_escape(', '.join(lens['avoid_paths']))} |")
+    if not mapping["task_lenses"]:
+        lines.append("| None recorded | - | - | - |")
 
     lines.extend(["", "## Task Routing Guide", "", "| Task Type | Start Here |", "|---|---|"])
     routes = [(task, node["path"]) for node in mapping["nodes"] for task in node["task_types"]]
@@ -551,6 +777,10 @@ def refresh_snapshot(root: Path, actor: str | None, verify: bool) -> tuple[dict[
         raise StructureError(
             f"Cannot accept a baseline with {candidate['summary']['unclassified']} unclassified entries."
         )
+    if mapping["_source_schema_version"] >= 2 and candidate["health"]["issue_count"]:
+        raise StructureError(
+            f"Cannot accept a baseline with {candidate['health']['issue_count']} semantic health issues."
+        )
     if candidate["missing_declared"]:
         raise StructureError(
             f"Cannot accept a baseline with {len(candidate['missing_declared'])} missing declared paths."
@@ -559,7 +789,7 @@ def refresh_snapshot(root: Path, actor: str | None, verify: bool) -> tuple[dict[
         raise StructureError(f"Cannot accept a baseline with {len(candidate['warnings'])} scan warnings.")
     entries, _ = scan_project(root, mapping)
     snapshot = {
-        "schema_version": SCHEMA_VERSION,
+        "schema_version": SNAPSHOT_SCHEMA_VERSION,
         "generated_at": utc_now(),
         "structure_hash": structure_hash(entries),
         "paths": entries,
@@ -570,12 +800,12 @@ def refresh_snapshot(root: Path, actor: str | None, verify: bool) -> tuple[dict[
         mapping["status"] = "verified"
         mapping["verified_at"] = utc_now()
         mapping["verified_by"] = actor.strip()
-        write_json(map_path, mapping)
+        write_json(map_path, {key: value for key, value in mapping.items() if not key.startswith("_")})
     elif mapping["status"] == "verified":
         mapping["verified_at"] = utc_now()
         if actor and actor.strip():
             mapping["verified_by"] = actor.strip()
-        write_json(map_path, mapping)
+        write_json(map_path, {key: value for key, value in mapping.items() if not key.startswith("_")})
     generate_markdown(root)
     return snapshot, snapshot_path
 
@@ -754,6 +984,8 @@ def main(argv: list[str] | None = None) -> int:
             raise FileNotFoundError(f"Project root does not exist: {root}")
         if args.command == "validate":
             state = build_state(root)
+            if args.ci and state["map_schema_version"] >= 2 and state["health"]["issue_count"]:
+                state["validation_result"] = TOKENS["invalid"]
             if (
                 args.require_generated
                 and state["validation_result"] in {TOKENS["provisional"], TOKENS["verified"]}

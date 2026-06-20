@@ -60,6 +60,8 @@ powershell -ExecutionPolicy Bypass -File scripts/check-directory-map.ps1
 localhost画面は必要なときだけ `open-project-structure-map.cmd` をダブルクリックするか、`python scripts/project-structure.py serve --open-browser` で起動します。session-startで毎回起動しません。
 詳しくは [Project Structure Map](../docs/project-structure-map.md) を参照してください。
 
+今回のタスクに対応するTask Lensがある場合は、全ファイルツリーより先に確認します。Lensがない場合は、implementation planに追加候補として記録します。Guided Tourへ影響する変更なら、実装前に対象フローを確認します。
+
 ### 1. Gitの状態を確認する
 
 ```bash

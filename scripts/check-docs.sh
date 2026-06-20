@@ -194,6 +194,18 @@ if ! grep -Fq 'open-project-structure-map.cmd' starter/README.md; then
   exit 1
 fi
 
+if ! grep -Fq '"schema_version": 2' starter/.ai-workflow/directory-map.json; then
+  echo "Starter Project Atlas must use schema version 2." >&2
+  exit 1
+fi
+
+for term in '全体マップ' '処理の流れ' 'タスク案内' '全ファイル' '説明の健康状態'; do
+  if ! grep -Fq "$term" starter/scripts/project-structure-viewer/index.html; then
+    echo "Project Atlas viewer is missing view: $term" >&2
+    exit 1
+  fi
+done
+
 echo "Checking for unresolved template placeholders in published docs..."
 if grep -RIn --exclude-dir='.git' --include='*.md' \
   -e 'TODO' \

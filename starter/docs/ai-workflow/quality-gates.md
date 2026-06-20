@@ -16,6 +16,8 @@ AI駆動開発では、実装速度が上がる一方で、誤った変更や範
 - ROADMAPが現在のDiscoveryまたはBuild-readyの経路に合っているか
 - PROJECT_STATUSが最初の候補タスクと注意点を示しているか
 - Project Structure MapがProvisionalまたはVerifiedを機械判定しているか
+- Project Atlasの区域、Guided Tour、Task Lensが初回タスクを説明できるか
+- 入口と中心ファイルに初心者向けFile Passportがあるか
 - DIRECTORY_MAPがJSON正本から生成されているか
 - AGENTS.mdがプロジェクト固有の確定事項に基づいているか
 - 初期設定レビューにユーザーの明示承認があるか
@@ -111,6 +113,8 @@ AI駆動開発では、実装速度が上がる一方で、誤った変更や範
 
 - `DIRECTORY_MAP.md` を読んだか
 - Project Structure GateがVerifiedか、最初の構築タスクとしてProvisionalを明示したか
+- Task Lensを全ファイルツリーより先に確認したか
+- 新規・改名した重要ファイルのPassport、フロー、区域への影響を確認したか
 - 今回のタスクが関係するディレクトリを特定したか
 - 各ディレクトリの責務と触ってはいけない境界を確認したか
 - コード全体ではなく、必要な範囲に絞って読む計画になっているか

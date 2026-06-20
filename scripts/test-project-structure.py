@@ -112,11 +112,44 @@ class ProjectStructureTests(unittest.TestCase):
         by_path = {entry["path"]: entry for entry in state["entries"]}
         self.assertEqual(by_path["src"]["role_source"], "explicit")
         self.assertEqual(by_path["src/app.py"]["role_source"], "inherited")
-        self.assertEqual(by_path["src/README.md"]["role_source"], "convention")
+        self.assertEqual(by_path["src/README.md"]["role_source"], "inherited")
         self.assertIn("Do not store secrets", by_path["src/README.md"]["boundaries"])
         self.assertEqual(by_path["README.md"]["role_source"], "convention")
         self.assertEqual(by_path["notes.bin"]["role_source"], "unclassified")
         self.assertNotIn("TOP_SECRET_CONTENT", json.dumps(state))
+
+    def test_schema_v2_atlas_passports_flows_and_health(self) -> None:
+        value = base_map()
+        value["schema_version"] = 2
+        value["areas"] = [{
+            "id": "application", "name": "Application", "beginner_summary": "User-facing application code",
+            "layer": "feature", "paths": ["src/**"], "entry_points": ["src/app.py"], "depends_on": [],
+        }]
+        value["nodes"][1].update({
+            "area": "application", "layer": "feature", "display_name": "Application source",
+            "beginner_summary": "Implements the application", "responsibility": "Application behavior",
+            "depends_on": ["missing.py"], "importance": "core", "evidence": "project-initialization",
+        })
+        value["flows"] = [{
+            "id": "start", "name": "Application start", "beginner_summary": "How the app starts",
+            "steps": [{"path": "src/app.py", "summary": "Runs the application"}],
+        }]
+        value["task_lenses"] = [{
+            "id": "change-app", "name": "Change application", "beginner_summary": "Where to look",
+            "primary_paths": ["src/**"], "related_paths": ["README.md"], "avoid_paths": ["docs/**"],
+        }]
+        self.fixture.write_map(value)
+        (self.fixture.root / "notes.bin").unlink()
+        state = project_structure.build_state(self.fixture.root)
+        self.assertEqual(state["schema_version"], 2)
+        self.assertEqual(state["areas"][0]["file_count"], 2)
+        self.assertEqual(state["flows"][0]["steps"][0]["path"], "src/app.py")
+        self.assertEqual(state["task_lenses"][0]["primary_paths"], ["src/**"])
+        self.assertEqual(state["health"]["semantic_coverage"], 100.0)
+        self.assertEqual(state["health"]["broken_references"][0]["target"], "missing.py")
+        ci = self.run_cli("validate", "--ci")
+        self.assertEqual(ci.returncode, 1)
+        self.assertEqual(ci.stdout.strip(), "DIRECTORY_MAP_INVALID")
 
     def test_provisional_verify_and_drift_lifecycle(self) -> None:
         self.assertEqual(self.run_cli("validate").stdout.strip(), "DIRECTORY_MAP_PROVISIONAL")
@@ -259,6 +292,13 @@ class ProjectStructureTests(unittest.TestCase):
 
         with mock.patch.object(project_structure.webbrowser, "open", side_effect=OSError("no browser")):
             project_structure.launch_browser(url)
+
+    def test_viewer_exposes_project_atlas_views(self) -> None:
+        html = (SCRIPT.parent / "project-structure-viewer" / "index.html").read_text(encoding="utf-8")
+        for view in ("atlas", "tour", "lens", "explorer", "health"):
+            self.assertIn(f'data-view="{view}"', html)
+            self.assertIn(f'id="view-{view}"', html)
+        self.assertIn("File Passport", html)
 
 
 if __name__ == "__main__":

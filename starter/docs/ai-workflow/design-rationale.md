@@ -58,15 +58,15 @@ AIは、不足している情報を推測で補うことがあります。
 このワークフローでは、ROADMAPを全体の地図、PROJECT_STATUSを現在地、implementation planを今回の1タスクの実行計画として扱います。
 session-startでは、ROADMAPとPROJECT_STATUSから今回取り組む候補タスクを確認し、実装前に細かな実行計画へ落とし込みます。
 
-### 3. Directory Mapで読む範囲を絞る
+### 3. Project Atlasで意味から読む範囲を絞る
 
 大規模なプロジェクトでは、AIにコード全体を読ませることは非効率です。
 コンテキストを大量に消費し、重要な責務境界より細かな実装詳細に引っ張られやすくなります。
 
-このワークフローでは、`.ai-workflow/directory-map.json` を責務と境界の正本、path-only snapshotを構造の基準線、`docs/DIRECTORY_MAP.md`を生成要約として分離します。
-session-startでは構造を機械検証してからDIRECTORY_MAPを読み、今回のタスクで読むべき範囲を絞ります。
+このワークフローでは、`.ai-workflow/directory-map.json` を区域、File Passport、Guided Tour、Task Lens、責務、境界の正本、path-only snapshotを構造の基準線、`docs/DIRECTORY_MAP.md`を生成要約として分離します。
+session-startでは構造を機械検証し、Task LensとGuided Tourから今回読むべき範囲を絞ります。
 session-endでは構造差分を確認し、承認した変更だけを新しい基準線へ反映します。
-localhost画面では全ファイルを表示しますが、ファイル内容は読まず、役割の根拠と構造差分だけを表示します。
+localhost画面は役割区域を最初に表示し、全ファイルツリーは補助画面として残します。ファイル内容は読まず、作成時に登録した意味情報と構造差分を表示します。
 
 ### 4. 作業範囲と完了条件を先に固定する
 
@@ -84,7 +84,7 @@ AI駆動開発では、実装が速いぶん、作業範囲も広がりやすく
 このワークフローでは、判断理由と検証結果を次のように分けて残します。
 
 - 現在地: `docs/PROJECT_STATUS.md`
-- 構造と責務の正本: `.ai-workflow/directory-map.json`
+- 構造、意味情報、責務の正本: `.ai-workflow/directory-map.json`
 - 人間とAI向け生成要約: `docs/DIRECTORY_MAP.md`
 - タスク単位の認識合わせ、計画、完了レビュー: `docs/tasks/`
 - 作業後の判断理由と検証結果: `docs/devlog/`

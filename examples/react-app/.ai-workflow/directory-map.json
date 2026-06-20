@@ -1,14 +1,76 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "status": "provisional",
   "project_name": "React App Workflow Example",
   "verified_at": null,
   "verified_by": null,
   "ignore_file": ".ai-workflow/directory-map.ignore",
+  "areas": [
+    {
+      "id": "atlas-config",
+      "name": "Project Atlasの設定",
+      "beginner_summary": "構造と役割の正本を保存し、説明が古くならないようにする区域です。",
+      "layer": "workflow",
+      "paths": [".ai-workflow/**"],
+      "entry_points": [".ai-workflow/directory-map.json"],
+      "depends_on": []
+    },
+    {
+      "id": "search-ui",
+      "name": "検索結果の画面",
+      "beginner_summary": "検索結果と、結果が0件だった場合の案内をユーザーへ表示する区域です。",
+      "layer": "experience",
+      "paths": ["src/components/**", "src/features/search/**"],
+      "entry_points": ["src/features/search/SearchResults.tsx"],
+      "depends_on": ["search-data"]
+    },
+    {
+      "id": "search-data",
+      "name": "検索データと型",
+      "beginner_summary": "検索結果の形と、開発中に使う仮データを管理する区域です。",
+      "layer": "data",
+      "paths": ["src/data/**", "src/types/**"],
+      "entry_points": ["src/types/search.ts"],
+      "depends_on": []
+    },
+    {
+      "id": "project-records",
+      "name": "計画と判断記録",
+      "beginner_summary": "何を作るか、現在どこまで進んだか、なぜ判断したかを保存する区域です。",
+      "layer": "documentation",
+      "paths": ["README.md", "docs/**", "*.md"],
+      "entry_points": ["docs/PROJECT_STATUS.md"],
+      "depends_on": []
+    }
+  ],
+  "flows": [
+    {
+      "id": "empty-search-result",
+      "name": "検索結果が0件のとき",
+      "beginner_summary": "検索結果を受け取り、0件専用の案内を表示するまでの流れです。",
+      "steps": [
+        {"path": "src/features/search/SearchResults.tsx", "summary": "検索結果の件数を確認します。"},
+        {"path": "src/components/EmptyState.tsx", "summary": "0件の場合に初心者にも分かる案内を表示します。"},
+        {"path": "src/features/search/SearchResults.test.tsx", "summary": "0件表示が壊れていないかテストします。"}
+      ]
+    }
+  ],
+  "task_lenses": [
+    {
+      "id": "improve-empty-state",
+      "name": "検索結果0件の表示を改善する",
+      "beginner_summary": "空状態の表示だけを変更し、検索精度やAPI接続へ作業を広げないための案内です。",
+      "primary_paths": ["src/features/search/**", "src/components/**"],
+      "related_paths": ["src/types/**", "docs/PROJECT_STATUS.md"],
+      "avoid_paths": ["src/data/**"]
+    }
+  ],
   "nodes": [
     {
       "path": ".ai-workflow",
       "kind": "directory",
+      "area": "atlas-config",
+      "layer": "workflow",
       "role": "Project Structure Mapの機械可読な定義を保存する",
       "boundaries": ["秘密情報を保存しない"],
       "task_types": ["構造定義の更新"]
@@ -16,6 +78,8 @@
     {
       "path": "docs",
       "kind": "directory",
+      "area": "project-records",
+      "layer": "documentation",
       "role": "プロジェクト計画、現在地、生成された構造要約を保存する",
       "boundaries": ["生成されたDIRECTORY_MAP.mdを直接編集しない"],
       "task_types": ["計画確認", "構造要約の確認"]
@@ -23,6 +87,8 @@
     {
       "path": "src/components",
       "kind": "pattern",
+      "area": "search-ui",
+      "layer": "experience",
       "role": "再利用UIコンポーネント",
       "boundaries": ["機能固有の状態管理を持ちすぎない"],
       "task_types": ["共通UI変更"]
@@ -30,6 +96,8 @@
     {
       "path": "src/components/**",
       "kind": "pattern",
+      "area": "search-ui",
+      "layer": "experience",
       "role": "再利用UIコンポーネント",
       "boundaries": ["機能固有の状態管理を持ちすぎない"],
       "task_types": ["共通UI変更"]
@@ -37,6 +105,8 @@
     {
       "path": "src/features/search",
       "kind": "pattern",
+      "area": "search-ui",
+      "layer": "experience",
       "role": "検索画面、検索結果表示、検索状態",
       "boundaries": ["Phase 2ではAPI接続を追加しない"],
       "task_types": ["検索結果表示", "0件時UI"]
@@ -44,6 +114,8 @@
     {
       "path": "src/features/search/**",
       "kind": "pattern",
+      "area": "search-ui",
+      "layer": "experience",
       "role": "検索画面、検索結果表示、検索状態",
       "boundaries": ["Phase 2ではAPI接続を追加しない"],
       "task_types": ["検索結果表示", "0件時UI"]
@@ -51,6 +123,8 @@
     {
       "path": "src/data",
       "kind": "pattern",
+      "area": "search-data",
+      "layer": "data",
       "role": "開発用モックデータ",
       "boundaries": ["本番APIの代替としてのみ使う"],
       "task_types": ["モックデータ変更"]
@@ -58,6 +132,8 @@
     {
       "path": "src/data/**",
       "kind": "pattern",
+      "area": "search-data",
+      "layer": "data",
       "role": "開発用モックデータ",
       "boundaries": ["本番APIの代替としてのみ使う"],
       "task_types": ["モックデータ変更"]
@@ -65,6 +141,8 @@
     {
       "path": "src/types",
       "kind": "pattern",
+      "area": "search-data",
+      "layer": "data",
       "role": "検索結果などの共有型定義",
       "boundaries": ["UI文言や表示判断を置かない"],
       "task_types": ["型定義変更"]
@@ -72,6 +150,8 @@
     {
       "path": "src/types/**",
       "kind": "pattern",
+      "area": "search-data",
+      "layer": "data",
       "role": "検索結果などの共有型定義",
       "boundaries": ["UI文言や表示判断を置かない"],
       "task_types": ["型定義変更"]
