@@ -71,6 +71,9 @@ case "$initialization_status" in
       "docs/PROJECT_STATUS.md"
       "docs/DIRECTORY_MAP.md"
       "docs/INITIALIZATION_REVIEW.md"
+      ".ai-workflow/directory-map.json"
+      "scripts/project-structure.py"
+      "scripts/check-directory-map.sh"
     )
     for relative_path in "${required_files[@]}"; do
       [[ -s "$project_root/$relative_path" ]] || emit "INITIALIZATION_INVALID"
@@ -120,6 +123,12 @@ case "$initialization_status" in
     if ! grep -Eq '^- Confirmation summary: .*[^[:space:]]' "$project_root/docs/INITIALIZATION_REVIEW.md"; then
       emit "INITIALIZATION_INVALID"
     fi
+    directory_map_result="$(bash "$project_root/scripts/check-directory-map.sh")" || emit "INITIALIZATION_CHECK_FAILED"
+    case "$directory_map_result" in
+      DIRECTORY_MAP_PROVISIONAL|DIRECTORY_MAP_VERIFIED) ;;
+      DIRECTORY_MAP_CHECK_FAILED) emit "INITIALIZATION_CHECK_FAILED" ;;
+      *) emit "INITIALIZATION_INVALID" ;;
+    esac
     emit "INITIALIZATION_READY"
     ;;
   *)

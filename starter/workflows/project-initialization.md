@@ -43,7 +43,8 @@
 - PROJECT_BRIEFにDiscoveryまたはBuild-readyとユーザー確認記録がある
 - ROADMAPにDiscoveryまたはBuild-readyと名前付きPhase 1がある
 - PROJECT_STATUSが初期値のままではない
-- DIRECTORY_MAPがProvisionalまたはVerifiedで、初期プレースホルダーが残っていない
+- Project Structure Mapが`DIRECTORY_MAP_PROVISIONAL`または`DIRECTORY_MAP_VERIFIED`を返す
+- DIRECTORY_MAPがJSON正本から生成され、初期プレースホルダーが残っていない
 - INITIALIZATION_REVIEWがReadyで、承認者、承認日、確認要約がある
 
 判定器はプロダクト仮説の正しさまでは判断しません。
@@ -191,10 +192,28 @@ Discovery Trackでは、最初のフェーズを仮説検証にします。
 
 ### 10. DIRECTORY_MAPを作る
 
-コード作成前は `Map Status: Provisional` とします。
-予定している主要ディレクトリ、責務、境界だけを書きます。
+`.ai-workflow/directory-map.json` を正本として、予定している主要ディレクトリ、責務、境界、タスク別の参照先を記録します。
+コード作成前は `status` を `provisional` とします。
 
-プロジェクトの初期構築後、実際のファイル構成と照合して `Map Status: Verified` へ変更します。
+AIは、まだ決まっていないWeb、モバイル、APIなどの構成を推測で追加しません。
+役割を確定できない項目は、後で確認する対象として残します。
+
+JSONを更新した後、Markdownを生成します。
+
+```bash
+python scripts/project-structure.py generate
+python scripts/project-structure.py validate
+```
+
+初期設定中の期待値は `DIRECTORY_MAP_PROVISIONAL` です。
+必要に応じて次を実行し、localhost画面で予定構成と現在の全ファイルを確認します。
+
+```bash
+python scripts/project-structure.py serve
+```
+
+プロジェクトの初期構築後、実際の全ファイル構成、役割、境界をユーザーが確認してから `verify --verified-by` でVerifiedへ変更します。
+詳しくは [Project Structure Map](../docs/project-structure-map.md) を参照してください。
 
 ### 11. 初期設定レビューを行う
 
@@ -210,6 +229,7 @@ AIは未確認項目を成功扱いせず、残る仮説、不明点、最初の
 - 仮説と不明点の扱いが正しいか
 - ROADMAPの最初のフェーズが適切か
 - AGENTS.mdのルールが適切か
+- ProvisionalなProject Structure Mapの予定構成と責務が適切か
 - 最初のタスク候補が適切か
 
 承認がない場合、`ready` に変更しません。

@@ -1,0 +1,5 @@
+.git/
+.ai-workflow/directory-snapshot.json
+node_modules/
+dist/
+coverage/

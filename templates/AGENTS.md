@@ -31,6 +31,8 @@ Edit it to match the project before use.
 - Do not put secrets, tokens, personal data, or internal URLs in committed files.
 - Do not edit template files as task records. Create task records under
   `docs/tasks/YYYY-MM-DD-HHMM-task-name/`.
+- Do not edit `docs/DIRECTORY_MAP.md` directly. Edit
+  `.ai-workflow/directory-map.json`, then regenerate the Markdown.
 
 ## Project-specific Context
 
@@ -75,6 +77,34 @@ user approval recorded in `docs/INITIALIZATION_REVIEW.md`.
 Treat `Confirmed`, `Hypothesis`, `Unknown`, and `Deferred` as different states.
 Never implement a hypothesis as if the user had confirmed it.
 
+## Project Structure Routing
+
+After `INITIALIZATION_READY`, run exactly one structure checker for the current
+environment:
+
+```bash
+bash scripts/check-directory-map.sh
+```
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/check-directory-map.ps1
+```
+
+Follow the exact output:
+
+- `DIRECTORY_MAP_VERIFIED`: normal task selection may continue.
+- `DIRECTORY_MAP_PROVISIONAL`: continue only for the first project construction
+  task and plan verification before normal feature work.
+- `DIRECTORY_MAP_DRIFT_DETECTED`: inspect the diff and repair the map before
+  implementation.
+- `DIRECTORY_MAP_INVALID`: report the invalid tracked structure records.
+- `DIRECTORY_MAP_CHECK_FAILED`: report the tool or environment failure. Do not
+  infer the structure state.
+
+The source of truth is `.ai-workflow/directory-map.json` plus the verified path
+snapshot. The localhost viewer is read-only and optional. Never assign a guessed
+role merely to make verification pass.
+
 ## Task Workflow After Initialization
 
 For normal work:
@@ -82,25 +112,27 @@ For normal work:
 1. Run `workflows/session-start.md`; continue only when its Step 0 returns
    `INITIALIZATION_READY`. Do not run the checker a second time in the same
    session unless the initialization state was intentionally changed.
-2. After the task is selected, use `docs/DIRECTORY_MAP.md` to identify the
+2. Continue only after the Project Structure Gate returns `DIRECTORY_MAP_VERIFIED`,
+   except for the explicitly scoped first construction task while Provisional.
+3. After the task is selected, use `docs/DIRECTORY_MAP.md` to identify the
    directories, responsibilities, boundaries, and files to inspect before
    planning.
-3. Align requirements with `templates/requirement-alignment.md` when the task is
+4. Align requirements with `templates/requirement-alignment.md` when the task is
    non-trivial or ambiguous.
-4. Select the workflow mode. Default to Standard.
-5. Downgrade to Minimal only when the task is small, reversible, low-risk, and
+5. Select the workflow mode. Default to Standard.
+6. Downgrade to Minimal only when the task is small, reversible, low-risk, and
    does not affect behavior, data, security, cost, release scope, or production.
-6. Upgrade to Strict when the task affects authentication, authorization,
+7. Upgrade to Strict when the task affects authentication, authorization,
    billing, personal data, data migration, production configuration, external
    dependencies, public release, architecture, or destructive actions.
-7. State the reason whenever selecting Minimal or Strict.
-8. Create or update task records under `docs/tasks/YYYY-MM-DD-HHMM-task-name/`.
-9. Write or update `implementation-plan.md` in the task records folder,
+8. State the reason whenever selecting Minimal or Strict.
+9. Create or update task records under `docs/tasks/YYYY-MM-DD-HHMM-task-name/`.
+10. Write or update `implementation-plan.md` in the task records folder,
    including Directory Context and Workflow Mode.
-10. Implement in small, reviewable changes.
-11. Run relevant tests, builds, or manual checks.
-12. Complete `completion-review.md` in the task records folder.
-13. Run `workflows/session-end.md` at the end of the task. This includes
+11. Implement in small, reviewable changes.
+12. Run relevant tests, builds, or manual checks.
+13. Complete `completion-review.md` in the task records folder.
+14. Run `workflows/session-end.md` at the end of the task. This includes
     devlog creation, PROJECT_STATUS update decision, DIRECTORY_MAP update
     decision, and git commit decision.
 
@@ -120,6 +152,8 @@ A task is complete only when:
 - skipped checks are explained
 - documentation is updated or explicitly marked unnecessary
 - DIRECTORY_MAP impact has been checked and recorded
+- the project structure checker is Verified, or Provisional is explicitly
+  justified for the first construction task
 - remaining risks are recorded
 - the next session can resume from tracked files, not chat history
 

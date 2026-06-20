@@ -77,7 +77,7 @@ npm run build: passed
 
 - 目的: 検索結果表示と0件時の表示を実装した
 - 検証: `npm test` と `npm run build` が通った
-- ドキュメント: `docs/PROJECT_STATUS.md` とdevlogを更新し、DIRECTORY_MAPは更新不要と判断した
+- ドキュメント: `docs/PROJECT_STATUS.md` とdevlogを更新し、Project Structure GateでDIRECTORY_MAP関連の更新不要を確認した
 - 残課題: API接続とURLクエリ同期は次フェーズとして記録した
 
 ## 次にやること

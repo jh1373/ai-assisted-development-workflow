@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "status": "provisional",
+  "project_name": "AI Meal Planning Experiment",
+  "verified_at": null,
+  "verified_by": null,
+  "ignore_file": ".ai-workflow/directory-map.ignore",
+  "nodes": [
+    {
+      "path": ".ai-workflow",
+      "kind": "directory",
+      "role": "初期設定状態とProject Structure Mapの機械可読な定義を保存する",
+      "boundaries": [
+        "秘密情報や食事・健康情報を保存しない"
+      ],
+      "task_types": [
+        "初期設定状態確認",
+        "構造検証"
+      ]
+    },
+    {
+      "path": "docs",
+      "kind": "directory",
+      "role": "Discovery段階のプロダクト理解、計画、現在地を記録する",
+      "boundaries": [
+        "個人の食事・健康情報を保存しない"
+      ],
+      "task_types": [
+        "仮説検証計画",
+        "初期設定レビュー"
+      ]
+    },
+    {
+      "path": "AGENTS.md",
+      "kind": "file",
+      "role": "AI Meal Planning ExperimentでAIが守るDiscovery境界を定義する",
+      "boundaries": [
+        "Phase 1では認証、課金、永続化、本番公開を追加しない"
+      ],
+      "task_types": [
+        "AI開発ルール確認"
+      ]
+    },
+    {
+      "path": "README.md",
+      "kind": "file",
+      "role": "Project Initialization完成例の読み方を説明する",
+      "boundaries": [],
+      "task_types": [
+        "完成例確認"
+      ]
+    }
+  ],
+  "conventions": [
+    {
+      "pattern": "*.md",
+      "role": "Discovery段階で人間とAIが共有するMarkdown文書"
+    },
+    {
+      "pattern": "*.conf",
+      "role": "機械判定用の固定形式設定"
+    },
+    {
+      "pattern": "*.json",
+      "role": "機械可読な構造定義"
+    }
+  ]
+}

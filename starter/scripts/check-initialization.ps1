@@ -66,7 +66,10 @@ try {
                 'docs\ROADMAP.md',
                 'docs\PROJECT_STATUS.md',
                 'docs\DIRECTORY_MAP.md',
-                'docs\INITIALIZATION_REVIEW.md'
+                'docs\INITIALIZATION_REVIEW.md',
+                '.ai-workflow\directory-map.json',
+                'scripts\project-structure.py',
+                'scripts\check-directory-map.ps1'
             )
             foreach ($relativePath in $requiredFiles) {
                 $path = Join-Path $projectRoot $relativePath
@@ -126,6 +129,14 @@ try {
             }
             if (-not ($review -cmatch '^- Confirmation summary: .*\S')) {
                 Write-ResultAndExit 'INITIALIZATION_INVALID'
+            }
+            $directoryMapChecker = Join-Path $projectRoot 'scripts\check-directory-map.ps1'
+            $directoryMapResult = (& $directoryMapChecker | Out-String).Trim()
+            switch -CaseSensitive ($directoryMapResult) {
+                'DIRECTORY_MAP_PROVISIONAL' { }
+                'DIRECTORY_MAP_VERIFIED' { }
+                'DIRECTORY_MAP_CHECK_FAILED' { Write-ResultAndExit 'INITIALIZATION_CHECK_FAILED' }
+                default { Write-ResultAndExit 'INITIALIZATION_INVALID' }
             }
             Write-ResultAndExit 'INITIALIZATION_READY'
         }

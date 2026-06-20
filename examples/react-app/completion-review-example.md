@@ -71,8 +71,8 @@ npm run build: passed
 
 - [x] PROJECT_STATUS を更新した
 - [ ] ROADMAP を更新した
-- [x] DIRECTORY_MAP の更新要否を確認した
-- [x] DIRECTORY_MAP を更新した、または更新不要の理由を記録した
+- [x] Project Structure Gateを実行した
+- [x] 構造変更がなく、JSON正本、snapshot、生成DIRECTORY_MAPの更新不要を確認した
 - [x] devlog に残すべき判断理由、検証結果、未完了事項を整理した
 - [x] devlog の保存先を決めた
 - [ ] README や利用手順を更新した

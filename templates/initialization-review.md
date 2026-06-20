@@ -33,7 +33,9 @@ Initialization Decision: Not Ready / Ready
 - [ ] `docs/PROJECT_BRIEF.md` を作成した
 - [ ] `docs/ROADMAP.md` を現在の成熟段階に合わせた
 - [ ] `docs/PROJECT_STATUS.md` を初期化した
-- [ ] `docs/DIRECTORY_MAP.md` にProvisionalまたはVerifiedを記録した
+- [ ] `.ai-workflow/directory-map.json` に予定構造、責務、境界を記録した
+- [ ] `docs/DIRECTORY_MAP.md` をJSON正本から生成した
+- [ ] 構造チェッカーが `DIRECTORY_MAP_PROVISIONAL` または `DIRECTORY_MAP_VERIFIED` を返した
 - [ ] `AGENTS.md` をプロジェクト固有のルールへ更新した
 
 ## Development Readiness
@@ -65,6 +67,7 @@ Initialization Decision: Not Ready / Ready
 - [ ] ユーザーへPROJECT_BRIEFの要点を提示した
 - [ ] ユーザーへROADMAPの最初のフェーズを提示した
 - [ ] ユーザーへAGENTS.mdの主要ルールを提示した
+- [ ] ユーザーへProject Structure Mapの予定構造と責務を提示した
 - [ ] ユーザーへ残る仮説と不明点を提示した
 - [ ] ユーザーから明示的な開始承認を得た
 

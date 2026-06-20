@@ -100,7 +100,7 @@ git diff --check: passed
 - ユーザー要望に対応した: 検索結果0件時に状態が分かる表示を追加した
 - 対象外に触れていない: API接続、検索条件、URL同期は変更していない
 - 検証した: `npm test`、`npm run build`、`git diff --check` が通った
-- 次回再開できる: `docs/PROJECT_STATUS.md` に未完了事項を残し、DIRECTORY_MAPは更新不要と判断した
+- 次回再開できる: `docs/PROJECT_STATUS.md` に未完了事項を残し、Project Structure GateでDIRECTORY_MAP関連の更新不要を確認した
 
 ## 次にやること
 

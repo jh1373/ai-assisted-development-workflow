@@ -31,6 +31,7 @@ None
 - Completion review:
 - Devlog:
 - ADR:
+- Project Structure Map result:
 
 ## ADR Decision
 
@@ -63,6 +64,7 @@ None
 
 ```text
 [command/check]: [passed/failed/skipped + reason]
+project structure checker: [DIRECTORY_MAP_VERIFIED / justified Provisional]
 ```
 
 ## Security and Privacy

@@ -1,0 +1,180 @@
+{
+  "schema_version": 1,
+  "status": "provisional",
+  "project_name": "New Project",
+  "verified_at": null,
+  "verified_by": null,
+  "ignore_file": ".ai-workflow/directory-map.ignore",
+  "nodes": [
+    {
+      "path": ".ai-workflow",
+      "kind": "directory",
+      "role": "AI開発ワークフローの機械判定用状態と構造定義を保存する",
+      "boundaries": [
+        "秘密情報や認証情報を保存しない",
+        "project-state.confを文書の推測で書き換えない"
+      ],
+      "task_types": [
+        "初期設定状態の確認",
+        "Project Structure Mapの管理"
+      ]
+    },
+    {
+      "path": ".github",
+      "kind": "directory",
+      "role": "GitHub上のIssue、Pull Request、CI設定を管理する",
+      "boundaries": [
+        "ワークフロー権限を必要以上に広げない"
+      ],
+      "task_types": [
+        "GitHub Actions変更",
+        "Pull Request運用変更"
+      ]
+    },
+    {
+      "path": "docs",
+      "kind": "directory",
+      "role": "プロジェクトの現在地、全体計画、判断記録、開発証拠を保存する",
+      "boundaries": [
+        "秘密情報、個人情報、内部URLを記録しない",
+        "生成されたDIRECTORY_MAP.mdを直接編集しない"
+      ],
+      "task_types": [
+        "プロジェクト状況確認",
+        "開発記録更新"
+      ]
+    },
+    {
+      "path": "docs/ai-workflow",
+      "kind": "directory",
+      "role": "導入済みAI開発ワークフローの参照文書を保存する",
+      "boundaries": [
+        "プロダクト固有のタスク記録を置かない"
+      ],
+      "task_types": [
+        "ワークフロー規則の確認"
+      ]
+    },
+    {
+      "path": "scripts",
+      "kind": "directory",
+      "role": "初期設定、構造検証、ローカル可視化などの自動化を提供する",
+      "boundaries": [
+        "外部サービスへプロジェクト情報を送信しない",
+        "破壊的なファイル操作を自動実行しない"
+      ],
+      "task_types": [
+        "ローカル自動化変更",
+        "Project Structure Map変更"
+      ]
+    },
+    {
+      "path": "templates",
+      "kind": "directory",
+      "role": "タスク計画、レビュー、devlogなどの再利用テンプレートを保存する",
+      "boundaries": [
+        "実際のタスク記録をテンプレートへ直接書き込まない"
+      ],
+      "task_types": [
+        "記録形式変更"
+      ]
+    },
+    {
+      "path": "workflows",
+      "kind": "directory",
+      "role": "Project Initialization、session-start、session-endの実行手順を定義する",
+      "boundaries": [
+        "ユーザー承認ゲートを省略しない"
+      ],
+      "task_types": [
+        "開発フロー変更"
+      ]
+    },
+    {
+      "path": "AGENTS.md",
+      "kind": "file",
+      "role": "AIエージェントが必ず守るプロジェクト固有ルールを定義する",
+      "boundaries": [
+        "Hypothesisを恒久ルールとして確定しない"
+      ],
+      "task_types": [
+        "AIルール変更"
+      ]
+    },
+    {
+      "path": "README.md",
+      "kind": "file",
+      "role": "プロジェクトの目的、導入方法、主要な利用手順を説明する",
+      "boundaries": [],
+      "task_types": [
+        "利用手順変更"
+      ]
+    }
+  ],
+  "conventions": [
+    {
+      "pattern": "README.md",
+      "role": "この階層の目的と利用方法を説明する"
+    },
+    {
+      "pattern": "*.test.*",
+      "role": "対象機能の自動テストを定義する"
+    },
+    {
+      "pattern": "test-*",
+      "role": "自動検証を実行する"
+    },
+    {
+      "pattern": "*.md",
+      "role": "人間とAIが参照するMarkdown文書"
+    },
+    {
+      "pattern": "*.py",
+      "role": "Pythonで実装された処理または自動化"
+    },
+    {
+      "pattern": "*.js",
+      "role": "JavaScriptで実装されたアプリケーションまたは画面処理"
+    },
+    {
+      "pattern": "*.ts",
+      "role": "TypeScriptで実装されたアプリケーション処理"
+    },
+    {
+      "pattern": "*.tsx",
+      "role": "TypeScriptとJSXで実装されたUI処理"
+    },
+    {
+      "pattern": "*.html",
+      "role": "ブラウザで表示するHTML文書"
+    },
+    {
+      "pattern": "*.css",
+      "role": "画面のレイアウトと視覚表現を定義する"
+    },
+    {
+      "pattern": "*.ps1",
+      "role": "Windows PowerShell用の自動化"
+    },
+    {
+      "pattern": "*.sh",
+      "role": "Bash環境用の自動化"
+    },
+    {
+      "pattern": "*.json",
+      "role": "機械可読な設定またはデータ"
+    },
+    {
+      "pattern": "*.yml",
+      "role": "YAML形式の設定"
+    },
+    {
+      "pattern": "*.yaml",
+      "role": "YAML形式の設定"
+    },
+    {
+      "pattern": "*.toml",
+      "role": "TOML形式の設定"
+    }
+  ]
+}

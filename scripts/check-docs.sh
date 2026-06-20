@@ -6,11 +6,14 @@ required_files=(
   "starter/README.md"
   "starter/AGENTS.md"
   "starter/.ai-workflow/project-state.conf"
+  "starter/.ai-workflow/directory-map.json"
+  "starter/.ai-workflow/directory-map.ignore"
   "starter/docs/PROJECT_BRIEF.md"
   "starter/docs/INITIALIZATION_REVIEW.md"
   "starter/docs/PROJECT_STATUS.md"
   "starter/docs/ROADMAP.md"
   "starter/docs/DIRECTORY_MAP.md"
+  "starter/docs/project-structure-map.md"
   "starter/docs/adr/.gitkeep"
   "starter/docs/devlog/.gitkeep"
   "starter/docs/tasks/.gitkeep"
@@ -29,6 +32,13 @@ required_files=(
   "starter/workflows/project-initialization.md"
   "starter/scripts/check-initialization.sh"
   "starter/scripts/check-initialization.ps1"
+  "starter/scripts/check-directory-map.sh"
+  "starter/scripts/check-directory-map.ps1"
+  "starter/scripts/project-structure.py"
+  "starter/scripts/project-structure-viewer/index.html"
+  "starter/scripts/project-structure-viewer/app.js"
+  "starter/scripts/project-structure-viewer/styles.css"
+  "starter/.github/workflows/project-structure-check.yml"
   "starter/.github/pull_request_template.md"
   "examples/devlog/README.md"
   "examples/devlog/standard-task-devlog.md"
@@ -45,6 +55,7 @@ required_files=(
   "docs/anti-patterns.md"
   "docs/strict-mode.md"
   "docs/security.md"
+  "docs/project-structure-map.md"
   "templates/AGENTS.md"
   "templates/project-brief.md"
   "templates/initialization-review.md"
@@ -61,6 +72,13 @@ required_files=(
   "scripts/check-initialization.ps1"
   "scripts/test-initialization-checker.sh"
   "scripts/test-initialization-checker.ps1"
+  "scripts/check-directory-map.sh"
+  "scripts/check-directory-map.ps1"
+  "scripts/project-structure.py"
+  "scripts/project-structure-viewer/index.html"
+  "scripts/project-structure-viewer/app.js"
+  "scripts/project-structure-viewer/styles.css"
+  "scripts/test-project-structure.py"
   "examples/project-initialization/README.md"
   "examples/project-initialization/docs/PROJECT_BRIEF.md"
   "examples/project-initialization/docs/INITIALIZATION_REVIEW.md"
@@ -69,6 +87,11 @@ required_files=(
   "examples/project-initialization/docs/DIRECTORY_MAP.md"
   "examples/project-initialization/AGENTS.md"
   "examples/project-initialization/.ai-workflow/project-state.conf"
+  "examples/project-initialization/.ai-workflow/directory-map.json"
+  "examples/project-initialization/.ai-workflow/directory-map.ignore"
+  "examples/react-app/.ai-workflow/directory-map.json"
+  "examples/react-app/.ai-workflow/directory-map.ignore"
+  "examples/react-app/docs/DIRECTORY_MAP.md"
   ".github/pull_request_template.md"
 )
 
@@ -92,6 +115,13 @@ sync_pairs=(
   "templates/initialization-review.md:starter/templates/initialization-review.md"
   "scripts/check-initialization.sh:starter/scripts/check-initialization.sh"
   "scripts/check-initialization.ps1:starter/scripts/check-initialization.ps1"
+  "scripts/check-directory-map.sh:starter/scripts/check-directory-map.sh"
+  "scripts/check-directory-map.ps1:starter/scripts/check-directory-map.ps1"
+  "scripts/project-structure.py:starter/scripts/project-structure.py"
+  "scripts/project-structure-viewer/index.html:starter/scripts/project-structure-viewer/index.html"
+  "scripts/project-structure-viewer/app.js:starter/scripts/project-structure-viewer/app.js"
+  "scripts/project-structure-viewer/styles.css:starter/scripts/project-structure-viewer/styles.css"
+  "docs/project-structure-map.md:starter/docs/project-structure-map.md"
   "docs/principles.md:starter/docs/ai-workflow/principles.md"
   "docs/design-rationale.md:starter/docs/ai-workflow/design-rationale.md"
   "docs/quality-gates.md:starter/docs/ai-workflow/quality-gates.md"
@@ -148,6 +178,11 @@ if ! grep -Fq '### 0. Initialization Gateを確認する' starter/workflows/sess
   exit 1
 fi
 
+if ! grep -Fq '### 0.5. Project Structure Gateを確認する' starter/workflows/session-start.md; then
+  echo "starter session-start is missing the Project Structure Gate." >&2
+  exit 1
+fi
+
 echo "Checking for unresolved template placeholders in published docs..."
 if grep -RIn --exclude-dir='.git' --include='*.md' \
   -e 'TODO' \
@@ -159,7 +194,7 @@ if grep -RIn --exclude-dir='.git' --include='*.md' \
 fi
 
 echo "Checking for common secret-like strings..."
-if grep -RIn --exclude-dir='.git' --include='*.md' --include='*.yml' --include='*.yaml' --include='*.sh' --include='*.ps1' --include='*.conf' \
+if grep -RIn --exclude-dir='.git' --include='*.md' --include='*.json' --include='*.js' --include='*.html' --include='*.yml' --include='*.yaml' --include='*.sh' --include='*.ps1' --include='*.conf' \
   -E '(sk-[A-Za-z0-9_-]{20,}|ghp_[A-Za-z0-9_]{20,}|AKIA[0-9A-Z]{16}|-----BEGIN (RSA |OPENSSH |EC )?PRIVATE KEY-----)' \
   .; then
   echo "Potential secret found. Remove it or replace it with a safe example." >&2
@@ -212,5 +247,15 @@ if errors:
     print("\n".join(errors), file=sys.stderr)
     sys.exit(1)
 PY
+
+echo "Checking starter Project Structure Map..."
+structure_result="$($python_bin starter/scripts/project-structure.py --root starter validate)"
+if [[ "$structure_result" != "DIRECTORY_MAP_PROVISIONAL" ]]; then
+  echo "Starter structure must remain provisional, got: $structure_result" >&2
+  exit 1
+fi
+
+"$python_bin" starter/scripts/project-structure.py --root starter generate --check
+"$python_bin" scripts/project-structure.py --root examples/react-app generate --check
 
 echo "Documentation checks passed."

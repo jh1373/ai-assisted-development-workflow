@@ -25,6 +25,7 @@ Idea
 - `docs/ROADMAP.md`: Discoveryから始まる全体計画
 - `docs/PROJECT_STATUS.md`: 初期設定後の現在地
 - `docs/DIRECTORY_MAP.md`: 初期構築前の暫定構成
+- `.ai-workflow/directory-map.json`: 構造と責務の機械可読な正本
 - `AGENTS.md`: 初期設定で追加したプロジェクト固有ルール
 - `docs/INITIALIZATION_REVIEW.md`: ユーザー承認と開始判断
 - `.ai-workflow/project-state.conf`: 承認後の機械判定状態

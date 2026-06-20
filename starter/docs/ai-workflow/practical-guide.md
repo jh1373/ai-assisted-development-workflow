@@ -4,6 +4,7 @@
 
 このガイドは、初期設定チェッカーが `INITIALIZATION_READY` を返した後で使用します。
 READY以外の場合は、通常タスクへ進まず `workflows/project-initialization.md` に従います。
+READY後はProject Structure Gateを通し、Verified後の構造ドリフトがないことも確認します。
 
 テンプレートを埋めることが目的ではありません。
 目的は、AIを使っても作業範囲、判断理由、検証結果、残課題が追える状態にすることです。
@@ -17,7 +18,8 @@ READY以外の場合は、通常タスクへ進まず `workflows/project-initial
 
 - `docs/ROADMAP.md`: プロジェクト全体の地図
 - `docs/PROJECT_STATUS.md`: 現在地と次の候補タスク
-- `docs/DIRECTORY_MAP.md`: 主要ディレクトリ、責務、タスク別の参照先
+- `.ai-workflow/directory-map.json`: 主要ディレクトリ、責務、境界の正本
+- `docs/DIRECTORY_MAP.md`: JSON正本から生成したタスク別参照先の要約
 - `docs/tasks/.../implementation-plan.md`: 今回の1タスクの実行計画
 
 ROADMAPの全項目を一度に実装しようとしないことが重要です。
@@ -59,6 +61,7 @@ AIに実装を頼む前に、まずタスクを明確にします。
 - `docs/PROJECT_STATUS.md`
 - `docs/ROADMAP.md`
 - `docs/DIRECTORY_MAP.md`
+- Project Structure Gateの固定出力
 - 直近の `docs/devlog/`
 - 最後に通ったテストやビルド
 
@@ -80,7 +83,8 @@ AIに実装を頼む前に、まずタスクを明確にします。
 - 触ってはいけない境界はどこか
 - DIRECTORY_MAPと実際の構成に大きなズレがないか
 
-DIRECTORY_MAPがない場合は、実装前に主要ディレクトリと責務を短く整理します。
+構造チェッカーがDrift、Invalid、Check Failedの場合は、実装前に原因を解消します。
+DIRECTORY_MAPがない場合は、実装前にJSON正本と生成文書を整備します。
 新しい主要ディレクトリや責務変更が必要になりそうな場合は、implementation planに更新候補として記録します。
 
 ## 5. Workflow Modeを判定する
@@ -190,7 +194,7 @@ UIや操作が関係する場合は、手動確認も記録します。
 - 未完了のことは何か
 - 計画から変わったことは何か
 - 検証結果は十分か
-- DIRECTORY_MAPの更新要否を確認したか
+- Project Structure Gateを実行し、構造差分を処理したか
 - 次の作業者が再開できるか
 
 テンプレートは `templates/completion-review.md` を使います。
@@ -209,7 +213,7 @@ devlogに残すこと:
 - どの選択肢を見送ったか
 - 何を検証したか
 - 何が未完了か
-- DIRECTORY_MAPを更新したか、または更新不要な理由
+- JSON正本、snapshot、生成DIRECTORY_MAPを更新したか、または更新不要な理由
 - 次に何を見るべきか
 
 devlogは作業日報ではありません。

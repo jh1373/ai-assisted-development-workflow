@@ -2,6 +2,8 @@ $ErrorActionPreference = 'Stop'
 
 $repoRoot = Split-Path -Parent $PSScriptRoot
 $checker = Join-Path $repoRoot 'scripts\check-initialization.ps1'
+$structureTool = Join-Path $repoRoot 'scripts\project-structure.py'
+$directoryChecker = Join-Path $repoRoot 'scripts\check-directory-map.ps1'
 $fixture = Join-Path ([System.IO.Path]::GetTempPath()) ("initialization-checker-" + [guid]::NewGuid().ToString('N'))
 $powerShellExecutable = if ($PSVersionTable.PSEdition -eq 'Desktop') { 'powershell.exe' } else { 'pwsh' }
 
@@ -30,6 +32,8 @@ function Write-State {
 try {
     New-Item -ItemType Directory -Force -Path (Join-Path $fixture 'scripts') | Out-Null
     Copy-Item -LiteralPath $checker -Destination (Join-Path $fixture 'scripts\check-initialization.ps1')
+    Copy-Item -LiteralPath $structureTool -Destination (Join-Path $fixture 'scripts\project-structure.py')
+    Copy-Item -LiteralPath $directoryChecker -Destination (Join-Path $fixture 'scripts\check-directory-map.ps1')
 
     Assert-Result 'INITIALIZATION_CHECK_FAILED'
 
@@ -79,6 +83,17 @@ try {
     Set-Content -LiteralPath (Join-Path $fixture 'docs\PROJECT_STATUS.md') -Value 'Current phase: Discovery'
     Set-Content -LiteralPath (Join-Path $fixture 'docs\DIRECTORY_MAP.md') -Value 'Map Status: Provisional'
     @('Initialization Decision: Ready', '- Approved by: User', '- Approved at: 2026-06-20', '- Confirmation summary: Approved for validation') | Set-Content -LiteralPath (Join-Path $fixture 'docs\INITIALIZATION_REVIEW.md')
+    @{
+        schema_version = 1
+        status = 'provisional'
+        project_name = 'Fixture'
+        verified_at = $null
+        verified_by = $null
+        ignore_file = '.ai-workflow/directory-map.ignore'
+        nodes = @()
+        conventions = @()
+    } | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath (Join-Path $fixture '.ai-workflow\directory-map.json')
+    & python (Join-Path $fixture 'scripts\project-structure.py') --root $fixture generate | Out-Null
     Assert-Result 'INITIALIZATION_READY'
 
     @('## Project-specific Context', 'Product goal: Not initialized', '## Initialization Routing', '## Task Workflow After Initialization') | Set-Content -LiteralPath (Join-Path $fixture 'AGENTS.md')
@@ -92,6 +107,10 @@ try {
     @('Initialization Decision: Ready', '- Approved by:    ', '- Approved at: 2026-06-20', '- Confirmation summary: Approved for validation') | Set-Content -LiteralPath (Join-Path $fixture 'docs\INITIALIZATION_REVIEW.md')
     Assert-Result 'INITIALIZATION_INVALID'
 
+    @('Initialization Decision: Ready', '- Approved by: User', '- Approved at: 2026-06-20', '- Confirmation summary: Approved for validation') | Set-Content -LiteralPath (Join-Path $fixture 'docs\INITIALIZATION_REVIEW.md')
+    Set-Content -LiteralPath (Join-Path $fixture '.ai-workflow\directory-map.json') -Value '{'
+    Assert-Result 'INITIALIZATION_INVALID'
+
     Set-Content -LiteralPath (Join-Path $fixture 'docs\INITIALIZATION_REVIEW.md') -Value 'Initialization Decision: Not Ready'
     Assert-Result 'INITIALIZATION_INVALID'
 
@@ -101,6 +120,9 @@ try {
     Copy-Item -LiteralPath (Join-Path $repoRoot 'examples\project-initialization\.ai-workflow') -Destination $fixture -Recurse -Force
     New-Item -ItemType Directory -Force -Path (Join-Path $fixture 'scripts') | Out-Null
     Copy-Item -LiteralPath $checker -Destination (Join-Path $fixture 'scripts\check-initialization.ps1')
+    Copy-Item -LiteralPath $structureTool -Destination (Join-Path $fixture 'scripts\project-structure.py')
+    Copy-Item -LiteralPath $directoryChecker -Destination (Join-Path $fixture 'scripts\check-directory-map.ps1')
+    & python (Join-Path $fixture 'scripts\project-structure.py') --root $fixture generate | Out-Null
     Assert-Result 'INITIALIZATION_READY'
 
     Write-Output 'Initialization checker PowerShell tests passed.'

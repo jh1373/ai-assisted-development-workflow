@@ -9,6 +9,8 @@ AI支援開発で、完了前に確認するためのチェックリストです
 - PROJECT_BRIEFでConfirmed、Hypothesis、Unknown、Deferredが区別されているか
 - 対象ユーザーや収益化の仮説を確定事項として扱っていないか
 - ROADMAPがDiscoveryまたはBuild-readyの現在地に合っているか
+- Project Structure MapがProvisionalまたはVerifiedを返しているか
+- JSON正本からDIRECTORY_MAPを生成しているか
 - AGENTS.mdに未設定のプロジェクト固有欄が残っていないか
 - 初期設定レビューにユーザーの明示承認があるか
 - `ready`を「すべて確定済み」という意味で使っていないか
@@ -23,6 +25,7 @@ AI支援開発で、完了前に確認するためのチェックリストです
 - 変更する範囲は明確か
 - 変更しない範囲は明確か
 - 既存仕様との矛盾はないか
+- Project Structure GateがDrift、Invalid、Check Failedのままではないか
 - テスト方法は決まっているか
 - セキュリティやプライバシーへの影響はないか
 - workflow modeは適切か
@@ -48,6 +51,7 @@ AI支援開発で、完了前に確認するためのチェックリストです
 - 手動確認が必要な箇所を確認したか
 - 余計なファイルを変更していないか
 - ドキュメント更新が必要な箇所を更新したか
+- 構造変更がある場合、JSON正本、snapshot、生成DIRECTORY_MAPを更新したか
 - devlogに判断理由を残したか
 - 次回作業者が再開できる状態か
 - `definition-of-done.md` の条件を満たしているか

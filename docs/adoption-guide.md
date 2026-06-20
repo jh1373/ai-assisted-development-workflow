@@ -190,14 +190,34 @@ Hypothesisを恒久ルールとして固定しません。
 
 ## Step 11: DIRECTORY_MAPを作る
 
-コードがまだない場合は、次を記録します。
+`.ai-workflow/directory-map.json` に予定している主要ディレクトリ、責務、境界、タスク別の参照先を記録します。
+コードがまだない場合は、次の状態を使います。
 
 ```text
-Map Status: Provisional
+"status": "provisional"
 ```
 
-予定している主要ディレクトリ、責務、境界を書きます。
-初期構築後に実際の構成と照合し、`Map Status: Verified` へ変更します。
+JSON正本からMarkdownを生成し、機械判定を確認します。
+
+```bash
+python scripts/project-structure.py generate
+python scripts/project-structure.py validate
+```
+
+期待値:
+
+```text
+DIRECTORY_MAP_PROVISIONAL
+```
+
+必要なら `python scripts/project-structure.py serve` でlocalhost画面を開き、現在の全ファイルと予定した責務を確認します。
+初期構築後、ユーザーが実際の構成と役割を確認してからVerifiedへ変更します。
+
+```bash
+python scripts/project-structure.py verify --verified-by "User"
+```
+
+詳しくは [Project Structure Map](project-structure-map.md) を参照してください。
 
 ## Step 12: Initialization Reviewを行う
 
@@ -244,7 +264,7 @@ INITIALIZATION_READY
 `ready`は、すべての事業・製品判断が完了した意味ではありません。
 現在の仮説と不明点を明示したうえで、最初のタスクを安全に始められる意味です。
 
-READY判定では、状態ファイルだけでなく、プロジェクト固有AGENTS、確認済みの初期経路、名前付きPhase 1、記入済みDirectory Map、承認者・承認日・確認要約も検査します。
+READY判定では、状態ファイルだけでなく、プロジェクト固有AGENTS、確認済みの初期経路、名前付きPhase 1、JSON正本から生成されたDirectory Map、構造チェッカーの結果、承認者・承認日・確認要約も検査します。
 これらの判定対象に初期値またはプレースホルダーが残る場合は `INITIALIZATION_INVALID` です。
 
 ## Step 15: 最初のタスクを開始する

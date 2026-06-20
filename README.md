@@ -58,7 +58,8 @@ starter/を配置する
 → DiscoveryまたはBuild-readyの経路を選ぶ
 → ROADMAPを作る
 → AGENTS.mdをプロジェクト向けに正式化する
-→ PROJECT_STATUSとDIRECTORY_MAPを初期化する
+→ PROJECT_STATUSとJSON正本のDirectory Mapを初期化する
+→ Project Structure Mapで予定構成を機械確認する
 → 初期設定レビューを行う
 → ユーザーが開始を承認する
 → 機械判定がINITIALIZATION_READYになったことを確認する
@@ -73,6 +74,7 @@ starter/を配置する
 
 ```text
 session-startのStep 0でINITIALIZATION_READYを確認する
+→ Project Structure Gateで構造の鮮度を機械確認する
 → 現在の開発状況を把握する
 → ROADMAPとPROJECT_STATUSから今回のタスクを選ぶ
 → DIRECTORY_MAPで今回読むべき範囲を絞る
@@ -122,9 +124,19 @@ starter/
 ```
 
 コピーすると、初期設定状態を持つ `.ai-workflow/`、AIが最初に読む `AGENTS.md`、プロダクト仮説を整理する `docs/PROJECT_BRIEF.md`、現在地を残す `docs/PROJECT_STATUS.md`、初期設定と通常タスクのワークフロー、作業用テンプレートが配置されます。
-`docs/DIRECTORY_MAP.md` には主要ディレクトリと責務を残し、AIがコード全体を読む前に確認範囲を絞れるようにします。
+`.ai-workflow/directory-map.json` を構造と責務の正本とし、`docs/DIRECTORY_MAP.md` を自動生成します。
+localhostのProject Structure Mapでは、全ファイル、役割の根拠、追加・削除、未分類項目をライブ表示できます。
 
 詳しくは [starter/README.md](starter/README.md) を参照してください。
+
+Project Structure MapはPython 3.10以降を推奨し、外部Pythonパッケージなしで動作します。
+
+```bash
+python scripts/project-structure.py validate
+python scripts/project-structure.py serve
+```
+
+localhost画面は`127.0.0.1`だけで起動し、全パス、役割の根拠、構造差分を閲覧専用で表示します。ファイル内容は読み取りません。
 
 ## 新規プロジェクトで必要な基本構成
 
@@ -132,6 +144,8 @@ starter/
 
 ```text
 .ai-workflow/project-state.conf
+.ai-workflow/directory-map.json
+.ai-workflow/directory-map.ignore
 AGENTS.md
 docs/PROJECT_BRIEF.md
 docs/INITIALIZATION_REVIEW.md
@@ -144,6 +158,9 @@ workflows/session-start.md
 workflows/session-end.md
 scripts/check-initialization.sh
 scripts/check-initialization.ps1
+scripts/check-directory-map.sh
+scripts/check-directory-map.ps1
+scripts/project-structure.py
 templates/project-brief.md
 templates/initialization-review.md
 templates/requirement-alignment.md
@@ -153,17 +170,20 @@ templates/devlog.md
 ```
 
 - `.ai-workflow/project-state.conf`: 初期設定状態を機械判定する唯一の状態ファイル
+- `.ai-workflow/directory-map.json`: 主要パス、責務、境界、タスク別参照先の正本
+- `.ai-workflow/directory-snapshot.json`: Verified時点の全パス構造を保存する生成基準線
 - `PROJECT_BRIEF.md`: 確定事項、仮説、不明点、後で決めることを整理する
 - `INITIALIZATION_REVIEW.md`: ユーザー承認を含む初期設定レビュー
 - `ROADMAP.md`: プロジェクト全体のフェーズ、成果、見直し条件を残す
 - `PROJECT_STATUS.md`: 次のセッションで最初に読む現在地メモ
-- `DIRECTORY_MAP.md`: 主要ディレクトリ、責務、タスク別の参照先を残す地図
+- `DIRECTORY_MAP.md`: JSON正本から生成する主要ディレクトリ、責務、タスク別参照先の要約
 - `docs/tasks/`: 1タスクごとの認識合わせ、計画、完了レビューを残す場所
 - `requirement-alignment.md`: 実装前にユーザーとAIの認識を揃える確認メモ
 - `implementation-plan.md`: 実装前に目的、範囲、検証方法を固定する計画
 - `devlog.md`: 作業後に判断理由、検証結果、未完了事項を残す記録
 
 Devlogの粒度は [examples/devlog/standard-task-devlog.md](examples/devlog/standard-task-devlog.md) を見本にしてください。
+構造検証とlocalhost画面は [Project Structure Map](docs/project-structure-map.md) を参照してください。
 
 PRテンプレート、ADR、Strict modeの追加成果物は、プロジェクトのリスクと運用に応じて使います。
 
@@ -313,7 +333,7 @@ AIは今回のタスク内容とリスクを見て、低リスクなら理由を
 4. `docs/PROJECT_BRIEF.md` に確定事項、仮説、不明点、Deferredを記録する
 5. DiscoveryまたはBuild-readyのROADMAPを作る
 6. `AGENTS.md` をプロジェクト向けに正式化する
-7. `PROJECT_STATUS.md` と `DIRECTORY_MAP.md` を初期化する
+7. `PROJECT_STATUS.md` と `.ai-workflow/directory-map.json` を初期化し、`DIRECTORY_MAP.md` を生成する
 8. `INITIALIZATION_REVIEW.md` を使って初期設定をレビューする
 9. ユーザー承認後だけ状態を `ready` にする
 10. チェッカーで `INITIALIZATION_READY` を確認する

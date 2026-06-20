@@ -1,0 +1,98 @@
+{
+  "schema_version": 1,
+  "status": "provisional",
+  "project_name": "React App Workflow Example",
+  "verified_at": null,
+  "verified_by": null,
+  "ignore_file": ".ai-workflow/directory-map.ignore",
+  "nodes": [
+    {
+      "path": ".ai-workflow",
+      "kind": "directory",
+      "role": "Project Structure Mapの機械可読な定義を保存する",
+      "boundaries": ["秘密情報を保存しない"],
+      "task_types": ["構造定義の更新"]
+    },
+    {
+      "path": "docs",
+      "kind": "directory",
+      "role": "プロジェクト計画、現在地、生成された構造要約を保存する",
+      "boundaries": ["生成されたDIRECTORY_MAP.mdを直接編集しない"],
+      "task_types": ["計画確認", "構造要約の確認"]
+    },
+    {
+      "path": "src/components",
+      "kind": "pattern",
+      "role": "再利用UIコンポーネント",
+      "boundaries": ["機能固有の状態管理を持ちすぎない"],
+      "task_types": ["共通UI変更"]
+    },
+    {
+      "path": "src/components/**",
+      "kind": "pattern",
+      "role": "再利用UIコンポーネント",
+      "boundaries": ["機能固有の状態管理を持ちすぎない"],
+      "task_types": ["共通UI変更"]
+    },
+    {
+      "path": "src/features/search",
+      "kind": "pattern",
+      "role": "検索画面、検索結果表示、検索状態",
+      "boundaries": ["Phase 2ではAPI接続を追加しない"],
+      "task_types": ["検索結果表示", "0件時UI"]
+    },
+    {
+      "path": "src/features/search/**",
+      "kind": "pattern",
+      "role": "検索画面、検索結果表示、検索状態",
+      "boundaries": ["Phase 2ではAPI接続を追加しない"],
+      "task_types": ["検索結果表示", "0件時UI"]
+    },
+    {
+      "path": "src/data",
+      "kind": "pattern",
+      "role": "開発用モックデータ",
+      "boundaries": ["本番APIの代替としてのみ使う"],
+      "task_types": ["モックデータ変更"]
+    },
+    {
+      "path": "src/data/**",
+      "kind": "pattern",
+      "role": "開発用モックデータ",
+      "boundaries": ["本番APIの代替としてのみ使う"],
+      "task_types": ["モックデータ変更"]
+    },
+    {
+      "path": "src/types",
+      "kind": "pattern",
+      "role": "検索結果などの共有型定義",
+      "boundaries": ["UI文言や表示判断を置かない"],
+      "task_types": ["型定義変更"]
+    },
+    {
+      "path": "src/types/**",
+      "kind": "pattern",
+      "role": "検索結果などの共有型定義",
+      "boundaries": ["UI文言や表示判断を置かない"],
+      "task_types": ["型定義変更"]
+    },
+    {
+      "path": "src",
+      "kind": "pattern",
+      "role": "Reactアプリケーションのソースコード",
+      "boundaries": ["責務が決まらない新規ディレクトリを追加しない"],
+      "task_types": ["アプリケーション実装"]
+    },
+    {
+      "path": "src/**",
+      "kind": "pattern",
+      "role": "Reactアプリケーションのソースコード",
+      "boundaries": ["責務が決まらない新規ディレクトリを追加しない"],
+      "task_types": ["アプリケーション実装"]
+    }
+  ],
+  "conventions": [
+    {"pattern": "*.md", "role": "人間とAIが参照するMarkdown文書"},
+    {"pattern": "*.json", "role": "機械可読な設定またはデータ"}
+  ]
+}

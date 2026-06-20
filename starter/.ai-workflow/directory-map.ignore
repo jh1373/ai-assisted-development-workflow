@@ -1,0 +1,16 @@
+# Project Structure Map exclusions
+# Paths are matched relative to the project root.
+
+.git/
+node_modules/
+dist/
+build/
+coverage/
+.next/
+.cache/
+.pytest_cache/
+__pycache__/
+*.pyc
+.env
+.env.*
+!.env.example

@@ -22,3 +22,6 @@ jobs:
       - name: Test PowerShell initialization checker
         shell: pwsh
         run: ./scripts/test-initialization-checker.ps1
+
+      - name: Test project structure map
+        run: python3 scripts/test-project-structure.py

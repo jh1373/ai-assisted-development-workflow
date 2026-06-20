@@ -70,8 +70,8 @@ Mode changed during work:
 
 - [ ] PROJECT_STATUS を更新した
 - [ ] ROADMAP を更新した
-- [ ] DIRECTORY_MAP の更新要否を確認した
-- [ ] DIRECTORY_MAP を更新した、または更新不要の理由を記録した
+- [ ] Project Structure Gateを実行した
+- [ ] 構造変更がある場合、JSON正本、snapshot、生成DIRECTORY_MAPを更新した
 - [ ] devlog に残すべき判断理由、検証結果、未完了事項を整理した
 - [ ] devlog の保存先を決めた
 - [ ] README や利用手順を更新した
@@ -95,6 +95,7 @@ Directory Map impact:
 
 ```text
 none / updated / update-needed
+Checker result:
 Reason:
 ```
 

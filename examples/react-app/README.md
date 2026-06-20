@@ -17,6 +17,7 @@ Reactアプリ開発で、このワークフローを使う場合の例です。
 
 ```text
 ROADMAPとPROJECT_STATUSを読む
+→ Project Structure Gateを実行する
 → 今回扱うタスクを選ぶ
 → DIRECTORY_MAPで今回読むべき範囲を絞る
 → ユーザー要望とAI側の理解を揃える
@@ -32,6 +33,7 @@ ROADMAPとPROJECT_STATUSを読む
 
 ```bash
 git status --short --branch
+python ../../scripts/project-structure.py --root . validate --require-generated
 npm test
 ```
 
@@ -57,10 +59,13 @@ git diff --check
 - `docs/devlog/YYYY-MM-DD/HHMM-task-name.md`
 - 必要に応じて `docs/PROJECT_STATUS.md`
 - 必要に応じて `docs/ROADMAP.md`
-- 必要に応じて `docs/DIRECTORY_MAP.md`
+- 構造や責務が変わる場合は `.ai-workflow/directory-map.json`
+- JSON正本を変えた場合は、生成された `docs/DIRECTORY_MAP.md`
 
 ## 例ファイル
 
 - `implementation-plan-example.md`: 実装前の計画例
 - `completion-review-example.md`: 完了前レビュー例
 - `devlog-example.md`: 作業後の判断ログ例
+- `.ai-workflow/directory-map.json`: この例の構造と責務の正本
+- `docs/DIRECTORY_MAP.md`: JSON正本から生成した例

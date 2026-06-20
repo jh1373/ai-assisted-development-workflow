@@ -1,61 +1,47 @@
-# Directory Map Template
+# Directory Map Generated Document
 
-このファイルは、プロジェクトの主要ディレクトリと責務を説明するための地図です。
-AIエージェントは、実装前にこのファイルを読み、今回のタスクで確認すべき範囲を絞ります。
+`docs/DIRECTORY_MAP.md` は手動で記入するテンプレートではありません。
 
-Map Status: Provisional / Verified
-
-- `Provisional`: コード作成前の予定構成、または実構成との照合前
-- `Verified`: 実際のプロジェクト構成と照合済み
-
-初期設定では、技術スタックが決まる前にWeb、モバイル、APIなどの構成を推測で埋めません。
-PROJECT_BRIEFと技術方針に基づき、必要な主要ディレクトリだけを記録します。
-
-## Directory Structure
+役割、境界、タスク別参照先の正本:
 
 ```text
-[PROJECT_ROOT]/
-  [path]/    [responsibility]
+.ai-workflow/directory-map.json
 ```
 
-## Responsibilities
+全パス構造のVerified基準線:
 
-| Path | Responsibility | Notes |
-|---|---|---|
-| `[path]` | `[responsibility]` | `[boundary or important note]` |
+```text
+.ai-workflow/directory-snapshot.json
+```
 
-## Task Routing Guide
+Markdown生成:
 
-| Task Type | Start Here | Also Check | Avoid |
-|---|---|---|---|
-| `[task type]` | `[primary path]` | `[related paths or tests]` | `[boundary not to cross]` |
+```bash
+python scripts/project-structure.py generate
+```
 
-## Boundaries
+初期設定ではJSONの`status`を`provisional`にし、予定している主要ディレクトリと責務だけを登録します。
+初期構築後、実際の全ファイル、役割、境界をユーザーが確認してから次を実行します。
 
-- 秘密情報、認証情報、個人情報をログや公開文書へ出さない
-- プロジェクト固有の責務境界は初期設定で追加する
-- 未確定の構成はConfirmedとして固定せず、Provisionalであることを残す
+```bash
+python scripts/project-structure.py verify --verified-by "User"
+```
 
-## Update Triggers
+生成される文書には次が含まれます。
 
-`DIRECTORY_MAP.md` はsession-startで読みます。
-session-endでは更新要否を確認します。
-ただし、更新するのは構造や責務に影響があった場合だけです。
+- ProvisionalまたはVerified
+- 構造チェッカーの固定出力
+- 現在と基準線の構造ハッシュ
+- ファイル数、ディレクトリ数、未分類数
+- 主要パスと責務
+- タスク別の参照先
+- 境界と禁止事項
+- 構造差分件数
 
-初期構築後に実構成と照合した場合は、`Map Status` を `Verified` に更新します。
+全ファイルツリーとライブ差分は次で確認します。
 
-更新する例:
+```bash
+python scripts/project-structure.py serve
+```
 
-- 新しい主要ディレクトリを追加した
-- 既存ディレクトリの責務を変えた
-- ファイル配置ルールを変えた
-- タスク別の参照先が変わった
-- 次回のAIが迷いそうな構成変更をした
-
-更新しない例:
-
-- 既存ディレクトリ内の小さな変更
-- 文言修正
-- テスト追加のみ
-- README更新のみ
-- ディレクトリ責務に影響しない修正
+詳しい仕様は [Project Structure Map](../docs/project-structure-map.md) を参照してください。

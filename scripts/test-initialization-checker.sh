@@ -3,11 +3,15 @@ set -euo pipefail
 
 repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 checker="$repo_root/scripts/check-initialization.sh"
+structure_tool="$repo_root/scripts/project-structure.py"
+directory_checker="$repo_root/scripts/check-directory-map.sh"
 fixture="$(mktemp -d)"
 trap 'rm -rf "$fixture"' EXIT
 
 mkdir -p "$fixture/scripts"
 cp "$checker" "$fixture/scripts/check-initialization.sh"
+cp "$structure_tool" "$fixture/scripts/project-structure.py"
+cp "$directory_checker" "$fixture/scripts/check-directory-map.sh"
 
 assert_result() {
   local expected="$1"
@@ -71,6 +75,8 @@ printf '%s\n' '- Initialization track: Discovery' '## Phase 1: Validation' > "$f
 printf 'Current phase: Discovery\n' > "$fixture/docs/PROJECT_STATUS.md"
 printf 'Map Status: Provisional\n' > "$fixture/docs/DIRECTORY_MAP.md"
 printf '%s\n' 'Initialization Decision: Ready' '- Approved by: User' '- Approved at: 2026-06-20' '- Confirmation summary: Approved for validation' > "$fixture/docs/INITIALIZATION_REVIEW.md"
+printf '%s\n' '{' '  "schema_version": 1,' '  "status": "provisional",' '  "project_name": "Fixture",' '  "verified_at": null,' '  "verified_by": null,' '  "ignore_file": ".ai-workflow/directory-map.ignore",' '  "nodes": [],' '  "conventions": []' '}' > "$fixture/.ai-workflow/directory-map.json"
+python3 "$fixture/scripts/project-structure.py" --root "$fixture" generate >/dev/null
 assert_result "INITIALIZATION_READY"
 
 printf '%s\n' '## Project-specific Context' 'Product goal: Not initialized' '## Initialization Routing' '## Task Workflow After Initialization' > "$fixture/AGENTS.md"
@@ -84,6 +90,10 @@ printf 'Map Status: Provisional\n' > "$fixture/docs/DIRECTORY_MAP.md"
 printf '%s\n' 'Initialization Decision: Ready' '- Approved by:    ' '- Approved at: 2026-06-20' '- Confirmation summary: Approved for validation' > "$fixture/docs/INITIALIZATION_REVIEW.md"
 assert_result "INITIALIZATION_INVALID"
 
+printf '%s\n' 'Initialization Decision: Ready' '- Approved by: User' '- Approved at: 2026-06-20' '- Confirmation summary: Approved for validation' > "$fixture/docs/INITIALIZATION_REVIEW.md"
+printf '{\n' > "$fixture/.ai-workflow/directory-map.json"
+assert_result "INITIALIZATION_INVALID"
+
 printf 'Initialization Decision: Not Ready\n' > "$fixture/docs/INITIALIZATION_REVIEW.md"
 assert_result "INITIALIZATION_INVALID"
 
@@ -91,6 +101,9 @@ rm -rf "$fixture"
 mkdir -p "$fixture/scripts"
 cp -R "$repo_root/examples/project-initialization/." "$fixture/"
 cp "$checker" "$fixture/scripts/check-initialization.sh"
+cp "$structure_tool" "$fixture/scripts/project-structure.py"
+cp "$directory_checker" "$fixture/scripts/check-directory-map.sh"
+python3 "$fixture/scripts/project-structure.py" --root "$fixture" generate >/dev/null
 assert_result "INITIALIZATION_READY"
 
 printf 'Initialization checker Bash tests passed.\n'

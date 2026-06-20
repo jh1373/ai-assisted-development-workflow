@@ -50,8 +50,9 @@ docs/tasks/YYYY-MM-DD-HHMM-task-name/
 ### Directory Map
 
 - Impact: none / updated / update-needed
+- Checker result:
 - Reason:
-- Updated path:
+- Updated JSON / snapshot / generated Markdown:
 
 ### 採用した方針
 

@@ -44,6 +44,10 @@ docs/tasks/YYYY-MM-DD-HHMM-task-name/implementation-plan.md
 
 <!-- DIRECTORY_MAPをもとに、今回読むべき範囲と触らない境界を書く -->
 
+Project Structure Gate result:
+
+-
+
 Related directories:
 
 -
