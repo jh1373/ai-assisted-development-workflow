@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import importlib.util
+import io
 import json
 import subprocess
 import sys
@@ -228,6 +229,8 @@ class ProjectStructureTests(unittest.TestCase):
             outside.rmdir()
 
     def test_local_server_token_and_live_update(self) -> None:
+        token = ""
+        stderr_output = ""
         process = subprocess.Popen(
             [sys.executable, str(SCRIPT), "--root", str(self.fixture.root), "serve", "--port", "0"],
             stdout=subprocess.PIPE,
@@ -241,14 +244,25 @@ class ProjectStructureTests(unittest.TestCase):
             self.assertTrue(first_line.startswith("Project Structure Map: "), first_line)
             url = first_line.split(": ", 1)[1]
             parsed = urlparse(url)
-            token = parse_qs(parsed.query)["token"][0]
+            self.assertNotIn("token", parse_qs(parsed.query))
+            token = parse_qs(parsed.fragment)["token"][0]
             base = f"http://127.0.0.1:{parsed.port}"
+
+            def authorized_request(path: str) -> urllib.request.Request:
+                return urllib.request.Request(
+                    f"{base}{path}",
+                    headers={"X-Project-Structure-Token": token},
+                )
 
             with self.assertRaises(urllib.error.HTTPError) as denied:
                 urllib.request.urlopen(f"{base}/api/state", timeout=5)
             self.assertEqual(denied.exception.code, 403)
 
-            with urllib.request.urlopen(f"{base}/api/state?token={token}", timeout=5) as response:
+            with self.assertRaises(urllib.error.HTTPError) as query_token_denied:
+                urllib.request.urlopen(f"{base}/api/state?token={token}", timeout=5)
+            self.assertEqual(query_token_denied.exception.code, 403)
+
+            with urllib.request.urlopen(authorized_request("/api/state"), timeout=5) as response:
                 state_before = json.loads(response.read().decode("utf-8"))
                 self.assertEqual(response.headers["X-Frame-Options"], "DENY")
                 self.assertIn("default-src 'self'", response.headers["Content-Security-Policy"])
@@ -265,7 +279,7 @@ class ProjectStructureTests(unittest.TestCase):
 
             (self.fixture.root / "src" / "live.py").write_text("pass\n", encoding="utf-8")
             time.sleep(1.2)
-            with urllib.request.urlopen(f"{base}/api/state?token={token}", timeout=5) as response:
+            with urllib.request.urlopen(authorized_request("/api/state"), timeout=5) as response:
                 state_after = json.loads(response.read().decode("utf-8"))
             self.assertNotEqual(state_before["structure_hash"], state_after["structure_hash"])
             self.assertIn("src/live.py", {entry["path"] for entry in state_after["entries"]})
@@ -279,19 +293,48 @@ class ProjectStructureTests(unittest.TestCase):
             if process.stdout:
                 process.stdout.close()
             if process.stderr:
+                stderr_output = process.stderr.read()
                 process.stderr.close()
+        self.assertNotIn(token, stderr_output)
+        self.assertIn("[REDACTED]", stderr_output)
 
     def test_open_browser_option_and_helper(self) -> None:
         args = project_structure.build_parser().parse_args(["serve", "--open-browser"])
         self.assertTrue(args.open_browser)
 
-        url = "http://127.0.0.1:4173/?token=test"
+        url = "http://127.0.0.1:4173/#token=test"
         with mock.patch.object(project_structure.webbrowser, "open", return_value=True) as opener:
             project_structure.launch_browser(url)
         opener.assert_called_once_with(url, new=2)
 
         with mock.patch.object(project_structure.webbrowser, "open", side_effect=OSError("no browser")):
             project_structure.launch_browser(url)
+
+    def test_open_browser_mode_hides_token_from_stdout(self) -> None:
+        class FakeServer:
+            server_address = ("127.0.0.1", 4173)
+
+            def serve_forever(self, poll_interval: float) -> None:
+                raise KeyboardInterrupt
+
+            def server_close(self) -> None:
+                return None
+
+        fake_server = FakeServer()
+        output = io.StringIO()
+        with (
+            mock.patch.object(project_structure, "ThreadingHTTPServer", return_value=fake_server),
+            mock.patch.object(project_structure.threading, "Thread") as thread_type,
+            mock.patch("sys.stdout", output),
+        ):
+            project_structure.serve(self.fixture.root, 0, open_browser=True)
+
+        printed = output.getvalue()
+        self.assertIn("Project Structure Map: http://127.0.0.1:4173/", printed)
+        self.assertNotIn("token=", printed)
+        access_url = thread_type.call_args.kwargs["args"][0]
+        self.assertIn("#token=", access_url)
+        thread_type.return_value.start.assert_called_once()
 
     def test_viewer_exposes_project_atlas_views(self) -> None:
         html = (SCRIPT.parent / "project-structure-viewer" / "index.html").read_text(encoding="utf-8")

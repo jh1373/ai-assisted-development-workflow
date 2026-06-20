@@ -1,11 +1,13 @@
 (() => {
   "use strict";
   const params = new URLSearchParams(location.search);
-  const token = params.get("token") || sessionStorage.getItem("project-atlas-token") || "";
+  const fragmentParams = new URLSearchParams(location.hash.replace(/^#/, ""));
+  const token = fragmentParams.get("token") || params.get("token") || sessionStorage.getItem("project-atlas-token") || "";
   if (token) sessionStorage.setItem("project-atlas-token", token);
-  if (params.has("token")) {
+  if (params.has("token") || fragmentParams.has("token")) {
     params.delete("token");
-    history.replaceState(null, "", location.pathname + (params.toString() ? "?" + params : ""));
+    fragmentParams.delete("token");
+    history.replaceState(null, "", location.pathname + (params.toString() ? "?" + params : "") + (fragmentParams.toString() ? "#" + fragmentParams : ""));
   }
   const byId = (id) => document.getElementById(id);
   const els = Object.fromEntries([
@@ -326,7 +328,10 @@
   async function refresh() {
     try {
       if (!token) throw new Error("アクセス用トークンがありません。起動時に表示されたURLを使用してください。");
-      const response = await fetch("/api/state?token=" + encodeURIComponent(token), { cache: "no-store" });
+      const response = await fetch("/api/state", {
+        cache: "no-store",
+        headers: { "X-Project-Structure-Token": token }
+      });
       if (!response.ok) throw new Error(response.status === 403 ? "アクセス用トークンが無効です。" : "状態を取得できません。");
       const next = await response.json();
       const nextRevision = JSON.stringify([next.structure_hash, next.areas, next.flows, next.task_lenses, next.health]);

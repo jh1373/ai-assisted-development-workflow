@@ -844,7 +844,11 @@ def launch_browser(url: str) -> None:
         print(f"Browser could not be opened automatically: {exc}", file=sys.stderr, flush=True)
         return
     if not opened:
-        print("Browser could not be opened automatically. Open the URL above manually.", file=sys.stderr, flush=True)
+        print(
+            "Browser could not be opened automatically. Rerun without --open-browser to print a manual access URL.",
+            file=sys.stderr,
+            flush=True,
+        )
 
 
 def serve(root: Path, port: int, open_browser: bool = False) -> None:
@@ -858,7 +862,8 @@ def serve(root: Path, port: int, open_browser: bool = False) -> None:
         server_version = "ProjectStructureMap/1.0"
 
         def log_message(self, format: str, *args: Any) -> None:
-            sys.stderr.write("[project-structure] " + format % args + "\n")
+            message = format % args
+            sys.stderr.write("[project-structure] " + message.replace(token, "[REDACTED]") + "\n")
 
         def security_headers(self, content_type: str) -> None:
             self.send_header("Content-Type", content_type)
@@ -883,15 +888,15 @@ def serve(root: Path, port: int, open_browser: bool = False) -> None:
             body = json.dumps(value, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
             self.send_bytes(status, body, "application/json; charset=utf-8")
 
-        def authorized(self, query: dict[str, list[str]]) -> bool:
-            supplied = query.get("token", [""])[0]
+        def authorized(self) -> bool:
+            supplied = self.headers.get("X-Project-Structure-Token", "")
             return secrets.compare_digest(supplied, token)
 
         def do_GET(self) -> None:  # noqa: N802 - stdlib handler API
             parsed = urlparse(self.path)
             query = parse_qs(parsed.query)
             if parsed.path.startswith("/api/"):
-                if not self.authorized(query):
+                if not self.authorized():
                     self.send_json(HTTPStatus.FORBIDDEN, {"error": "Access token required."})
                     return
                 try:
@@ -927,11 +932,12 @@ def serve(root: Path, port: int, open_browser: bool = False) -> None:
 
     server = ThreadingHTTPServer(("127.0.0.1", port), Handler)
     actual_port = server.server_address[1]
-    url = f"http://127.0.0.1:{actual_port}/?token={token}"
-    print(f"Project Structure Map: {url}", flush=True)
+    base_url = f"http://127.0.0.1:{actual_port}/"
+    access_url = f"{base_url}#token={token}"
+    print(f"Project Structure Map: {base_url if open_browser else access_url}", flush=True)
     print("Press Ctrl+C to stop.", flush=True)
     if open_browser:
-        threading.Thread(target=launch_browser, args=(url,), daemon=True).start()
+        threading.Thread(target=launch_browser, args=(access_url,), daemon=True).start()
     try:
         server.serve_forever(poll_interval=0.25)
     except KeyboardInterrupt:
