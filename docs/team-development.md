@@ -62,6 +62,7 @@ PRに書くこと:
 - 関連するtask brief、implementation plan、completion review、devlog、ADR
 
 `.github/pull_request_template.md` を使うと、最低限の確認項目を揃えられます。
+各項目の意味と初心者向けの記入例は [pull-request-template.md](pull-request-template.md) を参照してください。
 
 ## CIと必須チェック
 

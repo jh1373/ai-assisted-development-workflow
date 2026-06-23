@@ -1,5 +1,10 @@
 # Pull Request
 
+<!--
+For field meanings and beginner-friendly examples, see:
+docs/pull-request-template.md
+-->
+
 ## Summary
 
 <!-- What changed and why? -->

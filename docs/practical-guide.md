@@ -265,6 +265,7 @@ GitHubで開発する場合は、PRに次を残します。
 - 残るリスク
 
 `.github/pull_request_template.md` を使うと、レビュー時に確認しやすくなります。
+各項目の意味と初心者向けの記入例は [pull-request-template.md](pull-request-template.md) を参照してください。
 
 CIでは `scripts/check-docs.sh` と `.github/workflows/docs-check.yml` を使い、最低限の文書構造、リンク切れ、秘密情報らしき文字列を確認します。
 

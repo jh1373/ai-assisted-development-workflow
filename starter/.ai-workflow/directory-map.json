@@ -294,6 +294,16 @@
       "beginner_summary": "今どこまで終わり、次に何をする可能性があるかを確認するファイルです。"
     },
     {
+      "path": "docs/ai-workflow/pull-request-template.md",
+      "kind": "file",
+      "area": "documentation",
+      "layer": "documentation",
+      "importance": "entry-point",
+      "display_name": "Pull Requestテンプレートの説明",
+      "role": "PRテンプレートの目的、各項目の意味、初心者向けの記入例を説明する",
+      "beginner_summary": "Pull Requestで何を書けばよいか、なぜその確認が必要かを初心者向けに説明します。"
+    },
+    {
       "path": "scripts/project-structure.py",
       "kind": "file",
       "area": "automation",
@@ -322,6 +332,16 @@
       "display_name": "プロジェクト案内図の自動確認",
       "role": "GitHub上で構造と生成文書の整合性を検証する",
       "beginner_summary": "pushやPull Requestの後に、プロジェクト案内図が壊れていないか自動確認します。"
+    },
+    {
+      "path": ".github/pull_request_template.md",
+      "kind": "file",
+      "area": "github",
+      "layer": "platform",
+      "importance": "entry-point",
+      "display_name": "Pull Request確認シート",
+      "role": "Pull Request作成時に、変更内容、検証結果、範囲外変更、セキュリティ確認、残るリスクを書く型を提供する",
+      "beginner_summary": "GitHubでレビューを出すときに自動で表示される確認シートです。AIの変更をそのまま通さず、判断材料を揃えます。"
     },
     {
       "path": "templates/implementation-plan.md",

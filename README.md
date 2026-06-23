@@ -155,6 +155,7 @@ docs/INITIALIZATION_REVIEW.md
 docs/ROADMAP.md
 docs/PROJECT_STATUS.md
 docs/DIRECTORY_MAP.md
+docs/pull-request-template.md
 docs/tasks/
 workflows/project-initialization.md
 workflows/session-start.md
@@ -180,6 +181,7 @@ templates/devlog.md
 - `ROADMAP.md`: プロジェクト全体のフェーズ、成果、見直し条件を残す
 - `PROJECT_STATUS.md`: 次のセッションで最初に読む現在地メモ
 - `DIRECTORY_MAP.md`: JSON正本から生成するプロジェクト案内図と構成の要約
+- `pull-request-template.md`: PRテンプレートの目的、各項目の意味、初心者向けの記入例
 - `docs/tasks/`: 1タスクごとの認識合わせ、計画、完了レビューを残す場所
 - `requirement-alignment.md`: 実装前にユーザーとAIの認識を揃える確認メモ
 - `implementation-plan.md`: 実装前に目的、範囲、検証方法を固定する計画
@@ -189,6 +191,7 @@ Devlogの粒度は [examples/devlog/standard-task-devlog.md](examples/devlog/sta
 構造検証とlocalhost画面は [Project Structure Map](docs/project-structure-map.md) を参照してください。
 
 PRテンプレート、ADR、Strict modeの追加成果物は、プロジェクトのリスクと運用に応じて使います。
+PRテンプレートの考え方と書き方は [docs/pull-request-template.md](docs/pull-request-template.md) を参照してください。
 
 ## 品質を守る関門
 
@@ -259,6 +262,7 @@ AIは今回のタスク内容とリスクを見て、低リスクなら理由を
 │   ├── definition-of-done.md
 │   ├── practical-guide.md
 │   ├── principles.md
+│   ├── pull-request-template.md
 │   ├── quality-gates.md
 │   ├── requirement-alignment.md
 │   ├── review-checklist.md
