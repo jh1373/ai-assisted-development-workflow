@@ -1,6 +1,6 @@
 # docsの読み方
 
-`docs/` は、このリポジトリの考え方、導入手順、品質確認、作業記録をまとめる場所です。
+`docs/` は、このリポジトリの考え方、導入手順、品質確認をまとめる場所です。
 
 このファイルは、`docs/` フォルダの入口です。
 どの文書をどの順番で読めばよいか、各ファイルが何を担っているかを確認できます。
@@ -56,21 +56,19 @@
 | `docs/security.md` | セキュリティ確認 | 秘密情報、個人情報、権限変更などの扱いを説明する |
 | `docs/ai-human-boundary.md` | AIと人間の責任範囲 | AIに任せてよいこと、人間が判断することを分ける |
 | `docs/anti-patterns.md` | 避けるべき失敗 | AI駆動開発で起きやすい失敗例をまとめる |
-| `docs/task-records.md` | タスク記録 | `docs/tasks/` に何を残すかを説明する |
+| `docs/task-records.md` | タスク記録 | 導入先プロジェクトで `docs/tasks/` に何を残すかを説明する |
 | `docs/pull-request-template.md` | PR確認シートの説明 | Pull Request本文に何を書くかを説明する |
 | `docs/project-structure-map.md` | プロジェクト案内図 | 構成の検証とlocalhost画面の使い方を説明する |
 | `docs/team-development.md` | チーム開発 | チームでこのワークフローを使うときの考え方を説明する |
 | `docs/adr-guidelines.md` | 設計判断記録 | 後から見返すべき設計判断をADRとして残す基準を説明する |
 
-## docs/tasks と docs/devlog
+## タスク記録とdevlogについて
 
-| パス | 意味 | 役割 |
-|---|---|---|
-| `docs/tasks/` | タスクごとの作業記録 | 認識合わせ、実装計画、完了レビューなどをタスク単位で残す |
-| `docs/devlog/` | 開発ログ | 変更理由、判断、検証結果、次に見るべきことを残す |
+このリポジトリ本体には、保守作業の `docs/tasks/` と `docs/devlog/` を置きません。
+公開リポジトリとしての読みやすさを優先し、このリポジトリ自体の修正履歴はGitのコミット履歴で管理します。
 
-`docs/tasks/` は成果物置き場ではありません。
-実際のコード、UI、テスト、設定ファイルは通常のプロジェクト構成に置きます。
+一方で、導入先プロジェクトでは `starter/docs/tasks/` と `starter/docs/devlog/` を使います。
+新規プロジェクトへ `starter/` をコピーした後は、導入先の `docs/tasks/` と `docs/devlog/` にタスク記録と判断ログを残します。
 
 ## リポジトリ全体の主要ファイル
 

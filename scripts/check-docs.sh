@@ -49,7 +49,6 @@ required_files=(
   "docs/design-rationale.md"
   "docs/adr-guidelines.md"
   "docs/task-records.md"
-  "docs/tasks/.gitkeep"
   "docs/requirement-alignment.md"
   "docs/practical-guide.md"
   "docs/quality-gates.md"

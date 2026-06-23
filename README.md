@@ -273,7 +273,6 @@ AIは今回のタスク内容とリスクを見て、低リスクなら理由を
 │   ├── security.md
 │   ├── strict-mode.md
 │   ├── task-records.md
-│   ├── tasks/
 │   ├── team-development.md
 │   └── workflow-modes.md
 ├── workflows/
