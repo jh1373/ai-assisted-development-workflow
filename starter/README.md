@@ -8,7 +8,22 @@
 
 ## 使い方
 
-`starter/` の中身を、導入したいプロジェクトのルートにコピーします。
+推奨手順は、このリポジトリのルートで導入スクリプトを実行する方法です。
+導入先は、空フォルダ、または `.git` だけが入った空リポジトリにしてください。
+
+PowerShell:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\create-new-project.ps1 C:\path\to\project
+```
+
+Bash:
+
+```bash
+bash scripts/create-new-project.sh /path/to/project
+```
+
+導入スクリプトは、`starter/` の中身を導入先プロジェクトのルートへ展開します。
 このディレクトリは開発運用の導入パッケージです。
 プロダクト本体は、導入先プロジェクト側で開発します。
 
@@ -20,20 +35,21 @@ Pythonがない場合、AIは勝手にインストールせず、ユーザーへ
 
 `.github/` は隠しディレクトリです。
 初期設定状態を保存する `.ai-workflow/` も隠しディレクトリです。
-コピー時に両方を漏らさないでください。
+導入スクリプトを使うと、両方とも漏れずに展開されます。
 
-Bash:
+手動コピーは代替手段です。
+通常は導入スクリプトを使ってください。
+
+手動でコピーする場合のBash例:
 
 ```bash
 cp -R starter/. /path/to/project/
 ```
 
-PowerShell:
+手動でコピーする場合のPowerShell例:
 
 ```powershell
-Copy-Item -Path .\starter\* -Destination C:\path\to\project -Recurse -Force
-Copy-Item -Path .\starter\.github -Destination C:\path\to\project -Recurse -Force
-Copy-Item -Path .\starter\.ai-workflow -Destination C:\path\to\project -Recurse -Force
+Get-ChildItem -LiteralPath .\starter -Force | Copy-Item -Destination C:\path\to\project -Recurse -Force
 ```
 
 コピー後の構成:

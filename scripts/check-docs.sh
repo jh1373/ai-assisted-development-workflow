@@ -72,6 +72,8 @@ required_files=(
   "workflows/project-initialization.md"
   "scripts/check-initialization.sh"
   "scripts/check-initialization.ps1"
+  "scripts/create-new-project.sh"
+  "scripts/create-new-project.ps1"
   "scripts/test-initialization-checker.sh"
   "scripts/test-initialization-checker.ps1"
   "scripts/check-directory-map.sh"
@@ -174,6 +176,13 @@ if ! grep -Fq 'Existing-project adoption is not supported.' starter/AGENTS.md; t
   echo "starter/AGENTS.md must stop unsupported existing-project adoption." >&2
   exit 1
 fi
+
+for file in "README.md" "docs/adoption-guide.md" "starter/README.md"; do
+  if ! grep -Fq 'create-new-project' "$file"; then
+    echo "Recommended installer command is missing from: $file" >&2
+    exit 1
+  fi
+done
 
 if ! grep -Fq '### 0. Initialization Gateを確認する' starter/workflows/session-start.md; then
   echo "starter session-start is missing the Initialization Gate." >&2

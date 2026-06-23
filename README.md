@@ -115,15 +115,26 @@ ROADMAPは初期設定で作るプロジェクト全体の地図です。
 
 ## まず使う方法
 
-新規プロジェクト用のリポジトリを作り、`starter/` の中身をプロジェクトルートへコピーします。
+新規プロジェクト用の空フォルダ、または `.git` だけが入った空リポジトリを用意し、導入スクリプトで `starter/` の中身をプロジェクトルートへ展開します。
 このリポジトリ自体は開発運用のテンプレートです。
 通常は、プロダクト用リポジトリを別に用意し、そこへ `starter/` を導入します。
 
-```text
-starter/
+PowerShell:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\create-new-project.ps1 C:\path\to\my-new-project
 ```
 
-コピーすると、初期設定状態を持つ `.ai-workflow/`、AIが最初に読む `AGENTS.md`、プロダクト仮説を整理する `docs/PROJECT_BRIEF.md`、現在地を残す `docs/PROJECT_STATUS.md`、初期設定と通常タスクのワークフロー、作業用テンプレートが配置されます。
+Bash:
+
+```bash
+bash scripts/create-new-project.sh /path/to/my-new-project
+```
+
+導入スクリプトは、既存ファイルがある場所には展開しません。
+既存プロジェクトへ誤って上書きする事故を防ぐため、導入先に `.git` 以外のファイルやフォルダがある場合は停止します。
+
+展開すると、初期設定状態を持つ `.ai-workflow/`、AIが最初に読む `AGENTS.md`、プロダクト仮説を整理する `docs/PROJECT_BRIEF.md`、現在地を残す `docs/PROJECT_STATUS.md`、初期設定と通常タスクのワークフロー、作業用テンプレートが配置されます。
 `.ai-workflow/directory-map.json` を構造と意味情報の正本とし、`docs/DIRECTORY_MAP.md` を自動生成します。
 localhostのプロジェクト案内図では、プロジェクトの主な役割、処理の流れ、作業場所の案内、ファイルごとの役割を先に表示し、必要な場合だけ全ファイル一覧へ移動できます。
 
@@ -300,6 +311,8 @@ AIは今回のタスク内容とリスクを見て、低リスクなら理由を
 │   └── workflows/
 ├── scripts/
 │   ├── check-docs.sh
+│   ├── create-new-project.sh
+│   ├── create-new-project.ps1
 │   ├── check-initialization.sh
 │   ├── check-initialization.ps1
 │   ├── test-initialization-checker.sh
@@ -332,12 +345,13 @@ AIは今回のタスク内容とリスクを見て、低リスクなら理由を
 
 ## 導入方法
 
-新規プロジェクトへ導入する場合は、まず [starter/README.md](starter/README.md) を見てください。
+新規プロジェクトへ導入する場合は、まずこのリポジトリ直下で導入スクリプトを実行してください。
+詳しい手順は [docs/adoption-guide.md](docs/adoption-guide.md) と [starter/README.md](starter/README.md) を参照してください。
 運用の考え方を理解したい場合は、[docs/adoption-guide.md](docs/adoption-guide.md) から始めてください。
 
 導入後の基本的な流れ:
 
-1. `starter/` をプロジェクトへ配置する
+1. `scripts/create-new-project.ps1` または `scripts/create-new-project.sh` で `starter/` を新規プロジェクトへ展開する
 2. 初期設定チェッカーで `INITIALIZATION_NOT_STARTED` を確認する
 3. `workflows/project-initialization.md` に沿ってユーザーとAIが壁打ちする
 4. `docs/PROJECT_BRIEF.md` に確定事項、仮説、不明点、Deferredを記録する
