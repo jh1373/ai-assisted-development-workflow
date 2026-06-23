@@ -304,7 +304,7 @@
       "beginner_summary": "Pull Requestで何を書けばよいか、なぜその確認が必要かを初心者向けに説明します。"
     },
     {
-      "path": "docs/ai-workflow/file-naming-policy.md",
+      "path": "docs/ai-workflow/file-role-guide.md",
       "kind": "file",
       "area": "documentation",
       "layer": "documentation",

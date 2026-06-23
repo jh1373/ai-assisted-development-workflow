@@ -11,8 +11,8 @@
 
 ## Scope
 
-- `docs/file-naming-policy.md` を追加する
-- `starter/docs/ai-workflow/file-naming-policy.md` を追加する
+- `docs/file-role-guide.md` を追加する
+- `starter/docs/ai-workflow/file-role-guide.md` を追加する
 - READMEからファイル名方針へリンクする
 - design-rationaleへ追加した命名方針説明は削除し、主要ファイル一覧への導線に留める
 - starter READMEに導入先向けの注意を追加する

@@ -45,7 +45,7 @@
 | `docs/ai-workflow/anti-patterns.md` | 避けるべき失敗 | AI駆動開発で起きやすい失敗例をまとめる |
 | `docs/ai-workflow/task-records.md` | タスク記録 | `docs/tasks/` に何を残すかを説明する |
 | `docs/ai-workflow/pull-request-template.md` | PR確認シートの説明 | Pull Request本文に何を書くかを説明する |
-| `docs/ai-workflow/file-naming-policy.md` | 主要ファイル名の意味 | 主要ファイルが何をするものかを一覧で説明する |
+| `docs/ai-workflow/file-role-guide.md` | 主要ファイル名の意味 | 主要ファイルが何をするものかを一覧で説明する |
 
 ## docs/tasks と docs/devlog
 

@@ -13,8 +13,8 @@
 
 追加した内容:
 
-- `docs/file-naming-policy.md`
-- `starter/docs/ai-workflow/file-naming-policy.md`
+- `docs/file-role-guide.md`
+- `starter/docs/ai-workflow/file-role-guide.md`
 - READMEからの導線
 - design-rationaleから命名方針説明を削除
 - starter README上の導入先向け注意

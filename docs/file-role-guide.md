@@ -35,7 +35,7 @@
 | `docs/task-records.md` | タスク記録 | `docs/tasks/` に何を残すかを説明する |
 | `docs/pull-request-template.md` | PR確認シートの説明 | Pull Request本文に何を書くかを説明する |
 | `docs/project-structure-map.md` | プロジェクト案内図 | 構成の検証とlocalhost画面の使い方を説明する |
-| `docs/file-naming-policy.md` | 主要ファイル名の意味 | 主要ファイルが何をするものかを一覧で説明する |
+| `docs/file-role-guide.md` | 主要ファイル名の意味 | 主要ファイルが何をするものかを一覧で説明する |
 
 ## docs/tasks と docs/devlog
 

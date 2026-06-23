@@ -22,15 +22,15 @@ Standard
 
 ## Changed files
 
-- `docs/file-naming-policy.md`
-- `starter/docs/ai-workflow/file-naming-policy.md`
+- `docs/file-role-guide.md`
+- `starter/docs/ai-workflow/file-role-guide.md`
 - `README.md`
 - `docs/design-rationale.md`
 - `starter/README.md`
 - `starter/docs/ai-workflow/design-rationale.md`
 - `starter/.ai-workflow/directory-map.json`
 - `starter/docs/DIRECTORY_MAP.md`
-- `docs/devlog/2026-06-23/file-naming-policy.md`
+- `docs/devlog/2026-06-23/file-role-guide.md`
 
 ## Verification
 

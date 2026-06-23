@@ -10,7 +10,7 @@
 ## 構成と説明の確認
 
 - 機械判定: `DIRECTORY_MAP_PROVISIONAL`
-- 現在の構成を表す値: `sha256:1255d6beeb4ebbc01132d7ab6d760fc8c0340655f113f0c34a92a72b7b75142f`
+- 現在の構成を表す値: `sha256:21d019bbf20ba0a06892e40f3c0084db69ffb872feb74f93d18a7b99d46048cc`
 - 確認済み構成を表す値: `未作成`
 - 最終確認日時: 未確認
 - 確認者: 未確認
@@ -53,7 +53,7 @@
 | `docs/ROADMAP.md` | ファイル | プロジェクト全体計画 | プロジェクト全体で、何をどの順番で作るかを示す地図です。 |
 | `docs/PROJECT_STATUS.md` | ファイル | 現在地と次の候補 | 今どこまで終わり、次に何をする可能性があるかを確認するファイルです。 |
 | `docs/ai-workflow/pull-request-template.md` | ファイル | Pull Requestテンプレートの説明 | Pull Requestで何を書けばよいか、なぜその確認が必要かを初心者向けに説明します。 |
-| `docs/ai-workflow/file-naming-policy.md` | ファイル | 主要ファイル名の意味 | ファイル名を見ても迷わないよう、主要ファイルの意味と役割を対応づけます。 |
+| `docs/ai-workflow/file-role-guide.md` | ファイル | 主要ファイル名の意味 | ファイル名を見ても迷わないよう、主要ファイルの意味と役割を対応づけます。 |
 | `scripts/project-structure.py` | ファイル | プロジェクト案内図を動かすプログラム | プロジェクト案内図の確認、表示データの作成、画面の起動を担当する中心プログラムです。 |
 | `scripts/project-structure-viewer/index.html` | ファイル | プロジェクト案内図の画面 | ブラウザで最初に表示されるプロジェクト案内図の画面です。 |
 | `.github/workflows/project-structure-check.yml` | ファイル | プロジェクト案内図の自動確認 | pushやPull Requestの後に、プロジェクト案内図が壊れていないか自動確認します。 |
