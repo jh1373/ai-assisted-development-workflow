@@ -21,7 +21,7 @@
       "beginner_summary": "プロジェクトの目的、現在地、計画、判断理由を後から確認できる区域です。",
       "layer": "documentation",
       "paths": ["README.md", "docs/**"],
-      "entry_points": ["README.md", "docs/PROJECT_STATUS.md"],
+      "entry_points": ["README.md", "docs/README.md", "docs/PROJECT_STATUS.md"],
       "depends_on": []
     },
     {
@@ -219,6 +219,16 @@
       ]
     },
     {
+      "path": "docs/README.md",
+      "kind": "file",
+      "area": "documentation",
+      "layer": "documentation",
+      "importance": "entry-point",
+      "display_name": "docsの読み方",
+      "role": "docs内の読み方、目的別の参照先、主要ファイルの意味と役割を説明する",
+      "beginner_summary": "docsフォルダで迷わないよう、最初に読む順番と各ファイルの役割をまとめます。"
+    },
+    {
       "path": "open-project-structure-map.cmd",
       "kind": "file",
       "area": "automation",
@@ -302,16 +312,6 @@
       "display_name": "Pull Requestテンプレートの説明",
       "role": "PRテンプレートの目的、各項目の意味、初心者向けの記入例を説明する",
       "beginner_summary": "Pull Requestで何を書けばよいか、なぜその確認が必要かを初心者向けに説明します。"
-    },
-    {
-      "path": "docs/ai-workflow/file-role-guide.md",
-      "kind": "file",
-      "area": "documentation",
-      "layer": "documentation",
-      "importance": "entry-point",
-      "display_name": "主要ファイル名の意味",
-      "role": "主要ファイル名の意味と、それぞれが担う役割を一覧で説明する",
-      "beginner_summary": "ファイル名を見ても迷わないよう、主要ファイルの意味と役割を対応づけます。"
     },
     {
       "path": "scripts/project-structure.py",

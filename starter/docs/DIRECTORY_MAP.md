@@ -10,7 +10,7 @@
 ## 構成と説明の確認
 
 - 機械判定: `DIRECTORY_MAP_PROVISIONAL`
-- 現在の構成を表す値: `sha256:21d019bbf20ba0a06892e40f3c0084db69ffb872feb74f93d18a7b99d46048cc`
+- 現在の構成を表す値: `sha256:88f74b3fe8f51def4d1dcd569b62d752b5b1fd8a9efc432c78255a365e40e8b1`
 - 確認済み構成を表す値: `未作成`
 - 最終確認日時: 未確認
 - 確認者: 未確認
@@ -45,6 +45,7 @@
 | `workflows` | フォルダ | workflows | Project Initialization、session-start、session-endの実行手順を定義する |
 | `AGENTS.md` | ファイル | AGENTS.md | AIエージェントが必ず守るプロジェクト固有ルールを定義する |
 | `README.md` | ファイル | README.md | プロジェクトの目的、導入方法、主要な利用手順を説明する |
+| `docs/README.md` | ファイル | docsの読み方 | docsフォルダで迷わないよう、最初に読む順番と各ファイルの役割をまとめます。 |
 | `open-project-structure-map.cmd` | ファイル | open-project-structure-map.cmd | プロジェクト案内図をWindowsからワンクリックで起動する |
 | `.ai-workflow/project-state.conf` | ファイル | 初期設定状態 | 初期設定が未開始、作業中、完了のどれかをAIの推測なしで判定します。 |
 | `.ai-workflow/directory-map.json` | ファイル | プロジェクト案内図の元データ | プロジェクト案内図に表示する説明を保存する中心ファイルです。 |
@@ -53,7 +54,6 @@
 | `docs/ROADMAP.md` | ファイル | プロジェクト全体計画 | プロジェクト全体で、何をどの順番で作るかを示す地図です。 |
 | `docs/PROJECT_STATUS.md` | ファイル | 現在地と次の候補 | 今どこまで終わり、次に何をする可能性があるかを確認するファイルです。 |
 | `docs/ai-workflow/pull-request-template.md` | ファイル | Pull Requestテンプレートの説明 | Pull Requestで何を書けばよいか、なぜその確認が必要かを初心者向けに説明します。 |
-| `docs/ai-workflow/file-role-guide.md` | ファイル | 主要ファイル名の意味 | ファイル名を見ても迷わないよう、主要ファイルの意味と役割を対応づけます。 |
 | `scripts/project-structure.py` | ファイル | プロジェクト案内図を動かすプログラム | プロジェクト案内図の確認、表示データの作成、画面の起動を担当する中心プログラムです。 |
 | `scripts/project-structure-viewer/index.html` | ファイル | プロジェクト案内図の画面 | ブラウザで最初に表示されるプロジェクト案内図の画面です。 |
 | `.github/workflows/project-structure-check.yml` | ファイル | プロジェクト案内図の自動確認 | pushやPull Requestの後に、プロジェクト案内図が壊れていないか自動確認します。 |

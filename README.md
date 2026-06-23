@@ -155,7 +155,7 @@ docs/INITIALIZATION_REVIEW.md
 docs/ROADMAP.md
 docs/PROJECT_STATUS.md
 docs/DIRECTORY_MAP.md
-docs/file-role-guide.md
+docs/README.md
 docs/pull-request-template.md
 docs/tasks/
 workflows/project-initialization.md
@@ -182,7 +182,7 @@ templates/devlog.md
 - `ROADMAP.md`: プロジェクト全体のフェーズ、成果、見直し条件を残す
 - `PROJECT_STATUS.md`: 次のセッションで最初に読む現在地メモ
 - `DIRECTORY_MAP.md`: JSON正本から生成するプロジェクト案内図と構成の要約
-- `file-role-guide.md`: 主要ファイル名の意味と役割の一覧
+- `docs/README.md`: docsの読み方、目的別の参照先、主要ファイルの意味と役割の一覧
 - `pull-request-template.md`: PRテンプレートの目的、各項目の意味、初心者向けの記入例
 - `docs/tasks/`: 1タスクごとの認識合わせ、計画、完了レビューを残す場所
 - `requirement-alignment.md`: 実装前にユーザーとAIの認識を揃える確認メモ
@@ -191,7 +191,7 @@ templates/devlog.md
 
 Devlogの粒度は [examples/devlog/standard-task-devlog.md](examples/devlog/standard-task-devlog.md) を見本にしてください。
 構造検証とlocalhost画面は [Project Structure Map](docs/project-structure-map.md) を参照してください。
-主要ファイル名の意味と役割は [docs/file-role-guide.md](docs/file-role-guide.md) を参照してください。
+docsの読み方と主要ファイルの意味は [docs/README.md](docs/README.md) を参照してください。
 
 PRテンプレート、ADR、Strict modeの追加成果物は、プロジェクトのリスクと運用に応じて使います。
 PRテンプレートの考え方と書き方は [docs/pull-request-template.md](docs/pull-request-template.md) を参照してください。
@@ -263,7 +263,7 @@ AIは今回のタスク内容とリスクを見て、低リスクなら理由を
 │   ├── anti-patterns.md
 │   ├── design-rationale.md
 │   ├── definition-of-done.md
-│   ├── file-role-guide.md
+│   ├── README.md
 │   ├── practical-guide.md
 │   ├── principles.md
 │   ├── pull-request-template.md
@@ -352,16 +352,17 @@ AIは今回のタスク内容とリスクを見て、低リスクなら理由を
 
 最初に読む順番:
 
-1. [docs/design-rationale.md](docs/design-rationale.md)
-2. [docs/principles.md](docs/principles.md)
-3. [docs/adoption-guide.md](docs/adoption-guide.md)
-4. [workflows/project-initialization.md](workflows/project-initialization.md)
-5. [docs/requirement-alignment.md](docs/requirement-alignment.md)
-6. [docs/task-records.md](docs/task-records.md)
-7. [docs/practical-guide.md](docs/practical-guide.md)
-8. [docs/workflow-modes.md](docs/workflow-modes.md)
-9. [docs/quality-gates.md](docs/quality-gates.md)
-10. [docs/adr-guidelines.md](docs/adr-guidelines.md)
+1. [docs/README.md](docs/README.md)
+2. [docs/design-rationale.md](docs/design-rationale.md)
+3. [docs/principles.md](docs/principles.md)
+4. [docs/adoption-guide.md](docs/adoption-guide.md)
+5. [workflows/project-initialization.md](workflows/project-initialization.md)
+6. [docs/requirement-alignment.md](docs/requirement-alignment.md)
+7. [docs/task-records.md](docs/task-records.md)
+8. [docs/practical-guide.md](docs/practical-guide.md)
+9. [docs/workflow-modes.md](docs/workflow-modes.md)
+10. [docs/quality-gates.md](docs/quality-gates.md)
+11. [docs/adr-guidelines.md](docs/adr-guidelines.md)
 
 AIと人間の役割分担は [docs/ai-human-boundary.md](docs/ai-human-boundary.md) にまとめています。
 よくある失敗パターンは [docs/anti-patterns.md](docs/anti-patterns.md) にまとめています。
