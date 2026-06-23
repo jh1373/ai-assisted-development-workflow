@@ -2,29 +2,21 @@
 
 ## Summary
 
-ファイル名とディレクトリ名は英語で維持し、初心者向けの意味説明を日本語で補う方針を明文化した。
+主要ファイル名の意味と、それぞれが担う役割を初心者向けに一覧化した。
 
 ## Context
 
-このリポジトリは日本語で説明するポートフォリオ用途だが、GitHub、CI、CLI、AIエージェント、スクリプトで扱うファイルが多い。
-日本語ファイル名に寄せると一見分かりやすく見えるが、公開リポジトリとしての扱いやすさや自動化の安定性が下がる可能性がある。
+このリポジトリは日本語で説明するポートフォリオ用途だが、ファイル名だけでは初心者が役割を判断しにくい。
+そのため、主要ファイル名の意味と役割を日本語で確認できる一覧を用意した。
 
 ## Decision
-
-次の方針を採用した。
-
-```text
-ファイル名とディレクトリ名: 英語
-本文と説明: 日本語
-初心者向けの意味説明: README、DIRECTORY_MAP、localhost画面で補う
-```
 
 追加した内容:
 
 - `docs/file-naming-policy.md`
 - `starter/docs/ai-workflow/file-naming-policy.md`
 - READMEからの導線
-- design-rationale上の設計理由
+- design-rationaleから命名方針説明を削除
 - starter README上の導入先向け注意
 - Project Structure Map上の役割説明
 

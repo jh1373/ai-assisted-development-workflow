@@ -127,7 +127,7 @@ Devlogは1タスクにつき1つ残します。
 - `PROJECT_BRIEF.md` では仮説と確定事項を分けてください。
 - `PROJECT_STATUS.md` と `ROADMAP.md` は初期設定でプロジェクト内容へ書き換えてください。
 - `.ai-workflow/directory-map.json` の主な役割、ファイルの役割説明、処理の流れ、作業場所の案内をプロジェクトに合わせ、`DIRECTORY_MAP.md`を再生成してください。
-- ファイル名は英語で統一し、意味はREADME、`DIRECTORY_MAP.md`、localhost画面、`docs/ai-workflow/file-naming-policy.md` で日本語説明してください。
+- 主要ファイルの意味と役割は、README、`DIRECTORY_MAP.md`、localhost画面、`docs/ai-workflow/file-naming-policy.md` で確認してください。
 - Windowsでは、プロジェクト直下の `open-project-structure-map.cmd` をダブルクリックすると、全ファイルのライブ表示と既定ブラウザが自動で起動します。
 - ターミナルから起動する場合は `python scripts/project-structure.py serve --open-browser` を使います。
 - 起動中の黒い画面は閉じず、終了するときはその画面で `Ctrl+C` を押します。

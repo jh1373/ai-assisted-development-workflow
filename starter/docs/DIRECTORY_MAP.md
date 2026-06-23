@@ -53,7 +53,7 @@
 | `docs/ROADMAP.md` | ファイル | プロジェクト全体計画 | プロジェクト全体で、何をどの順番で作るかを示す地図です。 |
 | `docs/PROJECT_STATUS.md` | ファイル | 現在地と次の候補 | 今どこまで終わり、次に何をする可能性があるかを確認するファイルです。 |
 | `docs/ai-workflow/pull-request-template.md` | ファイル | Pull Requestテンプレートの説明 | Pull Requestで何を書けばよいか、なぜその確認が必要かを初心者向けに説明します。 |
-| `docs/ai-workflow/file-naming-policy.md` | ファイル | ファイル名の方針 | 英語のファイル名を見ても迷わないよう、名前の意味と日本語での役割を対応づけます。 |
+| `docs/ai-workflow/file-naming-policy.md` | ファイル | 主要ファイル名の意味 | ファイル名を見ても迷わないよう、主要ファイルの意味と役割を対応づけます。 |
 | `scripts/project-structure.py` | ファイル | プロジェクト案内図を動かすプログラム | プロジェクト案内図の確認、表示データの作成、画面の起動を担当する中心プログラムです。 |
 | `scripts/project-structure-viewer/index.html` | ファイル | プロジェクト案内図の画面 | ブラウザで最初に表示されるプロジェクト案内図の画面です。 |
 | `.github/workflows/project-structure-check.yml` | ファイル | プロジェクト案内図の自動確認 | pushやPull Requestの後に、プロジェクト案内図が壊れていないか自動確認します。 |
