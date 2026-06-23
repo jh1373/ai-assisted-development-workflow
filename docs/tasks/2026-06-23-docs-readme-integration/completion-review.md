@@ -50,6 +50,11 @@ node --check scripts/project-structure-viewer/app.js: passed
 git diff --check: passed
 ```
 
+## Follow-up correction
+
+追加の整合性確認で、`starter/docs/README.md` に `docs/ai-workflow/team-development.md` の案内が漏れていることを確認した。
+starter側のdocs入口として案内粒度を揃えるため、該当行を追記した。
+
 ## Security and Privacy
 
 - [x] 秘密情報、個人情報、認証情報を追加していない

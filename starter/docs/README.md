@@ -69,6 +69,7 @@
 | `docs/ai-workflow/task-records.md` | タスク記録 | `docs/tasks/` に何を残すかを説明する |
 | `docs/ai-workflow/pull-request-template.md` | PR確認シートの説明 | Pull Request本文に何を書くかを説明する |
 | `docs/ai-workflow/adr-guidelines.md` | 設計判断記録 | 後から見返すべき設計判断をADRとして残す基準を説明する |
+| `docs/ai-workflow/team-development.md` | チーム開発 | チームでこのワークフローを使うときの考え方を説明する |
 
 ## docs/tasks と docs/devlog
 

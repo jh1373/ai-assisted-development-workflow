@@ -30,6 +30,11 @@ node --check scripts/project-structure-viewer/app.js: passed
 git diff --check: passed
 ```
 
+## Follow-up correction
+
+追加の整合性確認で、`starter/docs/README.md` の `docs/ai-workflow` 一覧に `team-development.md` だけが載っていないことを確認した。
+導入先のdocs入口として全体を把握できるよう、`docs/ai-workflow/team-development.md` の行を追記した。
+
 ## Follow-up
 
 現時点ではなし。
