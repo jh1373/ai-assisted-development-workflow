@@ -1,47 +1,49 @@
 ---
-name: Bug report
-about: Record a reproducible defect before AI-assisted debugging
-title: "[Bug] "
+name: バグ報告
+about: AIに修正を依頼する前に、再現できる不具合として整理します
+title: "[バグ] "
 labels: bug
 assignees: ""
 ---
 
-## Problem
+## 問題
 
-<!-- What is broken? -->
+<!-- 何が壊れている、または期待通りに動いていないかを書きます。 -->
 
-## Impact
+## 影響
 
-<!-- Who or what is affected? -->
+<!-- 誰に、どの機能に、どの作業に影響があるかを書きます。 -->
 
-## Reproduction
+## 再現手順
+
+<!-- ほかの人やAIが同じ問題を確認できる手順を書きます。 -->
 
 1.
 2.
 3.
 
-## Expected Behavior
+## 期待する動き
 
 -
 
-## Actual Behavior
+## 実際の動き
 
 -
 
-## Evidence
+## 根拠
 
 ```text
-[error message, screenshot note, log summary, or failing command]
+[エラーメッセージ、スクリーンショットの内容、ログ概要、失敗したコマンドなど]
 ```
 
-## Suspected Area
+## 原因の仮説
 
-<!-- Optional. Keep this as a hypothesis, not a conclusion. -->
+<!-- 任意です。断定ではなく、現時点の仮説として書きます。 -->
 
 -
 
-## Verification Needed
+## 修正後の確認方法
 
 ```text
-[command or manual check that proves the fix]
+[修正できたと判断するためのコマンド、手動確認、再現確認など]
 ```

@@ -1,67 +1,67 @@
 ---
-name: Task
-about: Plan a scoped AI-assisted development task
-title: "[Task] "
+name: タスク
+about: AIと一緒に進める開発作業の目的、範囲、完了条件を整理します
+title: "[タスク] "
 labels: task
 assignees: ""
 ---
 
-## Goal
+## 目的
 
-<!-- What outcome should this task achieve? -->
+<!-- このタスクで最終的に何を実現したいかを書きます。 -->
 
-## User Request
+## 元の依頼
 
-<!-- What did the user originally ask for? -->
+<!-- ユーザーが最初に依頼した内容を、そのまま、または要約して残します。 -->
 
-## Current Understanding
+## 現時点の理解
 
-<!-- How do we understand the request now? -->
+<!-- 会話や確認を踏まえて、AIと人間が今どう理解しているかを書きます。 -->
 
-## Background
+## 背景
 
-<!-- Why is this needed now? -->
+<!-- なぜ今この作業が必要なのかを書きます。 -->
 
-## Scope
+## 作業範囲
 
-### In Scope
-
--
-
-### Out of Scope
+### 対象にすること
 
 -
 
-## Workflow Mode
+### 対象にしないこと
 
-- [ ] Minimal
-- [ ] Standard
-- [ ] Strict
+-
 
-Mode selection reason:
+## 作業モード
+
+- [ ] Minimal（最小）
+- [ ] Standard（標準）
+- [ ] Strict（厳格）
+
+選択理由:
 
 ```text
-Default is Standard. Explain if downgraded to Minimal or upgraded to Strict.
+通常はStandardを選びます。Minimalに軽くする理由、またはStrictに重くする理由があれば書きます。
 ```
 
-## Completion Condition
+## 完了条件
 
-<!-- What evidence proves this task is done? -->
+<!-- 何を確認できたら、このタスクを完了と言えるかを書きます。 -->
 
 -
 
-## Verification Plan
+## 確認方法
 
 ```text
-[commands or manual checks]
+[実行するコマンド、手動確認、レビュー観点など]
 ```
 
-## Risks and Unknowns
+## リスク・不明点
 
 -
 
-## Questions Before Implementation
+## 実装前に確認すること
 
-<!-- If any question here must be answered, do not start implementation yet. -->
+<!-- ここに回答必須の質問が残っている場合は、実装を始めません。 -->
 
 -

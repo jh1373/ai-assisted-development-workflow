@@ -93,7 +93,8 @@
 | ファイル名 | 意味 | 役割 |
 |---|---|---|
 | `.github/pull_request_template.md` | Pull Request確認シート | PR作成時に、変更内容、検証結果、残るリスクを書く型を表示する |
-| `.github/ISSUE_TEMPLATE/` | Issueひな型 | バグ報告やタスク作成時の入力形式を揃える |
+| `.github/ISSUE_TEMPLATE/bug.md` | バグ報告のひな型 | 不具合の内容、再現手順、期待する動き、確認方法を揃える |
+| `.github/ISSUE_TEMPLATE/task.md` | タスク作成のひな型 | 作業の目的、範囲、完了条件、確認方法を揃える |
 | `.github/workflows/docs-check.yml` | 自動チェック | pushやPull Request時にドキュメント構造を検証する |
 
 ## starter
