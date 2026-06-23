@@ -304,6 +304,16 @@
       "beginner_summary": "Pull Requestで何を書けばよいか、なぜその確認が必要かを初心者向けに説明します。"
     },
     {
+      "path": "docs/ai-workflow/file-naming-policy.md",
+      "kind": "file",
+      "area": "documentation",
+      "layer": "documentation",
+      "importance": "entry-point",
+      "display_name": "ファイル名の方針",
+      "role": "英語ファイル名を使う理由、命名ルール、主要ファイル名の日本語での意味を説明する",
+      "beginner_summary": "英語のファイル名を見ても迷わないよう、名前の意味と日本語での役割を対応づけます。"
+    },
+    {
       "path": "scripts/project-structure.py",
       "kind": "file",
       "area": "automation",
