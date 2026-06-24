@@ -11,7 +11,7 @@
 
 1. [design-rationale.md](design-rationale.md)
 2. [principles.md](principles.md)
-3. [adoption-guide.md](adoption-guide.md)
+3. [new-project-setup-guide.md](new-project-setup-guide.md)
 4. [../workflows/project-initialization.md](../workflows/project-initialization.md)
 5. [requirement-alignment.md](requirement-alignment.md)
 6. [task-records.md](task-records.md)
@@ -26,7 +26,7 @@
 |---|---|
 | この構成にしている理由を知りたい | [design-rationale.md](design-rationale.md) |
 | AI駆動開発の基本思想を知りたい | [principles.md](principles.md) |
-| 新規プロジェクトへ導入したい | [adoption-guide.md](adoption-guide.md) |
+| 新規プロジェクトへ導入したい | [new-project-setup-guide.md](new-project-setup-guide.md) |
 | 1タスクの進め方を知りたい | [practical-guide.md](practical-guide.md) |
 | 実装前の認識合わせをしたい | [requirement-alignment.md](requirement-alignment.md) |
 | 作業の重さを選びたい | [workflow-modes.md](workflow-modes.md) |
@@ -46,7 +46,7 @@
 | `docs/principles.md` | 基本思想 | AI駆動開発で守る考え方をまとめる |
 | `docs/design-rationale.md` | 設計理由 | なぜこのワークフロー構成にしているかを説明する |
 | `docs/practical-guide.md` | 実践手順 | 1タスクをどう進めるかを説明する |
-| `docs/adoption-guide.md` | 導入手順 | 新規プロジェクトへ導入するときの流れを説明する |
+| `docs/new-project-setup-guide.md` | 初期セットアップ手順 | 新規プロジェクトへ導入し、最初の通常タスクを始められる状態にする流れを説明する |
 | `docs/requirement-alignment.md` | 認識合わせ | 実装前にユーザーとAIの理解を揃える方法を説明する |
 | `docs/quality-gates.md` | 品質チェック | 作業前後に確認する関門を説明する |
 | `docs/review-checklist.md` | レビュー項目 | 初期設定、実装前、実装中、完了前、公開前の確認項目をまとめる |

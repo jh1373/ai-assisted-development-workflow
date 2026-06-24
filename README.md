@@ -268,7 +268,7 @@ AIは今回のタスク内容とリスクを見て、低リスクなら理由を
 │   ├── workflows/
 │   └── .github/
 ├── docs/
-│   ├── adoption-guide.md
+│   ├── new-project-setup-guide.md
 │   ├── adr-guidelines.md
 │   ├── ai-human-boundary.md
 │   ├── anti-patterns.md
@@ -346,8 +346,8 @@ AIは今回のタスク内容とリスクを見て、低リスクなら理由を
 ## 導入方法
 
 新規プロジェクトへ導入する場合は、まずこのリポジトリ直下で導入スクリプトを実行してください。
-詳しい手順は [docs/adoption-guide.md](docs/adoption-guide.md) と [starter/README.md](starter/README.md) を参照してください。
-運用の考え方を理解したい場合は、[docs/adoption-guide.md](docs/adoption-guide.md) から始めてください。
+詳しい手順は [docs/new-project-setup-guide.md](docs/new-project-setup-guide.md) と [starter/README.md](starter/README.md) を参照してください。
+運用の考え方を理解したい場合は、[docs/new-project-setup-guide.md](docs/new-project-setup-guide.md) から始めてください。
 
 導入後の基本的な流れ:
 
@@ -368,7 +368,7 @@ AIは今回のタスク内容とリスクを見て、低リスクなら理由を
 1. [docs/README.md](docs/README.md)
 2. [docs/design-rationale.md](docs/design-rationale.md)
 3. [docs/principles.md](docs/principles.md)
-4. [docs/adoption-guide.md](docs/adoption-guide.md)
+4. [docs/new-project-setup-guide.md](docs/new-project-setup-guide.md)
 5. [workflows/project-initialization.md](workflows/project-initialization.md)
 6. [docs/requirement-alignment.md](docs/requirement-alignment.md)
 7. [docs/task-records.md](docs/task-records.md)

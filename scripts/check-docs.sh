@@ -160,7 +160,7 @@ fi
 scope_files=(
   "README.md"
   "starter/README.md"
-  "docs/adoption-guide.md"
+  "docs/new-project-setup-guide.md"
   "workflows/project-initialization.md"
   "starter/workflows/project-initialization.md"
 )
@@ -177,7 +177,7 @@ if ! grep -Fq 'Existing-project adoption is not supported.' starter/AGENTS.md; t
   exit 1
 fi
 
-for file in "README.md" "docs/adoption-guide.md" "starter/README.md"; do
+for file in "README.md" "docs/new-project-setup-guide.md" "starter/README.md"; do
   if ! grep -Fq 'create-new-project' "$file"; then
     echo "Recommended installer command is missing from: $file" >&2
     exit 1
